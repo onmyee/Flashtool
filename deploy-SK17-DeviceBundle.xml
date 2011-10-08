@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="run" name="Deploy SK17 Bundle">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="run">
+        <delete dir="${eclipse.deployloc}/FlashTool/devices/SK17"/>
+    	<mkdir dir="${eclipse.deployloc}/FlashTool/devices"/>
+        <mkdir dir="${eclipse.deployloc}/FlashTool/devices/SK17"/>
+		<copy todir="${eclipse.deployloc}/FlashTool/devices/SK17">
+			  <fileset dir="${eclipse.workspace}/X10Flash/devices/SK17"/>
+		</copy>
+    </target>
+</project>
