@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exe4j version="4.4.1" transformSequenceNumber="1">
+  <directoryPresets config="C:/Users/Manu/Documents" />
+  <application name="X10flashTool" distributionSourceDir="C:/Users/Manu/Documents/FlashTool">
+    <languages>
+      <principalLanguage id="en" customLocalizationFile="" />
+    </languages>
+  </application>
+  <executable name="X10FlashTool" type="1" iconSet="false" iconFile="" executableDir="" redirectStderr="true" stderrFile="stderr.log" stderrMode="overwrite" redirectStdout="true" stdoutFile="stdout.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="requireAdministrator" checkConsoleParameter="false" globalSingleInstance="false" amd64="false">
+    <messageSet />
+    <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" companyName="" productVersion="" />
+  </executable>
+  <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+    <text>
+      <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+      <versionLine x="20" y="40" text="version %VERSION%" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+    </text>
+  </splashScreen>
+  <java mainClass="gui.FlasherGUI" vmParameters="-Xms128m -Xmx256m" arguments="" allowVMPassthroughParameters="true" preferredVM="client" bundleRuntime="true" minVersion="1.6" maxVersion="" allowBetaVM="false" jdkOnly="false">
+    <searchSequence>
+      <directory location="./x10flasher_lib/jre" />
+    </searchSequence>
+    <classPath>
+      <archive location="./x10flasher.jar" failOnError="false" />
+      <scanDirectory location="./x10flasher_lib" failOnError="false" />
+    </classPath>
+    <nativeLibraryDirectories>
+      <directory name="." />
+      <directory name="./x10flasher_lib" />
+    </nativeLibraryDirectories>
+  </java>
+  <includedFiles />
+  <unextractableFiles />
+</exe4j>
+

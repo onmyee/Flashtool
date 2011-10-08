@@ -1,0 +1,61 @@
+#!/system/bin/sh
+
+export PATH=/sbin:/system/sbin:/system/bin:/system/xbin
+
+while test $# != 0
+do
+  case $1 in
+  --*=*)
+    ac_option=`expr "X$1" : 'X\([^=]*\)='`
+    ac_optarg=`expr "X$1" : 'X[^=]*=\(.*\)'`
+    ac_shift=:
+    ;;
+  *)
+    ac_option=$1
+    ac_optarg=$2
+    ac_shift=shift
+    ;;
+  esac
+
+  case $ac_option in
+  -compression | --compression)
+     export p_compress=$ac_optarg;;
+  -image | --image)
+     export p_image=$ac_optarg;;
+  esac
+  shift
+done
+
+rm -r /data/local/tmp/recoveryboot
+rm -r /cache/recovery/boot
+
+if [ -e $p_image ]
+then
+	    	rm -r /cache/recovery/boot
+	    	# remount rootfs rw
+	    	mount -o remount,rw rootfs /
+	    	# Umount MTDs
+	    	umount -l /cache
+	    	umount -l /data
+	    	# Mount recovery partition
+	    	cd /
+	    	rm -r /sbin
+	    	rm -r /etc
+	    	rm -r /sdcard
+	    	case $p_compress in
+	    		none)
+	    			tar -xf $p_image
+	    			;;
+	    		bz2)
+	    			tar -xjf $p_image
+	    			;;
+	    		gz)
+	    			tar -xzf $p_image
+	    			;;
+	    	esac
+	    	# Umount /system
+	    	umount -l /system
+	    	# chroot
+	    	chroot / /init
+	    	exit
+fi

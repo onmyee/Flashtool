@@ -1,0 +1,12 @@
+#!/system/xbin/sh
+
+chmod 755 DEVICEWORKDIR/runscript
+/system/xbin/sh DEVICEWORKDIR/runscript
+
+if test -e DEVICEWORKDIR/busybox
+then
+	rm -r DEVICEWORKDIR/busybox
+fi
+
+rm -r DEVICEWORKDIR/runscript
+rm -r DEVICEWORKDIR/sysrun

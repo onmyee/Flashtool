@@ -1,0 +1,8 @@
+for i in `cat DEVICEWORKDIR/listappsadd`
+do
+   cp DEVICEWORKDIR/$i /system/app
+   chown 0.0 /system/app/$i
+   chmod 644 /system/app/$i
+   rm DEVICEWORKDIR/$i
+done
+rm DEVICEWORKDIR/listappsadd

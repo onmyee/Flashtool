@@ -1,0 +1,10 @@
+mount -o remount,rw yaffs2 /system
+
+touch /system/testfile
+
+if test $? -eq 0
+then
+   rm /system/testfile
+else
+   echo FTError
+fi

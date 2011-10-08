@@ -1,0 +1,9 @@
+pm list packages -f>DEVICEWORKDIR/packagelist
+for i in `cat DEVICEWORKDIR/listappsremove`
+do
+   rm /system/app/$i
+   PACKAGE=`cat DEVICEWORKDIR/packagelist|grep $i|cut -d "=" -f 2`
+   pm uninstall $PACKAGE
+done
+rm DEVICEWORKDIR/listappsremove
+rm DEVICEWORKDIR/packagelist

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<languages>
+    <fr trigger="fr">
+        <rdbtnmntmfr name="Français"/>
+        <rdbtnmntmen name="Anglais"/>
+        <rdbtnmntmger name="Allemand"/>
+		<rdbtnmntmpt name="Portugais"/>
+		<rdbtnmntmda name="Danois"/>
+		<rdbtnmntmar name="Arabe"/>
+    </fr>
+    <en trigger="en">
+        <rdbtnmntmfr name="French"/>
+        <rdbtnmntmen name="English"/>
+        <rdbtnmntmger name="German"/>
+		<rdbtnmntmpt name="Portuguese"/>
+		<rdbtnmntmda name="Danish"/>
+		<rdbtnmntmar name="Arabic"/>
+    </en>
+    <ger trigger="ger">
+        <rdbtnmntmfr name="Französisch"/>
+        <rdbtnmntmen name="Englisch"/>
+        <rdbtnmntmger name="Deutsch"/>
+        <rdbtnmntmpt name="Portugiesisch"/>
+        <rdbtnmntmda name="Dänish"/>
+        <rdbtnmntmar name="Arabic"/>
+    </ger>
+	<pt trigger="pt">
+        <rdbtnmntmfr name="Françês"/>
+        <rdbtnmntmen name="Inglês"/>
+        <rdbtnmntmger name="Alemão"/>
+		<rdbtnmntmpt name="Português"/>
+		<rdbtnmntmda name="Danish"/>
+		<rdbtnmntmar name="Arabic"/>
+	</pt>
+    <da trigger="da">
+        <rdbtnmntmfr name="Fransk"/>
+        <rdbtnmntmen name="Engelsk"/>
+        <rdbtnmntmger name="Tysk"/>
+        <rdbtnmntmpt name="Portuguese"/>
+        <rdbtnmntmda name="Dansk"/>
+        <rdbtnmntmar name="Arabic"/>
+    </da>   
+    <ar trigger="ar">
+        <rdbtnmntmfr name="French"/>
+        <rdbtnmntmen name="English"/>
+        <rdbtnmntmger name="German"/>
+        <rdbtnmntmpt name="Portuguese"/>
+        <rdbtnmntmda name="Danish"/>
+        <rdbtnmntmar name="Arabic"/>
+    </ar>
+</languages>

@@ -1,0 +1,4 @@
+export PATH=DEVICEWORKDIR:$PATH
+chmod 755 DEVICEWORKDIR/busybox
+(cd DEVICEWORKDIR;busybox tar xpf psneuter.tar;chmod 755 psneuter)
+DEVICEWORKDIR/psneuter

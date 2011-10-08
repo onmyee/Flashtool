@@ -1,0 +1,15 @@
+<feature name="Bootloader unlock">
+	<versions>
+		<version target="any"></version>
+	</versions>
+	<tasks>
+		<task type="push" file="feature.rar"></task>
+		<task type="shell" name="unpack" root="no" local="yes"></task>
+		<task type="shell" name="rootit" root="no" local="no"></task>
+		<task type="shell" name="fixpart" root="no" local="yes"></task>
+		<task type="command" name="reboot" root="no"></task>
+		<task type="shell" name="rootit" root="no" local="no"></task>
+		<task type="shell" name="unlock" root="no" local="yes"></task>
+		<task type="command" name="reboot" root="no"></task>
+	</tasks>
+</feature>
