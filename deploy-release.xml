@@ -56,6 +56,7 @@
     	<copy file="./src/flashsystem/ressources/bundletranslate.properties" todir="../Deploy/FlashTool/x10flasher_lib"/>
         <copy file="./win32/X10FlashTool.exe" todir="../Deploy/FlashTool"/>
         <copy file="./linux/X10FlashTool" todir="../Deploy/FlashTool"/>
+    	<chmod file="../Deploy/FlashTool/X10FlashTool" perm="755"/>
         <copy file="./linux/adb" todir="../Deploy/FlashTool/x10flasher_lib"/>
     	<copy todir="../Deploy/FlashTool/x10flasher_lib">
     		<fileset dir="./libs"
