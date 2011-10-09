@@ -60,6 +60,33 @@ public class X10flash {
         return cmd.getLastReplyHex();
     }
 
+    public void dumpProperty(int prnumber) throws IOException, X10FlashException
+    {
+    	try {
+		    MyLogger.info("Start Reading property");
+
+		    cmd = new Command(my_a,my_ch,_bundle.simulate());
+	    	
+			cmd.testPlugged();
+			cmd.send(Command.CMD01, Command.VALNULL, false);
+			cmd.send(Command.CMD09, Command.VAL2, false);
+	        cmd.send(Command.CMD10, Command.VALNULL, false);
+
+	        MyLogger.debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
+	        cmd.send(Command.CMD12, c.a(prnumber, 4, false),false);
+	        String reply = cmd.getLastReplyHex();
+	        reply = reply.replace("[", "");
+	        reply = reply.replace("]", "");
+	        reply = reply.replace(",", "");
+	        closeDevice();	    
+			MyLogger.info("Reading property finished.");
+	    }
+    	catch (Exception ioe) {
+    		closeDevice();
+    		MyLogger.error("Error dumping properties. Aborted");
+    	}    	
+    }
+
     public void dumpProperties() throws IOException, X10FlashException
     {
     	try {
