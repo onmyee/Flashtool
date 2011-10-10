@@ -60,7 +60,7 @@ public class X10flash {
         return cmd.getLastReplyHex();
     }
 
-    public void dumpProperty(int prnumber) throws IOException, X10FlashException
+    public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
     	try {
 		    MyLogger.info("Start Reading property");
@@ -80,10 +80,12 @@ public class X10flash {
 	        reply = reply.replace(",", "");
 	        closeDevice();	    
 			MyLogger.info("Reading property finished.");
+			return reply;
 	    }
     	catch (Exception ioe) {
     		closeDevice();
     		MyLogger.error("Error dumping properties. Aborted");
+    		return "";
     	}    	
     }
 

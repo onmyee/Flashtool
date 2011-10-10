@@ -13,6 +13,7 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import java.io.File; 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;  
 import java.io.IOException;
@@ -1390,9 +1391,10 @@ public class FlasherGUI extends JFrame {
 	    for(int i = 0; i < chld.length; i++){
 	    	if (chld[i].isDirectory()) {
 	    		try {
-	    			ClassPath.addFile(chld[i].getPath()+fsep+chld[i].getName()+".jar");
-	    			String classname= "org.plugins."+chld[i].getName().substring(0,1).toUpperCase()+chld[i].getName().substring(1).toLowerCase();
-	    			registerPlugin(classname);
+	    			Properties p = new Properties();
+	    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
+	    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
+	    			registerPlugin(p.getProperty("classname"));
 	    		}
 	    		catch (IOException ioe) {
 	    		}
