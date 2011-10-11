@@ -1394,7 +1394,7 @@ public class FlasherGUI extends JFrame {
 	    			Properties p = new Properties();
 	    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
 	    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-	    			registerPlugin(p.getProperty("classname"));
+	    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
 	    		}
 	    		catch (IOException ioe) {
 	    		}
@@ -1402,12 +1402,13 @@ public class FlasherGUI extends JFrame {
 	    }
     }
     
-    public static void registerPlugin(String classname) {
+    public static void registerPlugin(String classname,String workdir) {
 	    try {
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             JMenuItem item = new JMenuItem(pluginObject.getName());
+            pluginObject.setWorkdir(workdir);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             item.addActionListener(p);
             mnPlugins.add(item);

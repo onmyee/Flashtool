@@ -49,6 +49,7 @@ public class Command {
 	public void testPlugged() throws X10FlashException {
     	if (!_simulate) {
 	        readReply();
+	        MyLogger.debug("testPlugged");
 	        MyLogger.info(getLastReplyString());
     	}
 	}
