@@ -14,6 +14,7 @@ public class Devices  {
 
 	private static DeviceEntry _current=null;;
 	private static Properties props = null;
+	private static boolean waitforreboot=false;
 	
 	public static Enumeration listDevices(boolean reload) {
 		if (reload || props==null) load();
@@ -58,4 +59,12 @@ public class Devices  {
 		}
 	}
 
+	public static void waitForReboot() throws Exception {
+		waitforreboot=true;
+		while (waitforreboot) Thread.sleep(1000);
+	}
+	
+	public static void stopWaitForReboot() {
+		waitforreboot=false;
+	}
 }
