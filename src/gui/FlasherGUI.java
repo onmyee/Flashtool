@@ -71,7 +71,6 @@ public class FlasherGUI extends JFrame {
 	/**
 	 * 
 	 */
-	public static boolean waitforreboot = false;
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -1259,7 +1258,7 @@ public class FlasherGUI extends JFrame {
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
 		}
-    	if (waitforreboot) waitforreboot=false;
+    	Devices.stopWaitForReboot();
     	addPlugins();
 	}
 
