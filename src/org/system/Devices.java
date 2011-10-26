@@ -39,6 +39,7 @@ public class Devices  {
 		if (props==null) props=new Properties();
 		else props.clear();
 		File[] list = (new File("./devices")).listFiles();
+		if (list==null) return;
 		for (int i=0;i<list.length;i++) {
 			if (list[i].isDirectory()) {
 				Properties p = new Properties();
