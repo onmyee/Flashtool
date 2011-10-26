@@ -558,7 +558,7 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("max(33dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,},
+				ColumnSpec.decode("max(75dlu;default)"),},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
@@ -687,11 +687,11 @@ public class FlasherGUI extends JFrame {
 				MyLogger.writeFile();
 			}
 		});
-		contentPane.add(btnSaveLog, "18, 10, right, default");
+		contentPane.add(btnSaveLog, "22, 10, right, default");
 		
 		JProgressBar progressBar = new JProgressBar();
 		MyLogger.registerProgressBar(progressBar);
-		contentPane.add(progressBar, "2, 12, 17, 1");
+		contentPane.add(progressBar, "2, 12, 21, 1");
 		setLanguage();
 		mntmInstallBusybox.setEnabled(false);
 		mntmBuildpropEditor.setEnabled(false);
@@ -1237,6 +1237,7 @@ public class FlasherGUI extends JFrame {
         	}
         	if (!found) {
         		MyLogger.error("Cannot identify your device.");
+        		if (Devices.listDevices(false).hasMoreElements()) {
         		MyLogger.info("Selecting from user input");
         		deviceSelectGui devsel = new deviceSelectGui(null);
         		String dev = devsel.getDevice();
@@ -1244,7 +1245,8 @@ public class FlasherGUI extends JFrame {
         			found = true;
         			Devices.setCurrent(dev);
         			MyLogger.info("Connected device : " + Devices.getCurrent().getId());
-        		}        		
+        		}
+        		}
         	}
     	if (found) {
     		MyLogger.info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
@@ -1260,9 +1262,9 @@ public class FlasherGUI extends JFrame {
     		btnAskRootPerms.setEnabled(!Devices.getCurrent().hasRoot());
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
-		}
-    	Devices.stopWaitForReboot();
-    	addPlugins();
+        	Devices.stopWaitForReboot();
+        	addPlugins();
+    	}
 	}
 
     public static void doGiveRoot() {
