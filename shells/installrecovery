@@ -18,9 +18,7 @@ rm -r /system/recovery/$RVER
 (cd /system/recovery;tar xf DEVICEWORKDIR/recovery.tar)
 
 rm -r DEVICEWORKDIR/recovery.tar
-cp DEVICEWORKDIR/model /system/recovery/model
 
 chmod 444 /system/recovery/model
 
 rm -r DEVICEWORKDIR/*tar*
-rm -r DEVICEWORKDIR/model

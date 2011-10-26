@@ -53,6 +53,7 @@
     	<copy file="./src/org/adb/config/x10list.properties" todir="../Deploy/FlashTool/custom/clean"/>
     	<copy file="./src/org/adb/config/customlist.properties" todir="../Deploy/FlashTool/custom/clean"/>
     	<copy file="./romupdates/psneuter.tar" todir="../Deploy/FlashTool/custom/root"/>
+    	<copy file="./romupdates/zergrush.tar" todir="../Deploy/FlashTool/custom/root"/>
     	<copy file="./src/flashsystem/ressources/bundletranslate.properties" todir="../Deploy/FlashTool/x10flasher_lib"/>
         <copy file="./win32/X10FlashTool.exe" todir="../Deploy/FlashTool"/>
         <copy file="./linux/X10FlashTool" todir="../Deploy/FlashTool"/>
