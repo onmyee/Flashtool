@@ -65,6 +65,8 @@ import java.awt.SystemColor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import javax.swing.JToolBar;
+import javax.swing.ImageIcon;
 
 public class FlasherGUI extends JFrame {
 
@@ -83,7 +85,6 @@ public class FlasherGUI extends JFrame {
 	private static JButton btnAskRootPerms;
 	private static JButton btnCleanroot;
 	private static JButton custBtn;
-	private static JButton btnOptimize;
 	private static JButton btnXrecovery;
 	private static JButton btnKernel;
 	private static JMenuItem mntmInstallBusybox;
@@ -101,7 +102,7 @@ public class FlasherGUI extends JFrame {
 	private static JMenuItem mntmRebootDefaultKernel;
 	
 	private static JMenuItem mntmRootPsneuter;
-	private static JMenuItem mntmRootGingerbreak;
+	private static JMenuItem mntmRootzergRush;
 	//private static JMenuItem mntmCleanUninstalled;
 	//private static JMenuItem mntmRecoveryControler;
 	private static JMenuItem mntmBackupSystemApps;
@@ -247,15 +248,15 @@ public class FlasherGUI extends JFrame {
 			}
 		});
 
-		mntmRootGingerbreak = new JMenuItem("Force gingerbreak");
-		mntmRootGingerbreak.addActionListener(new ActionListener() {
+		mntmRootzergRush = new JMenuItem("Force zergRush");
+		mntmRootzergRush.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				doRootgingerbreak();
+				doRootzergRush();
 			}
 		});
 
 		mnRoot.add(mntmRootPsneuter);
-		mnRoot.add(mntmRootGingerbreak);
+		mnRoot.add(mntmRootzergRush);
 		
 		JMenu mnClean = new JMenu("Clean");
 		mnClean.setName("mnClean");
@@ -553,8 +554,14 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("default:grow"),},
+				ColumnSpec.decode("max(290dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				ColumnSpec.decode("max(33dlu;default):grow"),
+				FormFactory.RELATED_GAP_COLSPEC,
+				FormFactory.DEFAULT_COLSPEC,},
 			new RowSpec[] {
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
@@ -566,17 +573,85 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));						
 		
-		JButton btnDonate = new JButton("Donate");
-		btnDonate.setName("btnDonate");
-		btnDonate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				doConnectPaypal();
-			}
-		});
+		JToolBar toolBar = new JToolBar();
+		toolBar.setFloatable(false);
+		contentPane.add(toolBar, "2, 2, 17, 1");
 
-		flashBtn = new JButton("Flash");
-		flashBtn.setName("flashBtn");
-		contentPane.add(flashBtn, "2, 2");
+		flashBtn = new JButton("");
+		flashBtn.setToolTipText("Flash");
+		flashBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/lighting_icon&32.png")));
+		toolBar.add(flashBtn);
+		
+				btnRoot = new JButton("");
+				btnRoot.setToolTipText("Root");
+				btnRoot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/lock_open_icon&32.png")));
+				toolBar.add(btnRoot);
+				btnRoot.setEnabled(false);
+				
+						btnAskRootPerms = new JButton("");
+						btnAskRootPerms.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/key_icon&32.png")));
+						btnAskRootPerms.setToolTipText("Ask Root Perms");
+						toolBar.add(btnAskRootPerms);
+						btnAskRootPerms.setBackground(SystemColor.control);
+						btnAskRootPerms.setEnabled(false);
+						
+								btnCleanroot = new JButton("");
+								btnCleanroot.setToolTipText("Clean (Root Needed)");
+								btnCleanroot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/trash_icon&32.png")));
+								toolBar.add(btnCleanroot);
+								
+										btnCleanroot.addActionListener(new ActionListener() {
+											public void actionPerformed(ActionEvent arg0) {
+												doCleanRoot();
+											}
+										});
+										btnCleanroot.setEnabled(false);
+										custBtn = new JButton("");
+										custBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/redo_icon&32.png")));
+										custBtn.setToolTipText("APK Installer");
+										toolBar.add(custBtn);
+										custBtn.setEnabled(false);
+														
+														btnXrecovery = new JButton("");
+														btnXrecovery.setToolTipText("Recovery Installer");
+														btnXrecovery.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/sq_plus_icon&32.png")));
+														toolBar.add(btnXrecovery);
+														btnXrecovery.addActionListener(new ActionListener() {
+															public void actionPerformed(ActionEvent e) {
+																doInstallCustKit();
+																doInstallXRecovery();
+															}
+														});
+														btnXrecovery.setEnabled(false);
+														
+														btnKernel = new JButton("");
+														btnKernel.setToolTipText("Kernel Installer");
+														btnKernel.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/wrench_icon&32.png")));
+														toolBar.add(btnKernel);
+														btnKernel.addActionListener(new ActionListener() {
+															public void actionPerformed(ActionEvent e) {
+																doInstallCustKit();
+																doInstallKernel();
+															}
+														});
+														btnKernel.setEnabled(false);
+										
+												custBtn.addActionListener(new ActionListener() {
+													public void actionPerformed(ActionEvent arg0) {
+														doCustomize();
+													}
+												});
+						btnAskRootPerms.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								doAskRoot();
+							}
+						});
+				
+						btnRoot.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent arg0) {
+								doRoot();
+							}
+						});
 		flashBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -585,84 +660,23 @@ public class FlasherGUI extends JFrame {
 				catch (Exception eflash) {}
 			}
 		});
-
-		btnRoot = new JButton("Root");
-		btnRoot.setName("btnRoot");
-		btnRoot.setEnabled(false);
-		contentPane.add(btnRoot, "4, 2");
-
-		btnRoot.addActionListener(new ActionListener() {
+		
+		JToolBar toolBar_1 = new JToolBar();
+		contentPane.add(toolBar_1, "22, 2");
+		
+		JButton btnDonate = new JButton("");
+		toolBar_1.add(btnDonate);
+		btnDonate.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/paypal_icon.png")));
+		btnDonate.setToolTipText("Donate");
+		//btnDonate.setName("btnDonate");
+		btnDonate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				doRoot();
+				doConnectPaypal();
 			}
 		});
-
-		btnAskRootPerms = new JButton("Ask Root Perms");
-		btnAskRootPerms.setName("btnAskRootPerms");
-		btnAskRootPerms.setBackground(SystemColor.control);
-		btnAskRootPerms.setEnabled(false);
-		btnAskRootPerms.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				doAskRoot();
-			}
-		});
-		contentPane.add(btnAskRootPerms, "6, 2");
-
-		btnCleanroot = new JButton("Clean (Root Needed)");
-				btnCleanroot.setName("btnCleanroot");
-				contentPane.add(btnCleanroot, "8, 2");
-				
-						btnCleanroot.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								doCleanRoot();
-							}
-						});
-						btnCleanroot.setEnabled(false);
-				custBtn = new JButton("Customize");
-				custBtn.setName("custBtn");
-				custBtn.setEnabled(false);
-				contentPane.add(custBtn, "10, 2");
-				
-						custBtn.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								doCustomize();
-							}
-						});
-		
-				btnOptimize = new JButton("Optimize");
-				btnOptimize.setName("btnOptimize");
-				contentPane.add(btnOptimize, "12, 2");
-				
-						btnOptimize.addActionListener(new ActionListener() {
-							public void actionPerformed(ActionEvent arg0) {
-								doOptimize();
-							}
-						});
-						btnOptimize.setEnabled(false);
-		
-		btnXrecovery = new JButton("xRecovery");
-		btnXrecovery.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				doInstallCustKit();
-				doInstallXRecovery();
-			}
-		});
-		btnXrecovery.setEnabled(false);
-		contentPane.add(btnXrecovery, "14, 2");
-		
-		btnKernel = new JButton("Kernel");
-		btnKernel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				doInstallCustKit();
-				doInstallKernel();
-			}
-		});
-		btnKernel.setEnabled(false);
-		contentPane.add(btnKernel, "16, 2");
-		contentPane.add(btnDonate, "18, 2, right, default");
 		
 		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, "2, 6, 17, 1, fill, fill");
+		contentPane.add(scrollPane, "2, 8, 21, 1, fill, fill");
 		
 		scrollPane.setViewportView(textArea);
 		
@@ -673,11 +687,11 @@ public class FlasherGUI extends JFrame {
 				MyLogger.writeFile();
 			}
 		});
-		contentPane.add(btnSaveLog, "18, 8, right, default");
+		contentPane.add(btnSaveLog, "18, 10, right, default");
 		
 		JProgressBar progressBar = new JProgressBar();
 		MyLogger.registerProgressBar(progressBar);
-		contentPane.add(progressBar, "2, 10, 17, 1");
+		contentPane.add(progressBar, "2, 12, 17, 1");
 		setLanguage();
 		mntmInstallBusybox.setEnabled(false);
 		mntmBuildpropEditor.setEnabled(false);
@@ -815,13 +829,34 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public void doRoot() {
-		if (Devices.getCurrent().getVersion().contains("2.3")) doRootgingerbreak();
+		if (Devices.getCurrent().getVersion().contains("2.3")) doRootzergRush();
 		else 
 			doRootpsneuter();
 	}
 	
-	public void doRootgingerbreak() {
-		MyLogger.warn("Not yet implemented");
+	public void doRootzergRush() {
+		Worker.post(new Job() {
+			public Object run() {
+				try {
+					AdbUtility.push(Devices.getCurrent().getBusybox(false), GlobalConfig.getProperty("deviceworkdir")+"/busybox");
+					Shell shell = new Shell("busyhelper");
+					shell.run(true);
+					AdbUtility.push("."+fsep+"custom"+fsep+"root"+fsep+"zergrush.tar",GlobalConfig.getProperty("deviceworkdir"));
+					shell = new Shell("rootit");
+					MyLogger.info("Running part1 of Root Exploit, please wait");
+					shell.run(true);
+					Thread.sleep(10000);
+					MyLogger.info("Running part2 of Root Exploit");
+					shell = new Shell("rootit2");
+					shell.run(false);
+					MyLogger.info("Finished!.");
+					MyLogger.info("Root should be available after reboot!");		
+				}
+				catch (Exception e) {
+					MyLogger.error(e.getMessage());}
+				return null;
+			}
+		});
 	}
 	
 	public void doRootpsneuter() {
@@ -866,31 +901,6 @@ public class FlasherGUI extends JFrame {
 						}
 						else MyLogger.info("APK Installation canceled");
 					}
-				catch (Exception e) {}
-				return null;
-			}
-		});
-	}
-	
-	public void doOptimize() {
-		Worker.post(new Job() {
-			public Object run() {
-			try {
-						Devices.getCurrent().doBusyboxHelper();
-						if (AdbUtility.Sysremountrw()) {
-							AdbUtility.pull("/system/build.prop", Devices.getCurrent().getWorkDir()+fsep+".");
-							CommentedPropertiesFile build = new CommentedPropertiesFile();
-							build.load(new File(Devices.getCurrent().getWorkDir()+fsep+"build.prop"));
-							build.updateWith(new File(Devices.getCurrent().getBuildMerge()));
-							build.store(new FileOutputStream(new File(Devices.getCurrent().getWorkDir()+fsep+"buildnew.prop")), "");
-							AdbUtility.push(Devices.getCurrent().getOptimize(),GlobalConfig.getProperty("deviceworkdir")+"/optimize.tar");
-							AdbUtility.push(Devices.getCurrent().getWorkDir()+fsep+"buildnew.prop",GlobalConfig.getProperty("deviceworkdir")+"/build.prop");
-							Shell shell = new Shell("optimize");
-							shell.runRoot();
-							MyLogger.info("Optimize finished. Rebooting phone ...");
-						}
-						else MyLogger.info("Error mounting /system rw");
-				}
 				catch (Exception e) {}
 				return null;
 			}
@@ -1085,20 +1095,14 @@ public class FlasherGUI extends JFrame {
 						MyLogger.info("Installing xRecovery to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
-						TextFile model = new TextFile(Devices.getCurrent().getWorkDir()+fsep+"model","ISO-8859-1");
-						model.open(false);
-						model.write(Devices.getCurrent().getId());
-						model.close();
 						RecoverySelectGUI sel = new RecoverySelectGUI(Devices.getCurrent().getId());
 						String selVersion = sel.getVersion();
 						if (selVersion.length()>0) {
 							AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
-							AdbUtility.push(Devices.getCurrent().getWorkDir()+fsep+"model",GlobalConfig.getProperty("deviceworkdir")+"/model");
 							Shell shell = new Shell("installrecovery");
 							shell.runRoot();
 							MyLogger.info("xRecovery successfully installed");
 						}
-						model.delete();
 						}
 						else MyLogger.error("Error mounting /system rw");
 					}
@@ -1193,10 +1197,9 @@ public class FlasherGUI extends JFrame {
 
     public static void doDisableIdent() {
 		btnCleanroot.setEnabled(false);
-		btnOptimize.setEnabled(false);
 		mntmInstallBusybox.setEnabled(false);
 		mntmClearCache.setEnabled(false);
-		mntmRootGingerbreak.setEnabled(false);
+		mntmRootzergRush.setEnabled(false);
 		mntmRootPsneuter.setEnabled(false);
 		mntmBuildpropEditor.setEnabled(false);
 		mntmBuildpropRebrand.setEnabled(false);
@@ -1249,7 +1252,7 @@ public class FlasherGUI extends JFrame {
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
     		if (Devices.getCurrent().isRecovery()) MyLogger.info("Phone in recovery mode");
     		btnRoot.setEnabled(true);
-    		mntmRootGingerbreak.setEnabled(true);
+    		mntmRootzergRush.setEnabled(true);
     		mntmRootPsneuter.setEnabled(true);
     		if (Devices.getCurrent().getVersion().startsWith("2.3") && !Devices.getCurrent().getKernelVersion().contains("2.6.32"))
     			btnRoot.setEnabled(false);
@@ -1264,7 +1267,6 @@ public class FlasherGUI extends JFrame {
 
     public static void doGiveRoot() {
 		btnCleanroot.setEnabled(true);
-		btnOptimize.setEnabled(Devices.getCurrent().getVersion().startsWith("2.1"));
 		mntmInstallBusybox.setEnabled(true);
 		mntmClearCache.setEnabled(true);
 		mntmBuildpropEditor.setEnabled(true);

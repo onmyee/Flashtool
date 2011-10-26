@@ -1,4 +1,14 @@
 export PATH=DEVICEWORKDIR:$PATH
 chmod 755 DEVICEWORKDIR/busybox
-(cd DEVICEWORKDIR;busybox tar xpf psneuter.tar;chmod 755 psneuter)
-DEVICEWORKDIR/psneuter
+
+if [ -e DEVICEWORKDIR/psneuter.tar ]
+then
+	(cd DEVICEWORKDIR;busybox tar xpf psneuter.tar;chmod 755 psneuter)
+	DEVICEWORKDIR/psneuter
+fi
+
+if [ -e DEVICEWORKDIR/zergrush.tar ]
+then
+	(cd DEVICEWORKDIR;busybox tar xpf zergrush.tar;chmod 755 zergRush)
+	DEVICEWORKDIR/zergRush
+fi

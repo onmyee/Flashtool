@@ -110,60 +110,6 @@ fi
 
 if busybox test $RCU -eq 0
 then
-	echo "#!/system/bin/sh" > /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	echo >> /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	echo "#SD Card Tweak" >> /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	echo "echo 2048 > /sys/devices/virtual/bdi/179:0/read_ahead_kb" >> /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	echo "echo 2048 > /sys/devices/virtual/bdi/default/read_ahead_kb" >> /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	chmod 04755 /system/etc/install-recovery.sh
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
 	/system/xbin/busybox --install -s /system/xbin
 	export RCU=$?
 else

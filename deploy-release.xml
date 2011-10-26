@@ -34,7 +34,7 @@
     	<jar destfile="../Deploy/FlashTool/x10flasher.jar">
             <manifest>
                 <attribute name="Main-Class" value="gui.FlasherGUI"/>
-                <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.3.0.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar"/>
+                <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.4.2.jar x10flasher_lib/jgoodies-common-1.2.1.jar x10flasher_lib/win32-amd64.jar x10flasher_lib/win32-x86.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar"/>
             </manifest>
             <fileset dir="./bin"/>
         </jar>
@@ -53,6 +53,7 @@
     	<copy file="./src/org/adb/config/x10list.properties" todir="../Deploy/FlashTool/custom/clean"/>
     	<copy file="./src/org/adb/config/customlist.properties" todir="../Deploy/FlashTool/custom/clean"/>
     	<copy file="./romupdates/psneuter.tar" todir="../Deploy/FlashTool/custom/root"/>
+    	<copy file="./romupdates/zergrush.tar" todir="../Deploy/FlashTool/custom/root"/>
     	<copy file="./src/flashsystem/ressources/bundletranslate.properties" todir="../Deploy/FlashTool/x10flasher_lib"/>
         <copy file="./win32/X10FlashTool.exe" todir="../Deploy/FlashTool"/>
         <copy file="./linux/X10FlashTool" todir="../Deploy/FlashTool"/>
