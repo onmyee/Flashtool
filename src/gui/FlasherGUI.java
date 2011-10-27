@@ -579,17 +579,17 @@ public class FlasherGUI extends JFrame {
 
 		flashBtn = new JButton("");
 		flashBtn.setToolTipText("Flash");
-		flashBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/lighting_icon&32.png")));
+		flashBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/flash_32.png")));
 		toolBar.add(flashBtn);
 		
 				btnRoot = new JButton("");
 				btnRoot.setToolTipText("Root");
-				btnRoot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/lock_open_icon&32.png")));
+				btnRoot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/root_32.png")));
 				toolBar.add(btnRoot);
 				btnRoot.setEnabled(false);
 				
 						btnAskRootPerms = new JButton("");
-						btnAskRootPerms.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/key_icon&32.png")));
+						btnAskRootPerms.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/askroot_32.png")));
 						btnAskRootPerms.setToolTipText("Ask Root Perms");
 						toolBar.add(btnAskRootPerms);
 						btnAskRootPerms.setBackground(SystemColor.control);
@@ -597,7 +597,7 @@ public class FlasherGUI extends JFrame {
 						
 								btnCleanroot = new JButton("");
 								btnCleanroot.setToolTipText("Clean (Root Needed)");
-								btnCleanroot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/trash_icon&32.png")));
+								btnCleanroot.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/clean_32.png")));
 								toolBar.add(btnCleanroot);
 								
 										btnCleanroot.addActionListener(new ActionListener() {
@@ -607,14 +607,14 @@ public class FlasherGUI extends JFrame {
 										});
 										btnCleanroot.setEnabled(false);
 										custBtn = new JButton("");
-										custBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/redo_icon&32.png")));
+										custBtn.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/customize_32.png")));
 										custBtn.setToolTipText("APK Installer");
 										toolBar.add(custBtn);
 										custBtn.setEnabled(false);
 														
 														btnXrecovery = new JButton("");
 														btnXrecovery.setToolTipText("Recovery Installer");
-														btnXrecovery.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/sq_plus_icon&32.png")));
+														btnXrecovery.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/recovery_32.png")));
 														toolBar.add(btnXrecovery);
 														btnXrecovery.addActionListener(new ActionListener() {
 															public void actionPerformed(ActionEvent e) {
@@ -626,7 +626,7 @@ public class FlasherGUI extends JFrame {
 														
 														btnKernel = new JButton("");
 														btnKernel.setToolTipText("Kernel Installer");
-														btnKernel.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/wrench_icon&32.png")));
+														btnKernel.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/kernel_32.png")));
 														toolBar.add(btnKernel);
 														btnKernel.addActionListener(new ActionListener() {
 															public void actionPerformed(ActionEvent e) {
@@ -667,7 +667,7 @@ public class FlasherGUI extends JFrame {
 		
 		JButton btnDonate = new JButton("");
 		toolBar_1.add(btnDonate);
-		btnDonate.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/paypal_icon.png")));
+		btnDonate.setIcon(new ImageIcon(FlasherGUI.class.getResource("/gui/ressources/icons/paypal.png")));
 		btnDonate.setToolTipText("Donate");
 		//btnDonate.setName("btnDonate");
 		btnDonate.addActionListener(new ActionListener() {

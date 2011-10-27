@@ -34,11 +34,14 @@
     	<jar destfile="../Deploy/FlashTool/x10flasher.jar">
             <manifest>
                 <attribute name="Main-Class" value="gui.FlasherGUI"/>
-                <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.4.2.jar x10flasher_lib/jgoodies-common-1.2.1.jar x10flasher_lib/win32-amd64.jar x10flasher_lib/win32-x86.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar"/>
+                <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.4.2.jar x10flasher_lib/jgoodies-common-1.2.1.jar x10flasher_lib/win32-amd64.jar x10flasher_lib/win32-x86.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar x10flasher_lib/x10flasher-res.jar"/>
             </manifest>
-            <fileset dir="./bin"/>
+            <fileset dir="./bin" excludes="/gui/ressources/icons/**"/>
         </jar>
-		<copy todir="../Deploy/FlashTool/custom/apps_saved">
+        	<jar destfile="../Deploy/FlashTool/x10flasher_lib/x10flasher-res.jar">
+                <fileset dir="./bin" includes="/gui/ressources/icons/**"/>
+            </jar>
+    	<copy todir="../Deploy/FlashTool/custom/apps_saved">
 			<fileset dir="./apk"
 				excludes="**/.svn"/>
 		</copy>
@@ -57,15 +60,14 @@
     	<copy file="./src/flashsystem/ressources/bundletranslate.properties" todir="../Deploy/FlashTool/x10flasher_lib"/>
         <copy file="./win32/X10FlashTool.exe" todir="../Deploy/FlashTool"/>
         <copy file="./linux/X10FlashTool" todir="../Deploy/FlashTool"/>
-    	<chmod file="../Deploy/FlashTool/X10FlashTool" perm="755"/>
+    	<chmod file="../Deploy/FlashTool/XperiaFlashTool" perm="755"/>
         <copy file="./linux/adb" todir="../Deploy/FlashTool/x10flasher_lib"/>
     	<copy todir="../Deploy/FlashTool/x10flasher_lib">
     		<fileset dir="./libs"
 				excludes="**/.svn"/>
     	</copy>
     	<copy todir="../Deploy/FlashTool/x10flasher_lib">
-    		<fileset dir="./win32"
-				excludes="**/.svn"/>
+    		<fileset dir="./win32"/>
     	</copy>
         <copy todir="../Deploy/FlashTool/x10flasher_lib">
         	<fileset dir="./win32"
