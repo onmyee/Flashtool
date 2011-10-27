@@ -106,7 +106,7 @@ public class AdbUtility  {
 	
 	public static boolean isMounted(String mountpoint) throws Exception {
 		boolean result = false;
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"mount|grep "+mountpoint+"\"");
+		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"mount\"");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
@@ -118,6 +118,20 @@ public class AdbUtility  {
 		return result;
 	}
 	
+	public static boolean hasSU() throws Exception {
+		boolean result = true;
+		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"ls /system/bin/su\"");
+		command.run();
+		Scanner sc = new Scanner(command.getStdOut());
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			if (line.contains("No such")) {
+				result = false;
+			}
+		}
+		return result;	
+	}
+
 	public static String getProperty(String key) {
 		try {
 			boolean systemmounted = isMounted("/system");

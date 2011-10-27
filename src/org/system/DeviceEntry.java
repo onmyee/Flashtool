@@ -35,7 +35,16 @@ public class DeviceEntry {
 	public boolean isRecovery() {
 		return isRecoveryMode;
 	}
-	
+
+	public boolean hasSU() {
+		try {
+		return AdbUtility.hasSU();
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+
 	public void rebootSelectedRecovery() throws Exception {
 		RecoveryBootSelectGUI rsel = new RecoveryBootSelectGUI();
 		rsel.setTitle("Recovery selector");

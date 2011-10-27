@@ -1,28 +1,15 @@
 export PATH=DEVICEWORKDIR:$PATH
 
-echo "Cleaning rootit files 1/2"
+echo "Cleaning rootit files"
 busybox rm -f DEVICEWORKDIR/rootit
+busybox rm -f DEVICEWORKDIR/psneuter
+busybox rm -f DEVICEWORKDIR/zergRush
+busybox rm -f DEVICEWORKDIR/sh
+busybox rm -f DEVICEWORKDIR/boomsh
+
+echo "Mounting /system R/W"
+busybox mount -o remount,rw yaffs2 /system >/dev/null 2>&1
 export RCU=$?
-
-if busybox test $RCU -eq 0
-then
-	echo "Cleaning rootit files 2/2"
-	busybox rm -f DEVICEWORKDIR/psneuter
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
-
-if busybox test $RCU -eq 0
-then
-	echo "Mounting /system R/W"
-	mount -o remount,rw yaffs2 /system >/dev/null 2>&1
-	export RCU=$?
-else
-	echo FTError $RES
-	exit 31
-fi
 
 if busybox test $RCU -eq 0
 then
@@ -117,4 +104,7 @@ else
 	exit 31
 fi
 
-rm -r DEVICEWORKDIR/*
+busybox rm -f DEVICEWORKDIR/su
+busybox rm -f DEVICEWORKDIR/busybox
+busybox rm -f DEVICEWORKDIR/Superuser.apk
+busybox rm -f DEVICEWORKDIR/rootit2

@@ -845,7 +845,7 @@ public class FlasherGUI extends JFrame {
 					shell = new Shell("rootit");
 					MyLogger.info("Running part1 of Root Exploit, please wait");
 					shell.run(true);
-					Thread.sleep(10000);
+					Devices.waitForReboot();
 					MyLogger.info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);
@@ -870,7 +870,7 @@ public class FlasherGUI extends JFrame {
 					shell = new Shell("rootit");
 					MyLogger.info("Running part1 of Root Exploit, please wait");
 					shell.run(false);
-					Thread.sleep(10000);
+					Devices.waitForReboot();
 					MyLogger.info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);
@@ -1253,13 +1253,12 @@ public class FlasherGUI extends JFrame {
     		MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
     		if (Devices.getCurrent().isRecovery()) MyLogger.info("Phone in recovery mode");
-    		btnRoot.setEnabled(true);
+    		if (!Devices.getCurrent().isRecovery())
+    			btnRoot.setEnabled(!Devices.getCurrent().hasSU());
     		mntmRootzergRush.setEnabled(true);
     		mntmRootPsneuter.setEnabled(true);
-    		if (Devices.getCurrent().getVersion().startsWith("2.3") && !Devices.getCurrent().getKernelVersion().contains("2.6.32"))
-    			btnRoot.setEnabled(false);
     		flashBtn.setEnabled(Devices.getCurrent().canFlash());
-    		btnAskRootPerms.setEnabled(!Devices.getCurrent().hasRoot());
+    		btnAskRootPerms.setEnabled((!Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU()));
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
         	Devices.stopWaitForReboot();

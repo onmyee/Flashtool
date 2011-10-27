@@ -61,6 +61,7 @@ public class Devices  {
 	}
 
 	public static void waitForReboot() throws Exception {
+		MyLogger.info("Waiting for device");
 		waitforreboot=true;
 		while (waitforreboot) Thread.sleep(1000);
 	}
