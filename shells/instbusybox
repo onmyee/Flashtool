@@ -1,6 +1,6 @@
 export PATH=DEVICEWORKDIR:$PATH
 
-mount -o remount,rw yaffs2 /system
+busybox mount -o remount,rw yaffs2 /system
 
 chmod 755 DEVICEWORKDIR/busybox
 

@@ -122,29 +122,35 @@ public class KernelBootSelectGUI extends JDialog {
 		return result;
 	}
 
-	private void kernlist() throws Exception{
+	private void kernlist() {
 		boolean hasElements = false;
+		result = "";
 		modelVersion = new DefaultTableModel();
 		modelVersion.addColumn("Version");
 		table.setModel(modelVersion);
+		try {
 		HashSet<String> set = AdbUtility.listKernels();
 		Iterator<String> i = set.iterator();
 		
 		while (i.hasNext()) {
 			String kernel = i.next();
+			System.out.println("k:"+kernel);
 			hasElements=true;
 			modelVersion.addRow(new String[]{kernel});
 			MyLogger.debug("Adding "+kernel+" to list of kernel versions");			
-		}	
-	    if (!hasElements) {
-	    	okButton.setEnabled(false);
-	    	result="";
-	    }
-	    else {
+		}
+		
+	    if (hasElements) {
 	    	table.setRowSelectionInterval(0, 0);
 	    	result=(String)modelVersion.getValueAt(table.getSelectedRow(), 0);
 	    	okButton.setEnabled(true);
 	    }
+	    
+	    okButton.setEnabled(hasElements);
+		}
+		catch (Exception e) {
+			okButton.setEnabled(false);
+		}
 	}
 
 }

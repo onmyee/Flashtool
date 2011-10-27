@@ -380,6 +380,16 @@ public class AdbUtility  {
 		command.run();
 	}
 
+	public static boolean isConnected() {
+		try {
+			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"echo toto\"");
+			command.run();
+			return (command.getStdOut().contains("toto"));
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
 /*	public static boolean isConnected() {
 		try {
 			MyLogger.info("Searching Adb Device");

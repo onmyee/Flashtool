@@ -185,9 +185,9 @@ public class firmSelect extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(127dlu;default):grow"),
+				ColumnSpec.decode("max(206dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("left:max(62dlu;default)"),
+				ColumnSpec.decode("left:max(100dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
 				ColumnSpec.decode("left:max(60dlu;default)"),},
 			new RowSpec[] {

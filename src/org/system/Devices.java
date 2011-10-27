@@ -1,5 +1,7 @@
 package org.system;
 
+import gui.FlasherGUI;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -63,7 +65,18 @@ public class Devices  {
 	public static void waitForReboot() throws Exception {
 		MyLogger.info("Waiting for device");
 		waitforreboot=true;
-		while (waitforreboot) Thread.sleep(1000);
+		float count=0;
+		while (waitforreboot) {
+			Thread.sleep(1000);
+			count++;
+			if (count/30==0) {
+				MyLogger.info("Not autodetected. Trying manually");
+				if (AdbUtility.isConnected()) {
+					MyLogger.info("Phone connected. Identifying it");
+					FlasherGUI.doIdent();
+				}
+			}
+		}
 	}
 	
 	public static void stopWaitForReboot() {

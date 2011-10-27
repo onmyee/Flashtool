@@ -662,6 +662,7 @@ public class FlasherGUI extends JFrame {
 		});
 		
 		JToolBar toolBar_1 = new JToolBar();
+		toolBar_1.setFloatable(false);
 		contentPane.add(toolBar_1, "22, 2");
 		
 		JButton btnDonate = new JButton("");
@@ -722,6 +723,11 @@ public class FlasherGUI extends JFrame {
 			else {
 				OsRun cmd = new OsRun("taskkill /F /T /IM adb*");
 				cmd.run();
+				try {
+					adbWatchdog.interrupt();
+					adbWatchdog.join();
+				} catch (Exception e) {}
+				
 			}
 		}
 		catch (Exception e) {}
