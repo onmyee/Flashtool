@@ -65,11 +65,12 @@ public class Devices  {
 	public static void waitForReboot() throws Exception {
 		MyLogger.info("Waiting for device");
 		waitforreboot=true;
-		float count=0;
+		int count=0;
 		while (waitforreboot) {
 			Thread.sleep(1000);
 			count++;
-			if (count/30==0) {
+			if (count==30) {
+				count=0;
 				MyLogger.info("Not autodetected. Trying manually");
 				if (AdbUtility.isConnected()) {
 					MyLogger.info("Phone connected. Identifying it");

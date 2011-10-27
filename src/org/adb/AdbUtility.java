@@ -113,8 +113,9 @@ public class AdbUtility  {
 		return result;
 	}
 	
-	public static boolean hasSU() throws Exception {
+	public static boolean hasSU() {
 		boolean result = true;
+		try {
 		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"ls /system/bin/su\"");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
@@ -123,6 +124,10 @@ public class AdbUtility  {
 			if (line.contains("No such")) {
 				result = false;
 			}
+		}
+		}
+		catch (Exception e) {
+			return false;
 		}
 		return result;	
 	}

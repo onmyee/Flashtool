@@ -1259,8 +1259,7 @@ public class FlasherGUI extends JFrame {
     		MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
     		if (Devices.getCurrent().isRecovery()) MyLogger.info("Phone in recovery mode");
-    		if (!Devices.getCurrent().isRecovery())
-    			btnRoot.setEnabled(!Devices.getCurrent().hasSU());
+    		else btnRoot.setEnabled(!Devices.getCurrent().hasSU());
     		mntmRootzergRush.setEnabled(true);
     		mntmRootPsneuter.setEnabled(true);
     		flashBtn.setEnabled(Devices.getCurrent().canFlash());
