@@ -261,7 +261,7 @@ public class BundleGUI extends JDialog {
 								JOptionPane.showMessageDialog(null, "You already used this device/version/branding for another bundle");
 							else {
 								if (listFirmwareModel.getSize()==1) {
-									String md5 = OS.getMD5(new File(folderSource.getText()+OS.getFileSeparator()+(String)listFirmwareModel.getElementAt(0)));
+									String md5 = OS.getMD5(new File(folderSource.getText()+OS.getFileSeparator()+(String)listFirmwareModel.getElementAt(0))).toUpperCase();
 									Enumeration e = Devices.listDevices(false);
 									boolean found = false;
 									while (e.hasMoreElements() && !found) {

@@ -71,15 +71,16 @@ public class Devices  {
 			count++;
 			if (count==30) {
 				count=0;
-				MyLogger.info("Not autodetected. Trying manually");
+				MyLogger.debug("Not autodetected. Trying manually");
 				if (AdbUtility.isConnected()) {
-					MyLogger.info("Phone connected. Identifying it");
+					MyLogger.debug("Phone connected. Identifying it");
 					FlasherGUI.doIdent();
+					MyLogger.debug("End of identification");
 				}
 			}
 		}
 	}
-	
+
 	public static void stopWaitForReboot() {
 		waitforreboot=false;
 	}

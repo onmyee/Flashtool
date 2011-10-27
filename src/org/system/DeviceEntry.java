@@ -107,11 +107,11 @@ public class DeviceEntry {
 	}
 	
 	public String getLoaderMD5() {
-		return _entry.getProperty("loader");
+		return _entry.getProperty("loader").toUpperCase();
 	}
 
 	public String getLoaderUnlockedMD5() {
-		return _entry.getProperty("loader_unlocked");
+		return _entry.getProperty("loader_unlocked").toUpperCase();
 	}
 
 	public boolean hasUnlockedLoader() {

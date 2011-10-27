@@ -19,6 +19,9 @@ rm -r /system/recovery/$RVER
 
 rm -r DEVICEWORKDIR/recovery.tar
 
-chmod 444 /system/recovery/model
-
 rm -r DEVICEWORKDIR/*tar*
+
+if [ ! -e /system/recovery/default ]
+then
+	cp /system/recovery/$RVER/recovery.desc /system/recovery/default
+fi

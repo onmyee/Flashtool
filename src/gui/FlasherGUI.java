@@ -1258,16 +1258,28 @@ public class FlasherGUI extends JFrame {
     		MyLogger.info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
     		MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
-    		if (Devices.getCurrent().isRecovery()) MyLogger.info("Phone in recovery mode");
-    		else btnRoot.setEnabled(!Devices.getCurrent().hasSU());
+			MyLogger.debug("Now setting buttons availability - btnRoot");
+    		if (Devices.getCurrent().isRecovery()) {
+    			MyLogger.info("Phone in recovery mode");
+    			btnRoot.setEnabled(false);
+    		}
+    		else
+    			btnRoot.setEnabled(!Devices.getCurrent().hasSU());
+    		MyLogger.debug("mtmRootzergRush menu");
     		mntmRootzergRush.setEnabled(true);
+    		MyLogger.debug("mtmRootPsneuter menu");
     		mntmRootPsneuter.setEnabled(true);
+    		MyLogger.debug("flashBtn button");
     		flashBtn.setEnabled(Devices.getCurrent().canFlash());
+    		MyLogger.debug("btnAskRootPerms button");
     		btnAskRootPerms.setEnabled((!Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU()));
+    		MyLogger.debug("custBtn button");
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
-        	Devices.stopWaitForReboot();
+        	MyLogger.debug("Now adding plugins");
         	addPlugins();
+    		MyLogger.debug("Stop waiting for device");
+        	Devices.stopWaitForReboot();
     	}
 	}
 
@@ -1392,21 +1404,25 @@ public class FlasherGUI extends JFrame {
     }
     
     public static void addPlugins() {
-    	mnPlugins.removeAll();
-    	File dir = new File("./devices/"+Devices.getCurrent().getId()+"/features");
-	    File[] chld = dir.listFiles();
-	    for(int i = 0; i < chld.length; i++){
-	    	if (chld[i].isDirectory()) {
-	    		try {
-	    			Properties p = new Properties();
-	    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
-	    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-	    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
-	    		}
-	    		catch (IOException ioe) {
-	    		}
-	    	}
-	    }
+    	try {
+	    	mnPlugins.removeAll();
+	    	File dir = new File("./devices/"+Devices.getCurrent().getId()+"/features");
+		    File[] chld = dir.listFiles();
+		    for(int i = 0; i < chld.length; i++){
+		    	if (chld[i].isDirectory()) {
+		    		try {
+		    			Properties p = new Properties();
+		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
+		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
+		    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
+		    		}
+		    		catch (IOException ioe) {
+		    		}
+		    	}
+		    }
+    	}
+    	catch (Exception e) {
+    	}
     }
     
     public static void registerPlugin(String classname,String workdir) {
