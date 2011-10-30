@@ -27,6 +27,7 @@ import org.adb.AdbUtility;
 //import org.apache.commons.io.IOUtils;
 import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
+import org.plugins.PluginActionListenerAbout;
 import org.plugins.PluginInterface;
 import org.system.AdbShell;
 import org.system.ClassPath;
@@ -75,6 +76,7 @@ public class FlasherGUI extends JFrame {
 	 */
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
+	private static boolean isidentrun = false;
 	private JPanel contentPane;
 	static JTextPane textArea = new JTextPane();
 	private Bundle bundle;
@@ -864,7 +866,7 @@ public class FlasherGUI extends JFrame {
 			}
 		});
 	}
-	
+
 	public void doRootpsneuter() {
 		Worker.post(new Job() {
 			public Object run() {
@@ -1226,6 +1228,8 @@ public class FlasherGUI extends JFrame {
         }
  
         public static void doIdent() {
+        	if (!isidentrun) {
+        		isidentrun=true;
         	Enumeration e = Devices.listDevices(true);
         	boolean found = false;
         	while (e.hasMoreElements() && !found) {
@@ -1237,26 +1241,32 @@ public class FlasherGUI extends JFrame {
         				dev = current.getId();
         				found = true;
         				Devices.setCurrent(current.getId());
-        				MyLogger.info("Connected device : " + Devices.getCurrent().getId());
+        				if (!Devices.isWaitingForReboot())
+        					MyLogger.info("Connected device : " + Devices.getCurrent().getId());
         			}
         		}
         	}
         	if (!found) {
         		MyLogger.error("Cannot identify your device.");
         		if (Devices.listDevices(false).hasMoreElements()) {
-        		MyLogger.info("Selecting from user input");
-        		deviceSelectGui devsel = new deviceSelectGui(null);
-        		String dev = devsel.getDevice();
-        		if (dev.length()>0) {
-        			found = true;
-        			Devices.setCurrent(dev);
-        			MyLogger.info("Connected device : " + Devices.getCurrent().getId());
+	        		MyLogger.info("Selecting from user input");
+	        		deviceSelectGui devsel = new deviceSelectGui(null);
+	        		String dev = devsel.getDevice();
+	        		if (dev.length()>0) {
+	        			found = true;
+	        			Devices.setCurrent(dev);
+	        			MyLogger.info("Connected device : " + Devices.getCurrent().getId());
+	        		}
         		}
+        		else {
+        			MyLogger.error("You can only flash devices.");
         		}
         	}
     	if (found) {
-    		MyLogger.info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
-    		MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
+    		if (!Devices.isWaitingForReboot()) {
+    			MyLogger.info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
+    			MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
+    		}
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
 			MyLogger.debug("Now setting buttons availability - btnRoot");
     		if (Devices.getCurrent().isRecovery()) {
@@ -1279,8 +1289,11 @@ public class FlasherGUI extends JFrame {
         	MyLogger.debug("Now adding plugins");
         	addPlugins();
     		MyLogger.debug("Stop waiting for device");
-        	Devices.stopWaitForReboot();
+    		if (Devices.isWaitingForReboot())
+    			Devices.stopWaitForReboot();
+        	isidentrun=false;
     	}
+        }
 	}
 
     public static void doGiveRoot() {
@@ -1301,7 +1314,8 @@ public class FlasherGUI extends JFrame {
 		mntmBackupSystemApps.setEnabled(true);
 		btnXrecovery.setEnabled(Devices.getCurrent().canRecovery());
 		btnKernel.setEnabled(Devices.getCurrent().canKernel());
-		MyLogger.info("Root Access Allowed");    	
+		if (!Devices.isWaitingForReboot())
+			MyLogger.info("Root Access Allowed");    	
     }
     
     public static void doAskRoot() {
@@ -1430,11 +1444,32 @@ public class FlasherGUI extends JFrame {
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
-            JMenuItem item = new JMenuItem(pluginObject.getName());
+            JMenu menu = new JMenu(pluginObject.getName());
+            JMenuItem item = new JMenuItem("run");
+            JMenuItem about = new JMenuItem("about");
+            boolean aenabled = false;
+            Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
+            String aversion = Devices.getCurrent().getVersion();
+            while (e1.hasMoreElements()) {
+            	String pversion = e1.nextElement();
+            	if (aversion.startsWith(pversion)) aenabled=true;
+            }
+            Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
+            String kversion = Devices.getCurrent().getKernelVersion();
+            boolean kenabled = false;
+            while (e2.hasMoreElements()) {
+            	String pversion = e2.nextElement();
+            	if (kversion.equals(pversion)) kenabled=true;
+            }
+            item.setEnabled(aenabled&&kenabled);
             pluginObject.setWorkdir(workdir);
             PluginActionListener p =  new PluginActionListener(pluginObject);
+            PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             item.addActionListener(p);
-            mnPlugins.add(item);
+            about.addActionListener(p1);
+            menu.add(item);
+            menu.add(about);
+            mnPlugins.add(menu);
 	    }
 	    catch (Exception e) {
 	    	MyLogger.error(e.getMessage());

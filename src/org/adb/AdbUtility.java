@@ -180,7 +180,7 @@ public class AdbUtility  {
 			String result=shell.runRoot(false);
 			while (result.contains("Segmentation fault")) {
 				Thread.sleep(10000);
-				result=shell.runRoot(true);
+				result=shell.runRoot(false);
 			}
 			rootperms=result.contains("uid=0(root)");
 			return rootperms;

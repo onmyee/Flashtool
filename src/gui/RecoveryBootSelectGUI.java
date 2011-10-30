@@ -53,7 +53,7 @@ public class RecoveryBootSelectGUI extends JDialog {
 		});
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
-		setTitle("Kernel Selector");
+		setTitle("Recovery Selector");
 		setBounds(100, 100, 200, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));

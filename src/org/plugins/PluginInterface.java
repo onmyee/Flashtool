@@ -7,6 +7,8 @@ public interface  PluginInterface {
 	public void setWorkdir(String workdir);
 	public String getName();
 	public void run() throws Exception;
-	public Enumeration getCompatibleVersions();
+	public Enumeration<String> getCompatibleAndroidVersions();
+	public Enumeration<String> getCompatibleKernelVersions();
+	public void showAbout();
 
 }

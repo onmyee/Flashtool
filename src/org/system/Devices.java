@@ -84,4 +84,8 @@ public class Devices  {
 	public static void stopWaitForReboot() {
 		waitforreboot=false;
 	}
+	
+	public static boolean isWaitingForReboot() {
+		return waitforreboot;
+	}
 }

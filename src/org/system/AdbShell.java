@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
+import org.adb.AdbUtility;
+
 public class AdbShell  {
    private ProcessBuilder builder;
    private Process adb;
@@ -28,7 +30,10 @@ public class AdbShell  {
       Scanner sc = new Scanner(processInput);
       while (sc.hasNextLine()) {
     	  String line = sc.nextLine();
-    	  if (line.contains("State: device")) FlasherGUI.doIdent();
+    	  if (line.contains("State: device")) {
+    		  while (!AdbUtility.isConnected()) { }
+    		  FlasherGUI.doIdent();
+    	  }
     	  else if (line.contains("State: unknown")) FlasherGUI.doDisableIdent();
       }
    }

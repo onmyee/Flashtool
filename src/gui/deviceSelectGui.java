@@ -7,6 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -31,6 +33,9 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Properties;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 
 
@@ -42,9 +47,10 @@ public class deviceSelectGui extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static String fsep = OS.getFileSeparator();
 	private final JPanel contentPanel = new JPanel();
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private String result="";
 	private Bundle _bundle;
+	private JTable tableDevices;
+	private DefaultTableModel modelDevices;
 
 	/**
 	 * Create the dialog.
@@ -55,32 +61,23 @@ public class deviceSelectGui extends JDialog {
 		setResizable(false);
 		setModal(true);
 		setTitle("Device Selection");
-		setBounds(100, 100, 183, 317);
+		setBounds(100, 100, 240, 322);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,},
+				ColumnSpec.decode("max(131dlu;default):grow"),},
 			new RowSpec[] {
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,
-				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+				RowSpec.decode("default:grow"),}));
+		{
+			JScrollPane scrollPane = new JScrollPane();
+			contentPanel.add(scrollPane, "1, 1, fill, fill");
+			{
+				tableDevices = new JTable();
+				tableDevices.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				scrollPane.setViewportView(tableDevices);
+			}
+		}
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -90,23 +87,17 @@ public class deviceSelectGui extends JDialog {
 		});
 		
     	Enumeration e = Devices.listDevices(false);
-    	int ligne = 4;
+    	modelDevices = new DefaultTableModel();
+    	modelDevices.addColumn("Id");
+    	modelDevices.addColumn("Name");
+    	tableDevices.setModel(modelDevices);
+    	tableDevices.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    	tableDevices.getColumn("Id").setPreferredWidth(50);
+    	tableDevices.getColumn("Name").setPreferredWidth(170);
     	while (e.hasMoreElements()) {
     		DeviceEntry entry = Devices.getDevice((String)e.nextElement());
-    		JRadioButton rdbtnDev = new JRadioButton(entry.getName());
-    		rdbtnDev.setName(entry.getId());
-    		if (ligne==4) {
-    			rdbtnDev.setSelected(true);
-    			result = entry.getId();
-    		}
-    		buttonGroup.add(rdbtnDev);
-    		contentPanel.add(rdbtnDev, "4, "+Integer.toString(ligne));
-    		ligne = ligne+2;
-    		rdbtnDev.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					result=((JRadioButton)e.getSource()).getName();
-				}
-			});
+    		modelDevices.addRow(new String[]{entry.getId(),entry.getName()});
+    		tableDevices.setRowSelectionInterval(0, 0);
     	}
 
 		{
@@ -117,6 +108,7 @@ public class deviceSelectGui extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						result=(String)modelDevices.getValueAt(tableDevices.getSelectedRow(), 0);
 						dispose();
 					}
 				});
