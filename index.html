@@ -96,7 +96,7 @@ and questions I get from people using Flashtool.
 	<div class="tab-page">
 		<h2 class="tab">Release Notes</h2>
 		<table border=0 cellpadding=0 cellspacing=3 width=100%>
-		<tr><th>Known Bugs / Limitations</th></tr>
+		<tr><th>Known bugs / Limitations</th></tr>
 		<tr><td>
 		</td></tr>
 		<tr><th>Flashtool Release Notes</th></tr>
@@ -113,11 +113,13 @@ and questions I get from people using Flashtool.
 - When rooting device, it did not reboot at end of process.
 - su perms were not set the same way as Superuser do when it updates su binary
 - Corrected a small issue on ARC where phone was not detected after applying part1 of root exploit.
-- When installing recovery, the first install sets the installed version as default one. It was not the case, causing pressing back key at boot not entering recovery as no default one was found.
+- When installing recovery, the first install sets the installed version as default one.
+  It was not the case, causing pressing back key at boot not entering recovery as no default one was found.
 
 * 0.4.0.0:
 - Added zergRush root exploit for 2.3 FW
-- Added a toolbar instead of buttons. Icons can be changed from x10flasher_lib/x10flasher-res.jar if you don't like default ones :-)
+- Added a toolbar instead of buttons. Icons can be changed from x10flasher_lib/x10flasher-res.jar
+  if you don't like default ones :-)
 - Updated Superuser.apk and su to the latest version.
 - X10 BL unlock will come later as a plugin. Plugin system almost ready
 
@@ -130,12 +132,14 @@ and questions I get from people using Flashtool.
 - when flashing, system.sin can be excluded to flash only BB related files from a complete FTF bundle
 - Updated ADB drivers for 2.3.3 devices
 - Updated Superuser.apk and su to the latest version.
-- To apply aZuZu root method, after having flashed kernel downgrade, go to Advanced->root->force psneuter. aZuZu ftf files included in the flashtool package.
+- To apply aZuZu root method, after having flashed kernel downgrade, go to Advanced->root->force psneuter.
+  aZuZu ftf files included in the flashtool package.
 
 * 0.2.9.1:
 - Better chargemon support for all ROMS
 - Busybox upgraded to 1.17.2 (taken from superoneclick 1.7)
-- Developper feature : install and reboot custom kernels (doesn't work as custom kernels do not work yet. Just developper feature)
+- Developper feature : install and reboot custom kernels 
+  (doesn't work as custom kernels do not work yet. Just developper feature)
 
 * 0.2.9:
 - Recovery updated to FreeXperia recovery from J's CM7rc2
@@ -161,7 +165,8 @@ and questions I get from people using Flashtool.
 [Bug] Flashing should not anymore hang if flash goes wrong. An error should be thrown and flash aborted
 
 * 0.2.6:
-[Upd] Flashing 1.6 firmwares could lead to a FC with Timescape. 1.6 bundles must have the preset.ta file if this one exists. otherwise the flash will be uncomplete.
+[Upd] Flashing 1.6 firmwares could lead to a FC with Timescape. 1.6 bundles must have the preset.ta file
+      if this one exists. otherwise the flash will be uncomplete.
 [Upd] Updated the "turn to flashmode" wait box. (thanks to rendeiro2005 for the animated gif)
 [Upd] Updated to xRecovery 0.3
 [Upd] Decryption now opens the bundle creation when complete.
@@ -169,11 +174,16 @@ and questions I get from people using Flashtool.
 
 * 0.2.5:
 [Bug] Root not working properly (regression from 0.2.3 to 0.2.4). Fixed.
-[New Feature] Added a basic build.prop editor.
+[New] Feature] Added a basic build.prop editor.
 
 * 0.2.4:
-[Bug] Clean (root needed) task bug resolved. A new button "Ask Root Perms" has been added to be sure the flashtool has root accesses. All task which need root access are disabled while this Ask Root task is not complete.
-[New] Firmwares have to come bundled in one file named with a ftf extension (ftf for Flash Tool Firmware). A Create Bundle feature has been added to the tool to create your own firmware bundles. (So no need to Redownload a firmware you already have. Just bundle it). This way it will be easier to package / distribute / integrate firmwares as they come out.
+[Bug] Clean (root needed) task bug resolved. A new button "Ask Root Perms" has been added
+      to be sure the flashtool has root accesses. All task which need root access are disabled
+      while this Ask Root task is not complete.
+[New] Firmwares have to come bundled in one file named with a ftf extension
+      (ftf for Flash Tool Firmware). A Create Bundle feature has been added to the tool to create
+      your own firmware bundles. (So no need to Redownload a firmware you already have. Just bundle it).
+      This way it will be easier to package / distribute / integrate firmwares as they come out.
 
 * 0.2.3:
 [Bug] SEUS decrypt fixed
