@@ -1,77 +1,182 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <meta charset='utf-8'>
 
-  <title>Androxyde/Flashtool @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #dc45f6;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #23ba09; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #23ba09; }
-    h3 { text-align: center; color: #23ba09; }
-    a { color: #23ba09; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+<title>Flashtool - Xperia devices flashing</title>
+<meta name="description" content="Flashtool is a software to flash Xperia devices">
+<meta name="keywords" content="Flashtool">
+<link rel="shortcut icon" href="common/HTTPTunnel.ico" type="image/x-icon" />
+<link type="text/css" rel="StyleSheet" href="common/tab.css" />
+<script type="text/javascript" src="common/tabpane.js"></script>
+<script>
+	function hidePl() {
+		document.getElementById('movie').style.visibility='hidden';
+	}
+	function showPl() {
+		document.getElementById('movie').style.visibility='visible';
+	}
+</script>
 </head>
+<body style="background:ThreeDFace" class="readme">
+<a name="top"></a>
+<table border=0 cellpadding=0 cellspacing=3 width=600>
+	<tr>
+		<td valign=top rowspan=2><h1>Flashtool v0.4.2.0</h1>
+		&copy;2011 by Androxyde</a>><br><br>
+		</td>
+	</tr>
+</table><br>
+<div class="tab-pane" >
+<div class="tab-page"><h2 class="tab">Introduction</h2>
+ <table border="0" cellpadding="0" cellspacing="3" width="100%">
+ <tr><th>Introduction to Flashtool</th></tr>
+ <tr><td>
+   Flashtool is a flashing software that can be used to : 
+   <ol>
+	<li>Flash original Images (Android 1.6, 2.1, 2.3 Images)
+    <li>Root your phone
+    <li>Install Recovery, Busybox, custom kernels
+    <li>Clean your Rom (remove /system/apps apps of your choice) (Be careful, unless you really know what you do, do not modify the default list. This can make your phone stuck at the SE Logo)
+    <li>Clear dalvik cache
+    <li>Optimize (install of JIT v2) (Disabled in 0.4, will readd it as a plugin for 2.1 phones only)
+    <li>Customize (installs apps found in the custom/apps folder of the flashtool)
+    <li>Clean uninstalled (remove any references to system apps removed in the Clean (root needed) step)
+    <li>Edit any text file on the device
+    <li>Rebrand your device
+   </li>
+   </ol>
+ </td></tr>
+ </table></div>
+<div class="tab-page"><h2 class="tab">Installation</h2>
+  <table border="0" cellpadding="0" cellspacing="3" width="100%">
+		<tr><td>To download the Flashtool, follow this link: <a href="https://github.com/Androxyde/Flashtool/downloads" target="_new">Download Flashtool</a><br>&nbsp;</td></tr>
+		<tr><th>Requirements</th></tr>
+		<tr><td>
+		<dl>
+		    <dt>Flashtool-jre6u29.exe
+		    <dt>Flashtool-0.4.2full-nojre.exe
+		</dl>
+		</td></tr>
+		<tr><th>Installation of Flashtool</th></tr>
+		<tr><td>
+To install the Flashtool, follow the steps below:
+<ol>
+	<li>Install the Flashtool-jre6u29.exe package<br>
+	<li>Install the Flashtool-0.4.2full-nojre.exe package<br>
+	<br>Both packages have to be installed in the same folder.<br>
+</ol>
+		</td></tr>
+		</table>
+	</div>
+	<div class="tab-page">
+		<h2 class="tab">FAQ</h2>
+		<table border=0 cellpadding=0 cellspacing=3 width=100%>
+		<tr><th>Frequently Asked Questions</th></tr>
+		<tr><td>
+The FAQ section is constantly growing - depending on what kind of feedback
+and questions I get from people using Flashtool.
+<blockquote>
+<dl>
+<dt>Troubleshooting<dd>
+	<a href="#faq1">I run flashtool and I get a jre error - what can I do ?</a><br>
+</dl>
+</blockquote>
+</td></tr>
+<tr><th class="th1">Troubleshooting</th></tr>
+<tr><td>
+<p><span style="float:right"><a href="#top">Back to Top</a></span><a name="faq1"><em>I run flashtool and I get a jre error - what can I do ?</em></a>
+<p>Install or reinstall Flashtool-jre6u29.exe. This package is mandatory for Flashtool even if a JDK or JRE is already installed on the system.
+</td></tr>
+</table>
+	</div>
+	<div class="tab-page">
+		<h2 class="tab">Release Notes</h2>
+		<table border=0 cellpadding=0 cellspacing=3 width=100%>
+		<tr><th>Known Bugs / Limitations</th></tr>
+		<tr><td>
+		</td></tr>
+		<tr><th>Flashtool Release Notes</th></tr>
+		<tr><td>
+<pre>
+<hr>
+* 0.4.2.0:
+- Added BL unlock for X10
+- Small fixes for plugin API
+- Device recognition for all 2011 xperia line
 
-<body>
-  <a href="http://github.com/Androxyde/Flashtool"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+* 0.4.1.0:
+- Added drivers for 2011 line of xperia phones
+- When rooting device, it did not reboot at end of process.
+- su perms were not set the same way as Superuser do when it updates su binary
+- Corrected a small issue on ARC where phone was not detected after applying part1 of root exploit.
+- When installing recovery, the first install sets the installed version as default one. It was not the case, causing pressing back key at boot not entering recovery as no default one was found.
 
-  <div id="container">
+* 0.4.0.0:
+- Added zergRush root exploit for 2.3 FW
+- Added a toolbar instead of buttons. Icons can be changed from x10flasher_lib/x10flasher-res.jar if you don't like default ones :-)
+- Updated Superuser.apk and su to the latest version.
+- X10 BL unlock will come later as a plugin. Plugin system almost ready
 
-    <div class="download">
-      <a href="http://github.com/Androxyde/Flashtool/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/Androxyde/Flashtool/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
+* 0.3.0.0:
+- Rebrand feature added
+- Build.prop editor has become a generic text file editor
+- busybox installation can handle multiple versions
+- recovery installation can handle multiple versions
+- kernel installation can handle multiple versions
+- when flashing, system.sin can be excluded to flash only BB related files from a complete FTF bundle
+- Updated ADB drivers for 2.3.3 devices
+- Updated Superuser.apk and su to the latest version.
+- To apply aZuZu root method, after having flashed kernel downgrade, go to Advanced->root->force psneuter. aZuZu ftf files included in the flashtool package.
 
-    <h1><a href="http://github.com/Androxyde/Flashtool">Flashtool</a>
-      <span class="small">by <a href="http://github.com/Androxyde">Androxyde</a></span></h1>
+* 0.2.9.1:
+- Better chargemon support for all ROMS
+- Busybox upgraded to 1.17.2 (taken from superoneclick 1.7)
+- Developper feature : install and reboot custom kernels (doesn't work as custom kernels do not work yet. Just developper feature)
 
-    <div class="description">
-      
-    </div>
+* 0.2.9:
+- Recovery updated to FreeXperia recovery from J's CM7rc2
+- Recovery and Busybox installation should work on Custom Roms
+- Busybox is searched in /system/xbin now (J's CM7rc2 changes)
+- Recovery is installed in /system/recovery (as J's CM7rc2)
+- This version should recognize xperia ARC
+- This version should be able to flash SE decrypted firmwares for xperia ARC ? (need some testers)
+- This version may root xperia ARC ? (need some testers)
+- This version may install busybox on xperia ARC ? (need some testers)
+- This version may install xrecovery on xperia ARC ? (need some testers)
 
-    <h2>Authors</h2>
-<p>Androxyde
-<br/>
-<br/>      </p>
+* 0.2.8:
+[New] The device is autodetected by the flashtool at plug / unplug
+[New] If you install xRecovery from flashtool, you can reboot into recovery from flashtool too (Advanced menu)
+[New] You can now backup all /system/app content (Advanced menu)
+[New] You can translate all parts of the Graphical Interface (look in x10flasher_lib/langs for samples)
+[Upd] Firmware screen selection offers the ability to change the folder source containing ftf files.
+[Upd] Clean task now has a notion of profile that can be imported/exported for sharing
+[Upd] Customize is now APK Installer. This screen has the ability to choose the folder where apk files are
+[Upd] Optimize should work for any device (X10, X10mini/pro, X8)
+[Upd] xRecovery should work for any device (X10, X10mini/pro, X8)
+[Bug] Flashing should not anymore hang if flash goes wrong. An error should be thrown and flash aborted
 
+* 0.2.6:
+[Upd] Flashing 1.6 firmwares could lead to a FC with Timescape. 1.6 bundles must have the preset.ta file if this one exists. otherwise the flash will be uncomplete.
+[Upd] Updated the "turn to flashmode" wait box. (thanks to rendeiro2005 for the animated gif)
+[Upd] Updated to xRecovery 0.3
+[Upd] Decryption now opens the bundle creation when complete.
+[Bug] Correction of a bug under certain scenario with ROM cleaner (when switching firmware version)
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/Androxyde/Flashtool/zipball/master">zip</a> or
-      <a href="http://github.com/Androxyde/Flashtool/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/Androxyde/Flashtool</pre>
-    </p>
+* 0.2.5:
+[Bug] Root not working properly (regression from 0.2.3 to 0.2.4). Fixed.
+[New Feature] Added a basic build.prop editor.
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/Androxyde/Flashtool">Androxyde/Flashtool</a>
-    </div>
+* 0.2.4:
+[Bug] Clean (root needed) task bug resolved. A new button "Ask Root Perms" has been added to be sure the flashtool has root accesses. All task which need root access are disabled while this Ask Root task is not complete.
+[New] Firmwares have to come bundled in one file named with a ftf extension (ftf for Flash Tool Firmware). A Create Bundle feature has been added to the tool to create your own firmware bundles. (So no need to Redownload a firmware you already have. Just bundle it). This way it will be easier to package / distribute / integrate firmwares as they come out.
 
-  </div>
-
-  
+* 0.2.3:
+[Bug] SEUS decrypt fixed
+[New] Wipe Userdata is set to default YES</pre>
+	</td></tr>
+		</table>
+	</div>
+</div>
+<script>setupAllTabs();</script>
 </body>
 </html>
