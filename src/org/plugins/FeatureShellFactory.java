@@ -2,6 +2,7 @@ package org.plugins;
 
 import java.io.File;
 
+import org.logger.MyLogger;
 import org.system.OS;
 import org.system.Shell;
 
@@ -15,10 +16,11 @@ public class FeatureShellFactory {
 	
 	public Shell createShell(String name) {
 		try {
-			Shell s = new Shell(new File(_shelldir+OS.getFileSeparator()+name));
+			Shell s = new Shell(new File(_shelldir+OS.getFileSeparator()+"shells"+OS.getFileSeparator()+name));
 			return s;
 		}
 		catch (Exception e) {
+			MyLogger.error(e.getMessage());
 			return null;
 		}
 	}

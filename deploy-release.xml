@@ -6,31 +6,18 @@
     	<mkdir dir="../Deploy"/>
     	<delete dir="../Deploy/FlashTool"/>
         <mkdir dir ="../Deploy/FlashTool"/>
-        <delete dir="../Deploy/FlashTool/custom/"/>
         <mkdir dir ="../Deploy/FlashTool/custom/"/>
-    	<delete dir="../Deploy/FlashTool/custom/apps_saved"/>
         <mkdir dir ="../Deploy/FlashTool/custom/apps_saved"/>
-        <delete dir="../Deploy/FlashTool/custom/root"/>
         <mkdir dir ="../Deploy/FlashTool/custom/root"/>
-        <delete dir="../Deploy/FlashTool/custom/shells"/>
         <mkdir dir ="../Deploy/FlashTool/custom/shells"/>
-    	<delete dir="../Deploy/FlashTool/custom/apps"/>
         <mkdir dir ="../Deploy/FlashTool/custom/apps"/>
-        <delete dir="../Deploy/FlashTool/custom/clean"/>
         <mkdir dir ="../Deploy/FlashTool/custom/clean"/>
-    	<delete dir="../Deploy/FlashTool/firmwares"/>
+    	<mkdir dir ="../Deploy/FlashTool/custom/features"/>
     	<mkdir dir="../Deploy/FlashTool/firmwares"/>
         <mkdir dir ="../Deploy/FlashTool/custom/clean"/>
-    	<delete dir="../Deploy/FlashTool/x10flasher_lib"/>
         <mkdir dir="../Deploy/FlashTool/x10flasher_lib"/>
-    	<delete dir="../Deploy/FlashTool/x10flasher_lib/langs"/>
         <mkdir dir="../Deploy/FlashTool/x10flasher_lib/langs"/>
-    	<delete dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
-        <mkdir dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
-		<delete dir="../Deploy/FlashTool/drivers"/>
         <mkdir dir="../Deploy/FlashTool/drivers"/>
-    	<delete dir="../Deploy/FlashTool/CustomRoms"/>
-    	<mkdir dir="../Deploy/FlashTool/CustomRoms"/>
     	<jar destfile="../Deploy/FlashTool/x10flasher.jar">
             <manifest>
                 <attribute name="Main-Class" value="gui.FlasherGUI"/>
@@ -41,10 +28,6 @@
         	<jar destfile="../Deploy/FlashTool/x10flasher_lib/x10flasher-res.jar">
                 <fileset dir="./bin" includes="/gui/ressources/icons/**"/>
             </jar>
-    	<copy todir="../Deploy/FlashTool/custom/apps_saved">
-			<fileset dir="./apk"
-				excludes="**/.svn"/>
-		</copy>
     	<copy todir="../Deploy/FlashTool/custom/shells">
     		<fileset dir="./shells"
 				excludes="**/.svn"/>
@@ -77,7 +60,5 @@
         	<fileset dir="./drivers"
     			excludes="**/.svn"/>
         </copy>
-    	<copy file="./firmwares/X10_aZuZu_Kernel_Downgrade_Generic.ftf" todir="../Deploy/FlashTool/firmwares"/>
-    	<copy file="./firmwares/X10_aZuZu_Kernel_UpGrade_Generic.ftf" todir="../Deploy/FlashTool/firmwares"/>    	
     </target>
 </project>

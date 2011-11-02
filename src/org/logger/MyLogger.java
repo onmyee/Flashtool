@@ -4,9 +4,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-
 import javax.swing.JProgressBar;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 
@@ -86,10 +84,15 @@ public class MyLogger {
 	}
 
 	public static void error (Object obj) {
-		if (isinit)
+		if (isinit) {
 			logger.error(obj);
+		}
 	}
 
+	public static Logger getLogger() {
+		return logger;
+	}
+	
 	public static void debug (Object obj) {
 		if (isinit)
 			logger.debug(obj);

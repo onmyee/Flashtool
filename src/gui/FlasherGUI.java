@@ -753,7 +753,7 @@ public class FlasherGUI extends JFrame {
 								}
 							}
 						}
-						MyLogger.info("Clean Finished");
+						MyLogger.getLogger().info("Clean Finished");
 				} catch (Exception e) {}
 				return null;
 			}
@@ -766,7 +766,7 @@ public class FlasherGUI extends JFrame {
 					try {
 						X10flash flash = new X10flash();
 						if (flash.openDevice(false))
-							MyLogger.info("Phone successfully turned to flash mode");
+							MyLogger.getLogger().info("Phone successfully turned to flash mode");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -792,6 +792,7 @@ public class FlasherGUI extends JFrame {
 							}
 						}
 						catch (Exception e) {
+							e.printStackTrace();
 							MyLogger.error(e.getMessage());
 						}
 						bundle.close();
@@ -810,16 +811,16 @@ public class FlasherGUI extends JFrame {
 				Worker.post(new Job() {
 					public Object run() {
 						try {
-				    		MyLogger.info("Preparing files for flashing");
+				    		MyLogger.getLogger().info("Preparing files for flashing");
 				    		bundle.open();
 					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
 							if (!OS.getName().equals("windows")) bundle.setSimulate(true);
 							X10flash flash = new X10flash(bundle);
 							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
 								flash.flashDevice();
-								MyLogger.info("Now unplug the device and power it on");
-								MyLogger.info("Then go to application settings");
-								MyLogger.info("turn on Unknown Sources and Debugging");
+								MyLogger.getLogger().info("Now unplug the device and power it on");
+								MyLogger.getLogger().info("Then go to application settings");
+								MyLogger.getLogger().info("turn on Unknown Sources and Debugging");
 								doDisableIdent();
 							}
 						}
@@ -827,6 +828,7 @@ public class FlasherGUI extends JFrame {
 							MyLogger.error("Error preparing files");
 						}
 						catch (Exception e) {
+							e.printStackTrace();
 							MyLogger.error(e.getMessage());
 						}
 						bundle.close();
@@ -851,16 +853,17 @@ public class FlasherGUI extends JFrame {
 					shell.run(true);
 					AdbUtility.push("."+fsep+"custom"+fsep+"root"+fsep+"zergrush.tar",GlobalConfig.getProperty("deviceworkdir"));
 					shell = new Shell("rootit");
-					MyLogger.info("Running part1 of Root Exploit, please wait");
+					MyLogger.getLogger().info("Running part1 of Root Exploit, please wait");
 					shell.run(true);
 					Devices.waitForReboot();
-					MyLogger.info("Running part2 of Root Exploit");
+					MyLogger.getLogger().info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);
-					MyLogger.info("Finished!.");
-					MyLogger.info("Root should be available after reboot!");		
+					MyLogger.getLogger().info("Finished!.");
+					MyLogger.getLogger().info("Root should be available after reboot!");		
 				}
 				catch (Exception e) {
+					e.printStackTrace();
 					MyLogger.error(e.getMessage());}
 				return null;
 			}
@@ -876,16 +879,17 @@ public class FlasherGUI extends JFrame {
 					shell.run(true);
 					AdbUtility.push("."+fsep+"custom"+fsep+"root"+fsep+"psneuter.tar",GlobalConfig.getProperty("deviceworkdir"));
 					shell = new Shell("rootit");
-					MyLogger.info("Running part1 of Root Exploit, please wait");
+					MyLogger.getLogger().info("Running part1 of Root Exploit, please wait");
 					shell.run(false);
 					Devices.waitForReboot();
-					MyLogger.info("Running part2 of Root Exploit");
+					MyLogger.getLogger().info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);
-					MyLogger.info("Finished!.");
-					MyLogger.info("Root should be available after reboot!");		
+					MyLogger.getLogger().info("Finished!.");
+					MyLogger.getLogger().info("Root should be available after reboot!");		
 				}
 				catch (Exception e) {
+					e.printStackTrace();
 					MyLogger.error(e.getMessage());}
 				return null;
 			}
@@ -905,9 +909,9 @@ public class FlasherGUI extends JFrame {
 								if (chld[i].getName().endsWith(".apk"))
 									org.adb.AdbUtility.install(chld[i].getPath());
 							}
-							MyLogger.info("APK Installation finished");
+							MyLogger.getLogger().info("APK Installation finished");
 						}
-						else MyLogger.info("APK Installation canceled");
+						else MyLogger.getLogger().info("APK Installation canceled");
 					}
 				catch (Exception e) {}
 				return null;
@@ -935,14 +939,16 @@ public class FlasherGUI extends JFrame {
 									AdbUtility.push(Devices.getCurrent().getWorkDir()+fsep+"buildnew.prop",GlobalConfig.getProperty("deviceworkdir")+"/build.prop");
 									Shell shell = new Shell("rebrand");
 									shell.runRoot();
-									MyLogger.info("Rebrand finished. Rebooting phone ...");
+									MyLogger.getLogger().info("Rebrand finished. Rebooting phone ...");
 								}
 							}
 							else {MyLogger.error("You are not on a stock ROM");}
 						}
 						else MyLogger.error("Error mounting /system rw");
 				}
-				catch (Exception e) {MyLogger.error(e.getMessage());e.printStackTrace();}
+				catch (Exception e) {
+					MyLogger.error(e.getMessage());
+					e.printStackTrace();}
 				return null;
 			}
 		});
@@ -984,11 +990,11 @@ public class FlasherGUI extends JFrame {
 						}
 						if (somethingdone) {
 							AdbUtility.clearcache();
-							MyLogger.info("Clean finished. Rebooting phone ...");
+							MyLogger.getLogger().info("Clean finished. Rebooting phone ...");
 						}
-						else MyLogger.info("Clean canceled");
+						else MyLogger.getLogger().info("Clean canceled");
 					}
-					else MyLogger.info("Error mounting /system rw");
+					else MyLogger.getLogger().info("Error mounting /system rw");
 				} catch (Exception e) {}
 				return null;
 			}
@@ -1027,15 +1033,16 @@ public class FlasherGUI extends JFrame {
 					String current = rsel.getVersion();
 					if (current.length()>0) {
 						if (AdbUtility.Sysremountrw()) {
-						MyLogger.info("Setting default kernel");
+						MyLogger.getLogger().info("Setting default kernel");
 						Shell shell = new Shell("setdefaultkernel");
 						shell.setProperty("KERNELTOBOOT", current);
 						shell.runRoot();
-						MyLogger.info("Done");
+						MyLogger.getLogger().info("Done");
 						}
 					}
 				}
 				catch (Exception e) {
+					e.printStackTrace();
 					MyLogger.error(e.getMessage());
 				}
 				return null;
@@ -1047,10 +1054,10 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-					MyLogger.info("Rebooting into recovery mode");
+					MyLogger.getLogger().info("Rebooting into recovery mode");
 					Shell shell = new Shell("rebootrecovery");
 					shell.runRoot();
-					MyLogger.info("Phone will reboot into recovery mode");
+					MyLogger.getLogger().info("Phone will reboot into recovery mode");
 				}
 				catch (Exception e) {}
 				return null;
@@ -1065,14 +1072,14 @@ public class FlasherGUI extends JFrame {
 					KernelBootSelectGUI ksel = new KernelBootSelectGUI();
 					String current = ksel.getVersion();
 					if (current.length()>0) {
-						MyLogger.info("Rebooting into kexec mode");
+						MyLogger.getLogger().info("Rebooting into kexec mode");
 						Shell shell = new Shell("rebootkexect");
 						shell.setProperty("KERNELTOBOOT", current);
 						shell.runRoot();
-						MyLogger.info("Phone will reboot into kexec mode");
+						MyLogger.getLogger().info("Phone will reboot into kexec mode");
 					}
 					else {
-						MyLogger.info("Reboot canceled");
+						MyLogger.getLogger().info("Reboot canceled");
 					}
 				}
 				catch (Exception e) {}
@@ -1085,10 +1092,10 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-						MyLogger.info("Rebooting into stock mode");
+						MyLogger.getLogger().info("Rebooting into stock mode");
 						Shell shell = new Shell("reboot");
 						shell.runRoot();
-						MyLogger.info("Phone will reboot now");
+						MyLogger.getLogger().info("Phone will reboot now");
 				}
 				catch (Exception e) {}
 				return null;
@@ -1100,7 +1107,7 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-						MyLogger.info("Installing xRecovery to device...");
+						MyLogger.getLogger().info("Installing xRecovery to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
 						RecoverySelectGUI sel = new RecoverySelectGUI(Devices.getCurrent().getId());
@@ -1109,12 +1116,15 @@ public class FlasherGUI extends JFrame {
 							AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
 							Shell shell = new Shell("installrecovery");
 							shell.runRoot();
-							MyLogger.info("xRecovery successfully installed");
+							MyLogger.getLogger().info("xRecovery successfully installed");
 						}
 						}
 						else MyLogger.error("Error mounting /system rw");
 					}
-				catch (Exception e) {MyLogger.error(e.getMessage());}
+				catch (Exception e) {
+					e.printStackTrace();
+					MyLogger.error(e.getMessage());
+				}
 				return null;
 			}
 		});
@@ -1129,19 +1139,19 @@ public class FlasherGUI extends JFrame {
 	        	if (list!=null) {
 	        		String folder=null;
     				for (int i=0;i<list.length;i++) {
-    					MyLogger.info("Decrypting "+list[i]);
+    					MyLogger.getLogger().info("Decrypting "+list[i]);
     					folder = ((MyFile)list[i]).getParent();
     	        		SeusSinTool.decrypt(((MyFile)list[i]).getAbsolutePath());
     				}
 
-    				MyLogger.info("Decryption finished");
+    				MyLogger.getLogger().info("Decryption finished");
     				try {
 					BundleGUI bcre = new BundleGUI(folder);
 					Bundle b = bcre.getBundle();
 					if (b!=null) {
-    					MyLogger.info("Starting bundle creation");
+    					MyLogger.getLogger().info("Starting bundle creation");
     					b.createFTF();
-    					MyLogger.info("Finished bundle creation");
+    					MyLogger.getLogger().info("Finished bundle creation");
 					}
     				}
     				catch (Exception e) {}
@@ -1163,14 +1173,17 @@ public class FlasherGUI extends JFrame {
 		        		shell = new Shell("instbusybox");
 						shell.setProperty("BUSYBOXINSTALLPATH", Devices.getCurrent().getBusyBoxInstallPath());
 						shell.runRoot();
-				        MyLogger.info("Installed version of busybox : " + AdbUtility.getBusyboxVersion(Devices.getCurrent().getBusyBoxInstallPath()));
-				        MyLogger.info("Finished");
+				        MyLogger.getLogger().info("Installed version of busybox : " + AdbUtility.getBusyboxVersion(Devices.getCurrent().getBusyBoxInstallPath()));
+				        MyLogger.getLogger().info("Finished");
 	        		}
 	        		else {
-	        			MyLogger.info("Busybox installation canceled");
+	        			MyLogger.getLogger().info("Busybox installation canceled");
 	        		}
 		        }
-	        	catch (Exception e) {MyLogger.error(e.getMessage());}
+	        	catch (Exception e) {
+	        		e.printStackTrace();
+	        		MyLogger.error(e.getMessage());
+	        	}
 	 			return null;
 			}
 		});
@@ -1181,7 +1194,7 @@ public class FlasherGUI extends JFrame {
 			public Object run() {
 	        	try {
 						AdbUtility.clearcache();
-						MyLogger.info("Finished");
+						MyLogger.getLogger().info("Finished");
 				}
 				catch (Exception e) {}
 	 			return null;
@@ -1242,20 +1255,20 @@ public class FlasherGUI extends JFrame {
         				found = true;
         				Devices.setCurrent(current.getId());
         				if (!Devices.isWaitingForReboot())
-        					MyLogger.info("Connected device : " + Devices.getCurrent().getId());
+        					MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
         			}
         		}
         	}
         	if (!found) {
         		MyLogger.error("Cannot identify your device.");
         		if (Devices.listDevices(false).hasMoreElements()) {
-	        		MyLogger.info("Selecting from user input");
+	        		MyLogger.getLogger().info("Selecting from user input");
 	        		deviceSelectGui devsel = new deviceSelectGui(null);
 	        		String dev = devsel.getDevice();
 	        		if (dev.length()>0) {
 	        			found = true;
 	        			Devices.setCurrent(dev);
-	        			MyLogger.info("Connected device : " + Devices.getCurrent().getId());
+	        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
 	        		}
         		}
         		else {
@@ -1264,13 +1277,13 @@ public class FlasherGUI extends JFrame {
         	}
     	if (found) {
     		if (!Devices.isWaitingForReboot()) {
-    			MyLogger.info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
-    			MyLogger.info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
+    			MyLogger.getLogger().info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
+    			MyLogger.getLogger().info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
     		}
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
 			MyLogger.debug("Now setting buttons availability - btnRoot");
     		if (Devices.getCurrent().isRecovery()) {
-    			MyLogger.info("Phone in recovery mode");
+    			MyLogger.getLogger().info("Phone in recovery mode");
     			btnRoot.setEnabled(false);
     		}
     		else
@@ -1294,6 +1307,7 @@ public class FlasherGUI extends JFrame {
     		if (Devices.isWaitingForReboot())
     			Devices.stopWaitForReboot();
         	isidentrun=false;
+        	MyLogger.getLogger().debug("Message debug");
     	}
         }
 	}
@@ -1317,7 +1331,7 @@ public class FlasherGUI extends JFrame {
 		btnXrecovery.setEnabled(Devices.getCurrent().canRecovery());
 		btnKernel.setEnabled(Devices.getCurrent().canKernel());
 		if (!Devices.isWaitingForReboot())
-			MyLogger.info("Root Access Allowed");    	
+			MyLogger.getLogger().info("Root Access Allowed");    	
     }
     
     public static void doAskRoot() {
@@ -1342,12 +1356,14 @@ public class FlasherGUI extends JFrame {
 					BundleGUI bcre = new BundleGUI();
 					Bundle b = bcre.getBundle();
 					if (b!=null) {
-    					MyLogger.info("Starting bundle creation");
+    					MyLogger.getLogger().info("Starting bundle creation");
     					b.createFTF();
-    					MyLogger.info("Finished bundle creation");
+    					MyLogger.getLogger().info("Finished bundle creation");
 					}
 				}
-				catch (Exception e) {MyLogger.error(e.getMessage());}
+				catch (Exception e) {
+					e.printStackTrace();
+					MyLogger.error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1367,9 +1383,11 @@ public class FlasherGUI extends JFrame {
 						}
 						catch (Exception e) {}
 					}
-					MyLogger.info("Backup Finished");
+					MyLogger.getLogger().info("Backup Finished");
 				}
-				catch (Exception e) {MyLogger.error(e.getMessage());}
+				catch (Exception e) {
+					e.printStackTrace();
+					MyLogger.error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1379,17 +1397,19 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-						MyLogger.info("Installing chargemon feature / kernel bootkit to device...");
+						MyLogger.getLogger().info("Installing chargemon feature / kernel bootkit to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
 							AdbUtility.push("."+fsep+"devices"+fsep+Devices.getCurrent().getId()+fsep+"bootkit"+fsep+"bootkit.tar",GlobalConfig.getProperty("deviceworkdir"));
 							Shell shell = new Shell("installbootkit");
 							shell.runRoot();
-							MyLogger.info("bootkit successfully installed");
+							MyLogger.getLogger().info("bootkit successfully installed");
 						}
 						else MyLogger.error("Error mounting /system rw");
 					}
-				catch (Exception e) {MyLogger.error(e.getMessage());}
+				catch (Exception e) {
+					e.printStackTrace();
+					MyLogger.error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1399,7 +1419,7 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-						MyLogger.info("Installing kernel to device...");
+						MyLogger.getLogger().info("Installing kernel to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
 							KernelSelectGUI sel = new KernelSelectGUI(Devices.getCurrent().getId());
@@ -1408,12 +1428,14 @@ public class FlasherGUI extends JFrame {
 								AdbUtility.push("."+fsep+"devices"+fsep+Devices.getCurrent().getId()+fsep+"kernel"+fsep+selVersion+fsep+"kernel.tar",GlobalConfig.getProperty("deviceworkdir"));
 								Shell shell = new Shell("installkernel");
 								shell.runRoot();
-								MyLogger.info("kernel successfully installed");
+								MyLogger.getLogger().info("kernel successfully installed");
 							}
 						}
 						else MyLogger.error("Error mounting /system rw");
 					}
-				catch (Exception e) {MyLogger.error(e.getMessage());}
+				catch (Exception e) {
+					e.printStackTrace();
+					MyLogger.error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1496,6 +1518,7 @@ public class FlasherGUI extends JFrame {
             mnPlugins.add(deviceMenu);
 	    }
 	    catch (Exception e) {
+	    	e.printStackTrace();
 	    	MyLogger.error(e.getMessage());
 	    }
     }
@@ -1533,6 +1556,7 @@ public class FlasherGUI extends JFrame {
             mnPlugins.add(menu);
 	    }
 	    catch (Exception e) {
+	    	e.printStackTrace();
 	    	MyLogger.error(e.getMessage());
 	    }
     }
