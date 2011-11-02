@@ -1444,6 +1444,7 @@ public class FlasherGUI extends JFrame {
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
+            pluginObject.setWorkdir(workdir);
             JMenu menu = new JMenu(pluginObject.getName());
             JMenuItem item = new JMenuItem("run");
             JMenuItem about = new JMenuItem("about");
@@ -1462,7 +1463,6 @@ public class FlasherGUI extends JFrame {
             	if (kversion.equals(pversion)) kenabled=true;
             }
             item.setEnabled(aenabled&&kenabled);
-            pluginObject.setWorkdir(workdir);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             item.addActionListener(p);
