@@ -150,10 +150,10 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public static void main(String[] args) throws Exception {
+		initLogger();
 		String userdir = System.getProperty("user.dir");
 		String pathsep = System.getProperty("path.separator");
 		System.setProperty("java.library.path", OS.getWinDir()+pathsep+OS.getSystem32Dir()+pathsep+userdir+fsep+"x10flasher_lib");
-		initLogger();
 		setSystemLookAndFeel();
 		Language.Init(GlobalConfig.getProperty("language").toLowerCase());
 		EventQueue.invokeLater(new Runnable() {
