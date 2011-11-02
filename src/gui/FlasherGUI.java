@@ -1287,7 +1287,9 @@ public class FlasherGUI extends JFrame {
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
         	MyLogger.debug("Now adding plugins");
-        	addPlugins();
+        	mnPlugins.removeAll();
+        	addDevicesPlugins();
+        	addGenericPlugins();
     		MyLogger.debug("Stop waiting for device");
     		if (Devices.isWaitingForReboot())
     			Devices.stopWaitForReboot();
@@ -1417,9 +1419,8 @@ public class FlasherGUI extends JFrame {
 		});
     }
     
-    public static void addPlugins() {
+    public static void addDevicesPlugins() {
     	try {
-	    	mnPlugins.removeAll();
 	    	File dir = new File("./devices/"+Devices.getCurrent().getId()+"/features");
 		    File[] chld = dir.listFiles();
 		    for(int i = 0; i < chld.length; i++){
@@ -1438,16 +1439,39 @@ public class FlasherGUI extends JFrame {
     	catch (Exception e) {
     	}
     }
-    
+
+    public static void addGenericPlugins() {
+    	try {
+	    	File dir = new File("./custom/features");
+		    File[] chld = dir.listFiles();
+		    for(int i = 0; i < chld.length; i++){
+		    	if (chld[i].isDirectory()) {
+		    		try {
+		    			Properties p = new Properties();
+		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
+		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
+		    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
+		    		}
+		    		catch (IOException ioe) {
+		    		}
+		    	}
+		    }
+    	}
+    	catch (Exception e) {
+    	}
+    }
+
     public static void registerPlugin(String classname,String workdir) {
 	    try {
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             pluginObject.setWorkdir(workdir);
+            JMenu deviceMenu = new JMenu(Devices.getCurrent().getId());
             JMenu menu = new JMenu(pluginObject.getName());
-            JMenuItem item = new JMenuItem("run");
-            JMenuItem about = new JMenuItem("about");
+            deviceMenu.add(menu);
+            JMenuItem item = new JMenuItem("Run");
+            JMenuItem about = new JMenuItem("About");
             boolean aenabled = false;
             Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
             String aversion = Devices.getCurrent().getVersion();
@@ -1469,7 +1493,7 @@ public class FlasherGUI extends JFrame {
             about.addActionListener(p1);
             menu.add(item);
             menu.add(about);
-            mnPlugins.add(menu);
+            mnPlugins.add(deviceMenu);
 	    }
 	    catch (Exception e) {
 	    	MyLogger.error(e.getMessage());
