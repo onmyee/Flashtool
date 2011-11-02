@@ -1,6 +1,7 @@
 package org.adb;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Scanner;
@@ -228,6 +229,8 @@ public class AdbUtility  {
 	public static void push(String source, String destination, boolean log) throws Exception {
 		if (log) MyLogger.info("Pushing "+source+" to "+destination);
 		else MyLogger.debug("Pushing "+source+" to "+destination);
+		File f = new File(source);
+		if (!f.exists()) throw new AdbException(source+" : Not found");
 		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb push "+source+" "+destination);
 		command.run();
 		if (command.getReturnCode()!=0) {

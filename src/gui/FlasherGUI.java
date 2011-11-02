@@ -1429,7 +1429,7 @@ public class FlasherGUI extends JFrame {
 		    			Properties p = new Properties();
 		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
 		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-		    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
+		    			registerPluginDevices(p.getProperty("classname"),chld[i].getPath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
@@ -1450,7 +1450,7 @@ public class FlasherGUI extends JFrame {
 		    			Properties p = new Properties();
 		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
 		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-		    			registerPlugin(p.getProperty("classname"),chld[i].getPath());
+		    			registerPluginGeneric(p.getProperty("classname"),chld[i].getPath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
@@ -1461,7 +1461,7 @@ public class FlasherGUI extends JFrame {
     	}
     }
 
-    public static void registerPlugin(String classname,String workdir) {
+    public static void registerPluginDevices(String classname,String workdir) {
 	    try {
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
@@ -1499,4 +1499,42 @@ public class FlasherGUI extends JFrame {
 	    	MyLogger.error(e.getMessage());
 	    }
     }
+
+    public static void registerPluginGeneric(String classname,String workdir) {
+	    try {
+	    	Class pluginClass = Class.forName(classname);
+            Constructor constr = pluginClass.getConstructor();
+            PluginInterface pluginObject = (PluginInterface)constr.newInstance();
+            pluginObject.setWorkdir(workdir);
+            JMenu menu = new JMenu(pluginObject.getName());
+            JMenuItem run = new JMenuItem("Run");
+            JMenuItem about = new JMenuItem("About");
+            boolean aenabled = false;
+            Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
+            String aversion = Devices.getCurrent().getVersion();
+            while (e1.hasMoreElements()) {
+            	String pversion = e1.nextElement();
+            	if (aversion.startsWith(pversion)) aenabled=true;
+            }
+            Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
+            String kversion = Devices.getCurrent().getKernelVersion();
+            boolean kenabled = false;
+            while (e2.hasMoreElements()) {
+            	String pversion = e2.nextElement();
+            	if (kversion.equals(pversion)) kenabled=true;
+            }
+            run.setEnabled(aenabled&&kenabled);
+            PluginActionListener p =  new PluginActionListener(pluginObject);
+            PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
+            run.addActionListener(p);
+            about.addActionListener(p1);
+            menu.add(run);
+            menu.add(about);
+            mnPlugins.add(menu);
+	    }
+	    catch (Exception e) {
+	    	MyLogger.error(e.getMessage());
+	    }
+    }
+
 }
