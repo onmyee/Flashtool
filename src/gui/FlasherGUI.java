@@ -286,7 +286,7 @@ public class FlasherGUI extends JFrame {
 			}
 		});*/
 
-		JMenu mnXrecovery = new JMenu("xRecovery");
+		JMenu mnXrecovery = new JMenu("Recovery");
 		mnAdvanced.add(mnXrecovery);
 		
 		
@@ -1115,7 +1115,7 @@ public class FlasherGUI extends JFrame {
 							AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
 							Shell shell = new Shell("installrecovery");
 							shell.runRoot();
-							MyLogger.getLogger().info("xRecovery successfully installed");
+							MyLogger.getLogger().info("Recovery successfully installed");
 						}
 						}
 						else MyLogger.error("Error mounting /system rw");
