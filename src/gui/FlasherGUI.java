@@ -620,7 +620,6 @@ public class FlasherGUI extends JFrame {
 														toolBar.add(btnXrecovery);
 														btnXrecovery.addActionListener(new ActionListener() {
 															public void actionPerformed(ActionEvent e) {
-																doInstallCustKit();
 																doInstallXRecovery();
 															}
 														});
@@ -632,7 +631,6 @@ public class FlasherGUI extends JFrame {
 														toolBar.add(btnKernel);
 														btnKernel.addActionListener(new ActionListener() {
 															public void actionPerformed(ActionEvent e) {
-																doInstallCustKit();
 																doInstallKernel();
 															}
 														});
@@ -1107,12 +1105,13 @@ public class FlasherGUI extends JFrame {
 		Worker.post(new Job() {
 			public Object run() {
 				try {
-						MyLogger.getLogger().info("Installing xRecovery to device...");
+						MyLogger.getLogger().info("Installing Recovery to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
 						RecoverySelectGUI sel = new RecoverySelectGUI(Devices.getCurrent().getId());
 						String selVersion = sel.getVersion();
 						if (selVersion.length()>0) {
+							doInstallCustKit();
 							AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
 							Shell shell = new Shell("installrecovery");
 							shell.runRoot();
@@ -1425,6 +1424,7 @@ public class FlasherGUI extends JFrame {
 							KernelSelectGUI sel = new KernelSelectGUI(Devices.getCurrent().getId());
 							String selVersion = sel.getVersion();
 							if (selVersion.length()>0) {
+								doInstallCustKit();
 								AdbUtility.push("."+fsep+"devices"+fsep+Devices.getCurrent().getId()+fsep+"kernel"+fsep+selVersion+fsep+"kernel.tar",GlobalConfig.getProperty("deviceworkdir"));
 								Shell shell = new Shell("installkernel");
 								shell.runRoot();
