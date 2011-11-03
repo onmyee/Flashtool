@@ -205,4 +205,8 @@ public class DeviceEntry {
 		}
     }
 
+    public void reboot() throws Exception {
+    	Shell s = new Shell("reboot");
+    	s.runRoot(false);
+    }
 }
