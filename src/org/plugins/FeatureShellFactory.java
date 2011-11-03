@@ -16,7 +16,7 @@ public class FeatureShellFactory {
 	
 	public Shell createShell(String name) {
 		try {
-			Shell s = new Shell(new File(_shelldir+OS.getFileSeparator()+"shells"+OS.getFileSeparator()+name));
+			Shell s = new Shell(new File(_shelldir+OS.getFileSeparator()+name));
 			return s;
 		}
 		catch (Exception e) {
