@@ -1499,14 +1499,14 @@ public class FlasherGUI extends JFrame {
             String aversion = Devices.getCurrent().getVersion();
             while (e1.hasMoreElements()) {
             	String pversion = e1.nextElement();
-            	if (aversion.startsWith(pversion)) aenabled=true;
+            	if (aversion.startsWith(pversion) || pversion.equals("any")) aenabled=true;
             }
             Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
             String kversion = Devices.getCurrent().getKernelVersion();
             boolean kenabled = false;
             while (e2.hasMoreElements()) {
             	String pversion = e2.nextElement();
-            	if (kversion.equals(pversion)) kenabled=true;
+            	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
             item.setEnabled(aenabled&&kenabled);
             PluginActionListener p =  new PluginActionListener(pluginObject);
@@ -1537,14 +1537,14 @@ public class FlasherGUI extends JFrame {
             String aversion = Devices.getCurrent().getVersion();
             while (e1.hasMoreElements()) {
             	String pversion = e1.nextElement();
-            	if (aversion.startsWith(pversion)) aenabled=true;
+            	if (aversion.startsWith(pversion) || pversion.equals("any")) aenabled=true;
             }
             Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
             String kversion = Devices.getCurrent().getKernelVersion();
             boolean kenabled = false;
             while (e2.hasMoreElements()) {
             	String pversion = e2.nextElement();
-            	if (kversion.equals(pversion)) kenabled=true;
+            	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
             run.setEnabled(aenabled&&kenabled);
             PluginActionListener p =  new PluginActionListener(pluginObject);
