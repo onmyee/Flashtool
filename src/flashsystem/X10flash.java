@@ -69,6 +69,17 @@ public class X10flash {
         cmd.send(Command.CMD10, Command.VALNULL, false);
         return hook;
     }
+
+    // added method to retrieved long string returned by loader
+    public String getHook2() throws IOException, X10FlashException {
+	    cmd = new Command(my_a,my_ch,_bundle.simulate());
+		cmd.testPlugged();
+		cmd.send(Command.CMD01, Command.VALNULL, false);
+		String hook = cmd.getLastReplyString();
+		cmd.send(Command.CMD09, Command.VAL2, false);
+        cmd.send(Command.CMD10, Command.VALNULL, false);
+        return hook;
+    }
     
     public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
