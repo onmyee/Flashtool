@@ -9,6 +9,7 @@ public interface  PluginInterface {
 	public void run() throws Exception;
 	public Enumeration<String> getCompatibleAndroidVersions();
 	public Enumeration<String> getCompatibleKernelVersions();
+	public Enumeration<String> getCompatibleDevices();
 	public void showAbout();
 
 }

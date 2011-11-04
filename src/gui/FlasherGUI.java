@@ -1508,7 +1508,14 @@ public class FlasherGUI extends JFrame {
             	String pversion = e2.nextElement();
             	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
-            item.setEnabled(aenabled&&kenabled);
+            Enumeration <String> e3 = pluginObject.getCompatibleDevices();
+            String currdevid = Devices.getCurrent().getId();
+            boolean denabled = false;
+            while (e3.hasMoreElements()) {
+            	String pversion = e3.nextElement();
+            	if (currdevid.equals(pversion) || pversion.equals("any")) denabled=true;
+            }
+            item.setEnabled(aenabled&&kenabled&&denabled);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             item.addActionListener(p);

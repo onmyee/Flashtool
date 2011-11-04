@@ -36,6 +36,14 @@ public class PluginDefaults {
 		return v.elements();
 	}
 
+	public Enumeration<String> getCompatibleDevices() {
+		Vector<String> v = new Vector<String>();
+		String[] list = getProperty("compatibledevices").split(",");
+		for (int i = 0;i<list.length;i++)
+			v.add(list[i]);
+		return v.elements();
+	}
+
 	public String getProperty(String property) {
 		if (featureProperties==null)
 			featureProperties = new PropertiesFile("",_workdir+fsep+"feature.properties");
