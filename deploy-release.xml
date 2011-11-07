@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Deploy Flashtool">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required                                        -->
-    <target name="create_run_jar">
+<project default="all" name="Deploy Flashtool">
+
+	<target name="all" depends="core release,E15 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device,JRE"/>
+
+	<target name="7z" >
+	  <taskdef name="sevenzip" classname="org.apache.tools.ant.SevenZip1"/>
+	  <sevenzip input="C:\Users\Manu\git\Deploy\Flashtool" output="C:\Deploy\Flashtool.exe"/>
+	</target>
+
+	<target name="JRE" depends="32bits JRE on 64bits Systems,32bits JRE on 32bits Systems"/>
+	
+	<target name="dir.check">
+	    <condition property="dir.exists">
+	      <available file="C:\Program Files (x86)" type="dir"/>
+	    </condition>
+	</target>
+	
+    <target name="32bits JRE on 64bits Systems" depends="dir.check" if="dir.exists">
+        <delete dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
+        <mkdir dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
+		<copy todir="../Deploy/FlashTool/x10flasher_lib/jre">
+			<fileset dir="C:\Program Files (x86)\java\jre6"/>
+		</copy>
+    </target>
+
+    <target name="32bits JRE on 32bits Systems" depends="dir.check" unless="dir.exists">
+        <delete dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
+        <mkdir dir="../Deploy/FlashTool/x10flasher_lib/jre"/>
+		<copy todir="../Deploy/FlashTool/x10flasher_lib/jre">
+			<fileset dir="C:\Program Files\java\jre6"/>
+		</copy>
+    </target>
+
+	<target name="core release">
     	<mkdir dir="../Deploy"/>
     	<delete dir="../Deploy/FlashTool"/>
         <mkdir dir ="../Deploy/FlashTool"/>
@@ -61,4 +91,221 @@
     			excludes="**/.svn"/>
         </copy>
     </target>
+
+    <target name="E15 Device">
+        <delete dir="../Deploy/FlashTool/devices/E15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/E15"/>
+		<copy todir="../Deploy/FlashTool/devices/E15">
+			  <fileset dir="./devicesConfig/E15"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+    <target name="LT15 Device">
+        <delete dir="../Deploy/FlashTool/devices/LT15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/LT15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT15/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT15/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT15/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/LT15">
+			  <fileset dir="./devicesConfig/LT15"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/LT15/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="LT18 Device">
+        <delete dir="../Deploy/FlashTool/devices/LT18"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/LT18"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT18/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT18/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT18/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/LT18">
+			  <fileset dir="./devicesConfig/LT18"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/LT18/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="MK16 Device">
+        <delete dir="../Deploy/FlashTool/devices/MK16"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/MK16"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MK16/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MK16/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MK16/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/MK16">
+			  <fileset dir="./devicesConfig/MK16"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/MK16/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+    <target name="MT11 Device">
+        <delete dir="../Deploy/FlashTool/devices/MT11"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/MT11"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT11/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT11/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT11/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/MT11">
+			  <fileset dir="./devicesConfig/MT11"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/MT11/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="MT15 Device">
+        <delete dir="../Deploy/FlashTool/devices/MT15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/MT15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT15/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT15/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT15/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/MT15">
+			  <fileset dir="./devicesConfig/MT15"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/MT15/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="R800 Device">
+        <delete dir="../Deploy/FlashTool/devices/R800"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/R800"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/R800/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/R800/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/R800/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/R800">
+			  <fileset dir="./devicesConfig/R800"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/R800/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="SK17 Device">
+        <delete dir="../Deploy/FlashTool/devices/SK17"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/SK17"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/SK17/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/SK17/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/SK17/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/SK17">
+			  <fileset dir="./devicesConfig/SK17"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/SK17/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="ST15 Device">
+        <delete dir="../Deploy/FlashTool/devices/ST15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/ST15"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST15/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST15/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST15/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/ST15">
+			  <fileset dir="./devicesConfig/ST15"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/ST15/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="ST17 Device">
+        <delete dir="../Deploy/FlashTool/devices/ST17"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/ST17"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST17/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST17/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST17/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/ST17">
+			  <fileset dir="./devicesConfig/ST17"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/ST17/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="ST18 Device">
+        <delete dir="../Deploy/FlashTool/devices/ST18"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/ST18"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST18/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST18/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST18/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/ST18">
+			  <fileset dir="./devicesConfig/ST18"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/ST18/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="WT19 Device">
+        <delete dir="../Deploy/FlashTool/devices/WT19"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/WT19"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/WT19/features"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/WT19/busybox"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/WT19/busybox/1.18.4"/>
+		<copy todir="../Deploy/FlashTool/devices/WT19">
+			  <fileset dir="./devicesConfig/WT19"
+			           excludes="**/.svn"/>
+		</copy>
+		<copy todir="../Deploy/FlashTool/devices/WT19/busybox/1.18.4">
+			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="X10 Device">
+        <delete dir="../Deploy/FlashTool/devices/X10"/>
+    	<mkdir dir="../Deploy/FlashTool/devices"/>
+        <mkdir dir="../Deploy/FlashTool/devices/X10"/>
+		<copy todir="../Deploy/FlashTool/devices/X10">
+			  <fileset dir="./devicesConfig/X10"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
+	<target name="Shells only">
+        <delete dir="../Deploy/FlashTool/custom/shells"/>
+    	<mkdir dir="../Deploy/FlashTool/custom/shells"/>
+		<copy todir="../Deploy/FlashTool/custom/shells">
+			  <fileset dir="./shells"
+			           excludes="**/.svn"/>
+		</copy>
+    </target>
+
 </project>
