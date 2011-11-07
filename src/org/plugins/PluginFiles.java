@@ -35,6 +35,17 @@ public class PluginFiles {
 		}
 	}
 
+	public boolean pullWithRename(String file, String newname) {
+		try {
+			AdbUtility.pull(file, _filedir+OS.getFileSeparator()+newname);
+			return true;
+		}
+		catch (Exception e) {
+			MyLogger.error("Error sending "+file+" to device");
+			return false;			
+		}
+	}
+
 	public String getFileDir() {
 		return _filedir;
 	}
