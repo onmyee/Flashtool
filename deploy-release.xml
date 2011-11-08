@@ -32,6 +32,11 @@
 		</copy>
     </target>
 
+	<target name="clean">
+    	<mkdir dir="../Deploy"/>
+    	<delete dir="../Deploy/FlashTool"/>
+	</target>
+	
 	<target name="core release">
     	<mkdir dir="../Deploy"/>
     	<delete dir="../Deploy/FlashTool"/>
