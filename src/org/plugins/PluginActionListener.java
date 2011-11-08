@@ -3,6 +3,8 @@ package org.plugins;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.logger.MyLogger;
+
 import foxtrot.Job;
 import foxtrot.Worker;
 
@@ -15,15 +17,12 @@ public class PluginActionListener implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		Worker.post(new Job() {
-			public Object run() {
-				try {
-					_p.run();
-				}
-				catch (Exception e) {}
-				return null;
-			}
-		});
+		try {
+			_p.run();
+		}
+		catch (Exception ex) {
+			MyLogger.getLogger().error(ex.getMessage());
+		}
 	}
 
 }
