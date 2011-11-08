@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import org.adb.AdbUtility;
+import org.logger.MyLogger;
 
 public class AdbShell  {
    private ProcessBuilder builder;
@@ -31,7 +32,16 @@ public class AdbShell  {
       while (sc.hasNextLine()) {
     	  String line = sc.nextLine();
     	  if (line.contains("State: device")) {
-    		  while (!AdbUtility.isConnected()) { }
+    		  if (!AdbUtility.isConnected()) { 
+	    		  while (!AdbUtility.isConnected()) {
+	    			  try {
+	    				  Thread.sleep(1000);
+	    			  }
+	    			  catch (Exception e) {
+	    			  }
+	    		  }
+    		  }
+    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
     		  FlasherGUI.doIdent();
     	  }
     	  else if (line.contains("State: unknown")) FlasherGUI.doDisableIdent();

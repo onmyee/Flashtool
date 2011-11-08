@@ -40,7 +40,7 @@ public class OsRun {
 
 	
 	public void run() throws Exception {
-		MyLogger.debug("Running "+command);
+		MyLogger.getLogger().debug("Running "+command);
 		stdout="";stderr="";
 		if (OS.getName().equals("windows"))
 			process = Runtime.getRuntime().exec("cmd /c \""+command+"\"");
@@ -51,7 +51,7 @@ public class OsRun {
 			String line = sc_stdout.nextLine();
 			if (line.length()>0) {
 				stdout=stdout+line+"\n";
-				MyLogger.debug("stdout :" + line);
+				MyLogger.getLogger().debug("stdout :" + line);
 			}
 		}
         Scanner sc_stderr = new Scanner(process.getErrorStream());
@@ -59,7 +59,7 @@ public class OsRun {
 			String line = sc_stderr.nextLine();
 			if (line.length()>0) {
 				stderr=stderr+line+"\n";
-				MyLogger.debug("stderr :" + line);
+				MyLogger.getLogger().debug("stderr :" + line);
 			}
 		}
         RunStack.removeFromStack(this);

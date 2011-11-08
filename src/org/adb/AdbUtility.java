@@ -385,9 +385,10 @@ public class AdbUtility  {
 
 	public static boolean isConnected() {
 		try {
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"echo toto\"");
+			MyLogger.getLogger().debug("Testing if device is connected by sending an adb command");
+			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"ls /\"");
 			command.run();
-			return (command.getStdOut().contains("toto"));
+			return (command.getStdOut().contains("system"));
 		}
 		catch (Exception e) {
 			return false;
