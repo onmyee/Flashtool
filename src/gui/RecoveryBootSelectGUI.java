@@ -136,7 +136,7 @@ public class RecoveryBootSelectGUI extends JDialog {
 			String recovery = i.next();
 			hasElements=true;
 			modelVersion.addRow(new String[]{recovery});
-			MyLogger.debug("Adding "+recovery+" to list of recovery versions");			
+			MyLogger.getLogger().debug("Adding "+recovery+" to list of recovery versions");			
 		}	
 	    if (hasElements) {
 	    	table.setRowSelectionInterval(0, 0);

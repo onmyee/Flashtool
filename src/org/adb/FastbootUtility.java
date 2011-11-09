@@ -4,46 +4,47 @@ import org.system.OS;
 import org.system.OsRun;
 
 public class FastbootUtility {
-	
-	private static String fsep = OS.getFileSeparator();
+
+	private static String adbpath = OS.getAdbPath();
+	private static String fastbootpath = OS.getFastBootPath();
 	
 	public static void adbRebootFastboot() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb reboot bootloader");
+		OsRun command = new OsRun(adbpath+" reboot bootloader");
 		command.run();
 	}
 	
 	public static void hotBoot(String bootimg) throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot boot "+bootimg);
+		OsRun command = new OsRun(fastbootpath+" boot "+bootimg);
 		command.run();		
 	}
 	
 	public static void flashBoot(String bootimg) throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot flash boot "+bootimg);
+		OsRun command = new OsRun(fastbootpath+" flash boot "+bootimg);
 		command.run();		
 	}
 	
 	public static void rebootDevice() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot reboot");
+		OsRun command = new OsRun(fastbootpath+" reboot");
 		command.run();
 	}
 	
 	public static void rebootFastboot() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot reboot-bootloader");
+		OsRun command = new OsRun(fastbootpath+" reboot-bootloader");
 		command.run();
 	}
 	
 	public static void wipeDataCache() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot -w");
+		OsRun command = new OsRun(fastbootpath+" -w");
 		command.run();
 	}
 	
 	public static void getDeviceInfo() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot devices");
+		OsRun command = new OsRun(fastbootpath+" devices");
 		command.run();
 	}
 	
 	public static void getFastbootVerInfo() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"fastboot.exe -i 0x0fce getvar version");
+		OsRun command = new OsRun(fastbootpath+" -i 0x0fce getvar version");
 		command.run();
 	}
 }

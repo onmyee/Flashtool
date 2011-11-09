@@ -30,11 +30,11 @@ public class BundleEntry {
 	
 	public InputStream getInputStream() throws FileNotFoundException, IOException {
 		if (fileentry!=null) {
-			MyLogger.debug("Streaming from file : "+fileentry.getPath());
+			MyLogger.getLogger().debug("Streaming from file : "+fileentry.getPath());
 			return new FileInputStream(fileentry);
 		}
 		else {
-			MyLogger.debug("Streaming from jar entry : "+jarentry.getName());
+			MyLogger.getLogger().debug("Streaming from jar entry : "+jarentry.getName());
 			return _bundle.getImageStream(jarentry);
 		}
 	}

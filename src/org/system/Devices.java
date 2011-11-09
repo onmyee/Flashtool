@@ -51,10 +51,10 @@ public class Devices  {
 					DeviceEntry entry = new DeviceEntry(p);
 					if (device.equals(entry.getId()))
 						props.put(device, entry);
-					else MyLogger.error(device + " : this bundle is not valid");
+					else MyLogger.getLogger().error(device + " : this bundle is not valid");
 				}
 				catch (FileNotFoundException fne) {
-					MyLogger.error(device + " : this bundle is not valid");
+					MyLogger.getLogger().error(device + " : this bundle is not valid");
 				}
 				catch (IOException ioe) {
 				}
@@ -63,7 +63,7 @@ public class Devices  {
 	}
 
 	public static void waitForReboot() throws Exception {
-		MyLogger.info("Waiting for device");
+		MyLogger.getLogger().info("Waiting for device");
 		waitforreboot=true;
 		int count=0;
 		while (waitforreboot) {
@@ -71,11 +71,11 @@ public class Devices  {
 			count++;
 			if (count==30) {
 				count=0;
-				MyLogger.debug("Not autodetected. Trying manually");
+				MyLogger.getLogger().debug("Not autodetected. Trying manually");
 				if (AdbUtility.isConnected()) {
-					MyLogger.debug("Phone connected. Identifying it");
+					MyLogger.getLogger().debug("Phone connected. Identifying it");
 					FlasherGUI.doIdent();
-					MyLogger.debug("End of identification");
+					MyLogger.getLogger().debug("End of identification");
 				}
 			}
 		}

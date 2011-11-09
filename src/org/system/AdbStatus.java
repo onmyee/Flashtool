@@ -11,7 +11,7 @@ import java.util.Scanner;
 import org.adb.AdbUtility;
 import org.logger.MyLogger;
 
-public class AdbShell  {
+public class AdbStatus  {
    private ProcessBuilder builder;
    private Process adb;
    private static String fsep = OS.getFileSeparator();

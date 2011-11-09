@@ -29,7 +29,7 @@ public class TaFile {
 	    			String elem = scanline.next();
 	    			if (elem.length()==8) {
 	    				if (partition.length()>0) {
-	    					MyLogger.debug("Closing entry "+partition);
+	    					MyLogger.getLogger().debug("Closing entry "+partition);
 	    					entries.get(entries.size()-1).close();
 	    				}
 	    				partition = elem;
@@ -45,7 +45,7 @@ public class TaFile {
 	    	}
 	    }
 			if (partition.length()>0) {
-				MyLogger.debug("Closing entry "+partition);
+				MyLogger.getLogger().debug("Closing entry "+partition);
 				entries.get(entries.size()-1).close();
 			}
 	    try {

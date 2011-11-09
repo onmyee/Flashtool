@@ -40,17 +40,17 @@ public class X10flash {
     private void sendTA(InputStream in,String name) throws FileNotFoundException, IOException,X10FlashException {
     	try {
     		TaFile ta = new TaFile(in);
-    		MyLogger.info("Flashing "+name);
+    		MyLogger.getLogger().info("Flashing "+name);
 			Vector<TaEntry> entries = ta.entries();
 			for (int i=0;i<entries.size();i++) {
-				MyLogger.info("TA value : "+HexDump.toHex(entries.get(i).getWordbyte()));
+				MyLogger.getLogger().info("TA value : "+HexDump.toHex(entries.get(i).getWordbyte()));
 				if (!_bundle.simulate()) {
 					cmd.send(Command.CMD13, entries.get(i).getWordbyte(),false);
 				}
 			}
     	}
     	catch (TaParseException tae) {
-    		MyLogger.error("Error parsing TA file. Skipping");
+    		MyLogger.getLogger().error("Error parsing TA file. Skipping");
     	}
     }
 
@@ -84,21 +84,21 @@ public class X10flash {
     public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
     	try {
-		    MyLogger.info("Start Reading property");
-	        MyLogger.debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
+		    MyLogger.getLogger().info("Start Reading property");
+	        MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
 	        cmd.send(Command.CMD12, c.a(prnumber, 4, false),false);
 	        String reply = cmd.getLastReplyHex();
 	        reply = reply.replace("[", "");
 	        reply = reply.replace("]", "");
 	        reply = reply.replace(",", "");
 	        closeDevice();	    
-			MyLogger.info("Reading property finished.");
+			MyLogger.getLogger().info("Reading property finished.");
 			MyLogger.initProgress(0);
 			return reply;
 	    }
     	catch (Exception ioe) {
     		closeDevice();
-    		MyLogger.error("Error dumping properties. Aborted");
+    		MyLogger.getLogger().error("Error dumping properties. Aborted");
     		MyLogger.initProgress(0);
     		return "";
     	}    	
@@ -107,7 +107,7 @@ public class X10flash {
     public void dumpProperties() throws IOException, X10FlashException
     {
     	try {
-		    MyLogger.info("Start Dumping properties");
+		    MyLogger.getLogger().info("Start Dumping properties");
 
 		    cmd = new Command(my_a,my_ch,_bundle.simulate());
 	    	
@@ -122,7 +122,7 @@ public class X10flash {
 	        tazoneS.open(false);
 	        for(int i = 0; i < 3000; i++)
 	        {
-	        	MyLogger.debug((new StringBuilder("%%% read property id=")).append(i).toString());
+	        	MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(i).toString());
 	        	cmd.send(Command.CMD12, c.a(i, 4, false),false);
 	        	String reply = cmd.getLastReplyHex();
 	        	String replyS = cmd.getLastReplyString();
@@ -139,11 +139,11 @@ public class X10flash {
             
 	        closeDevice();
 		    
-			MyLogger.info("Dumping properties finished.");
+			MyLogger.getLogger().info("Dumping properties finished.");
 	    }
     	catch (Exception ioe) {
     		closeDevice();
-    		MyLogger.error("Error dumping properties. Aborted");
+    		MyLogger.getLogger().error("Error dumping properties. Aborted");
     	}
     }
 
@@ -203,7 +203,7 @@ public class X10flash {
     }
 
     public void sendLoader() throws FileNotFoundException, IOException, X10FlashException {
-		MyLogger.info("Flashing loader");
+		MyLogger.getLogger().info("Flashing loader");
 		uploadImage(_bundle.getLoader().getInputStream(), 0x1000);
     }
 
@@ -211,7 +211,7 @@ public class X10flash {
         Enumeration<BundleEntry> e = _bundle.systemdataEntries();
     	while (e.hasMoreElements()) {
     		BundleEntry entry = e.nextElement();
-    		MyLogger.info("Flashing "+entry.getName());
+    		MyLogger.getLogger().info("Flashing "+entry.getName());
     		uploadImage(entry.getInputStream(),0x10000);
     	}    	
     }
@@ -220,9 +220,9 @@ public class X10flash {
     		Enumeration<BundleEntry> e = _bundle.entries();
         	while (e.hasMoreElements()) {
         		BundleEntry entry = e.nextElement();
-        		MyLogger.info("Flashing "+entry.getName());
+        		MyLogger.getLogger().info("Flashing "+entry.getName());
         		uploadImage(entry.getInputStream(),0x10000);
-        		MyLogger.debug("Flashing "+entry.getName()+" finished");
+        		MyLogger.getLogger().debug("Flashing "+entry.getName()+" finished");
         	}
     }
     
@@ -256,7 +256,7 @@ public class X10flash {
     
     public void flashDevice() {
     	try {
-		    MyLogger.info("Start Flashing");
+		    MyLogger.getLogger().info("Start Flashing");
 		    MyLogger.initProgress(getNumberPasses());
 		    
 		    init();
@@ -278,12 +278,12 @@ public class X10flash {
 	
             closeDevice();
 		    
-			MyLogger.info("Flashing finished.");
+			MyLogger.getLogger().info("Flashing finished.");
 		    MyLogger.initProgress(0);
 	    }
     	catch (Exception ioe) {
     		closeDevice();
-    		MyLogger.error("Error flashing. Aborted");
+    		MyLogger.getLogger().error("Error flashing. Aborted");
     	}
     }
 
@@ -307,13 +307,13 @@ public class X10flash {
     	boolean found=false;
     	String device = "";
     	my_a = com.sonyericsson.cs.usbflashnative.b.a.a();
-    	MyLogger.info("Searching Xperia....");
+    	MyLogger.getLogger().info("Searching Xperia....");
     	try {
     		device=Device.getDeviceIdFlashMode();
     		if (!device.startsWith("Err")) {
-    			MyLogger.debug("Trying "+device);
+    			MyLogger.getLogger().debug("Trying "+device);
     			my_ch = my_a.openChannel(device, false);
-    			MyLogger.info("Found at "+device);
+    			MyLogger.getLogger().info("Found at "+device);
     			found = true;
     		}
     		else throw new Exception(device);
@@ -322,11 +322,11 @@ public class X10flash {
     		closeDevice();
     		found=false;
     		if (device.equals("ErrNotPlugged"))
-    			MyLogger.error("Please plug you device in flash mode");
+    			MyLogger.getLogger().error("Please plug you device in flash mode");
     		else if (device.equals("ErrDriverError"))
-    			MyLogger.error("Please install or reinstall device drivers from drivers folder");
+    			MyLogger.getLogger().error("Please install or reinstall device drivers from drivers folder");
     		else
-    			MyLogger.error(device);
+    			MyLogger.getLogger().error(device);
     	}
     	return found;
     }

@@ -78,7 +78,7 @@ public class BuildPropGUI extends JFrame implements ActionListener {
             setTitle(textPath.getText()+"/"+textFile.getText());
         }
         catch (Exception e) {
-        	MyLogger.error(e.getMessage());
+        	MyLogger.getLogger().error(e.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public class BuildPropGUI extends JFrame implements ActionListener {
 			fout.close();
 		}
 		catch (IOException exception) {
-			MyLogger.error(exception.getMessage());
+			MyLogger.getLogger().error(exception.getMessage());
 		}
 		finally {
 				try {
@@ -116,10 +116,10 @@ public class BuildPropGUI extends JFrame implements ActionListener {
 						shell.setProperty("VPERM", saccess.substring(astart, aend).trim());
 						shell.runRoot();
 					}
-					else MyLogger.info("Error mounting /system rw");
+					else MyLogger.getLogger().info("Error mounting /system rw");
 				}
 				catch (Exception exception) {
-					MyLogger.error(exception.getMessage());
+					MyLogger.getLogger().error(exception.getMessage());
 				}
 			}
 		}

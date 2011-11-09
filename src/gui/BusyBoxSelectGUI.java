@@ -130,7 +130,7 @@ public class BusyBoxSelectGUI extends JDialog {
 		    	if (chld[i].isDirectory()) {
 		    			hasElements = true;
 		    			modelVersion.addRow(new String[]{chld[i].getName()});
-		    			MyLogger.debug("Adding "+chld[i].getName()+" to list of busybox version");
+		    			MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of busybox version");
 		    	}
 		    }
 	    if (!hasElements) {

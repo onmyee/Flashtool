@@ -24,7 +24,7 @@ public class Registry {
     	noderoot=noderoot.toUpperCase();
     	Set<String> s = new HashSet();
         try {
-        	MyLogger.debug("Running "+"reg query " + '"'+ noderoot + '"');
+        	MyLogger.getLogger().debug("Running "+"reg query " + '"'+ noderoot + '"');
         	OsRun run = new OsRun("reg query " + '"'+ noderoot + '"');
         	run.run();
             String[] parsed = run.getStdOut().split("\n");
@@ -33,7 +33,7 @@ public class Registry {
             	if (parsed[i].contains(noderoot)) {
             		String[] nodes = parsed[i].split("ADDE");
             		if (nodes.length>1) {
-            			MyLogger.debug("Adding "+nodes[1].toLowerCase().substring(1));
+            			MyLogger.getLogger().debug("Adding "+nodes[1].toLowerCase().substring(1));
             			s.add(nodes[1].toLowerCase().substring(1));
             		}
             	}

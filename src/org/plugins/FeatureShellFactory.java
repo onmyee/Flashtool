@@ -20,7 +20,7 @@ public class FeatureShellFactory {
 			return s;
 		}
 		catch (Exception e) {
-			MyLogger.error(e.getMessage());
+			MyLogger.getLogger().error(e.getMessage());
 			return null;
 		}
 	}

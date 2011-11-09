@@ -49,8 +49,8 @@ public class Command {
 	public void testPlugged() throws X10FlashException {
     	if (!_simulate) {
 	        readReply();
-	        MyLogger.debug("testPlugged");
-	        MyLogger.info(getLastReplyString());
+	        MyLogger.getLogger().debug("testPlugged");
+	        MyLogger.getLogger().info(getLastReplyString());
     	}
 	}
 	
@@ -182,7 +182,7 @@ public class Command {
 	    			my_ch=0;
 	    			throw new X10FlashException("Error writing command");
 	    		}
-	    		MyLogger.debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
+	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
 	    		
 	    	}
 	    	MyLogger.updateProgress();
@@ -218,29 +218,29 @@ public class Command {
 	        if(abyte0 != null && abyte0.length < 65519) {
 	            writeCommand(Command.CMD06, abyte0, ongoing);
 	    		readReply();
-	    		MyLogger.debug("Reply      : "+getLastReplyString());
-	    		MyLogger.debug("Reply(Hex) : "+getLastReplyHex());
+	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
+	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
 	        } 
 	        else {
 	            byte abyte1[] = new byte[65519];
 	            System.arraycopy(abyte0, 0, abyte1, 0, abyte1.length);
 	            writeCommand(Command.CMD06, abyte1, true);
 	    		readReply();
-	    		MyLogger.debug("Reply      : "+getLastReplyString());
-	    		MyLogger.debug("Reply(Hex) : "+getLastReplyHex());
+	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
+	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
 	    		abyte1 = new byte[abyte0.length - 65519];
 	            System.arraycopy(abyte0, 65519, abyte1, 0, abyte1.length);
 	            writeCommand(Command.CMD06, abyte1, ongoing);
 	    		readReply();
-	    		MyLogger.debug("Reply      : "+getLastReplyString());
-	    		MyLogger.debug("Reply(Hex) : "+getLastReplyHex());
+	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
+	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
 	        }
     	}
     	else {
     		writeCommand(cmd, abyte0, ongoing);
     		readReply();
-    		MyLogger.debug("Reply      : "+getLastReplyString());
-    		MyLogger.debug("Reply(Hex) : "+getLastReplyHex());	
+    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
+    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());	
     	}
     }
 
@@ -254,15 +254,15 @@ public class Command {
         {
             if(abyte1.length != 0)
             {
-                MyLogger.debug((new StringBuilder("<<<")).append(new String(abyte1)).toString());
-                MyLogger.debug((new StringBuilder("<<<")).append(HexDump.toHex(abyte1)).toString());
+                MyLogger.getLogger().debug((new StringBuilder("<<<")).append(new String(abyte1)).toString());
+                MyLogger.getLogger().debug((new StringBuilder("<<<")).append(HexDump.toHex(abyte1)).toString());
             } else
             {
-                MyLogger.debug("<<< null string");
+                MyLogger.getLogger().debug("<<< null string");
             }
         } else
         {
-        	MyLogger.debug("<<< (null)");
+        	MyLogger.getLogger().debug("<<< (null)");
         }
         return abyte1;
     	} else return null;

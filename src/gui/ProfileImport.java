@@ -79,7 +79,7 @@ public class ProfileImport extends JDialog {
 		    	hasElements = true;
 	    		JarFile jf = new JarFile(chld[i]);
 	    		tableProfilesmodel.addRow(new String[]{chld[i].getName(),jf.getManifest().getMainAttributes().getValue("profileName")});
-	    		MyLogger.debug("Adding "+chld[i].getName()+" to list of profiles");
+	    		MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of profiles");
 		    }
 		}	    	
 	    if (!hasElements)
@@ -126,7 +126,7 @@ public class ProfileImport extends JDialog {
 			    	JarEntry el = e.nextElement();
 			    	if (!el.getName().startsWith("META")) {
 			    		model_1.addRow(new String[]{el.getName()});
-			    		MyLogger.debug("Adding "+el.getName()+" to the content of "+result);
+			    		MyLogger.getLogger().debug("Adding "+el.getName()+" to the content of "+result);
 			    	}
 				}
 			if (hasElements)

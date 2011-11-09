@@ -131,7 +131,7 @@ public class KernelSelectGUI extends JDialog {
 		    	if (chld[i].isDirectory()) {
 		    			hasElements = true;
 		    			modelVersion.addRow(new String[]{chld[i].getName()});
-		    			MyLogger.debug("Adding "+chld[i].getName()+" to list of firmwares");
+		    			MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of firmwares");
 		    	}
 		    }
 	    if (!hasElements) {

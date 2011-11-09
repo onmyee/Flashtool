@@ -135,7 +135,7 @@ public class deviceSelectGui extends JDialog {
 	public boolean isSelected() {
 		setVisible(!_bundle.hasLoader());
 		if (!_bundle.hasLoader() && (result.length()>0)) {
-			MyLogger.debug("Choosed loader from device selection :"+result);
+			MyLogger.getLogger().debug("Choosed loader from device selection :"+result);
 			if (Devices.getDevice(result).hasUnlockedLoader()) {
 				LoaderSelectGUI sel = new LoaderSelectGUI();
 				String resultL = sel.getResult();

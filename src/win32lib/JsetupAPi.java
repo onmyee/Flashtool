@@ -25,7 +25,7 @@ public class JsetupAPi {
 			return name;
 		}
 		else {
-			MyLogger.error("Error calling SetupDiClassNameFromGuid");
+			MyLogger.getLogger().error("Error calling SetupDiClassNameFromGuid");
 		}
 		return "";
 	}

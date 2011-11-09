@@ -50,14 +50,14 @@ public class DeviceEntry {
 		rsel.setTitle("Recovery selector");
 		String current = rsel.getVersion();
 		if (current.length()>0) {
-			MyLogger.info("Rebooting into recovery mode");
+			MyLogger.getLogger().info("Rebooting into recovery mode");
 			Shell shell = new Shell("rebootrecoveryt");
 			shell.setProperty("RECOV_VERSION", current);
 			shell.runRoot();
-			MyLogger.info("Phone will reboot into recovery mode");
+			MyLogger.getLogger().info("Phone will reboot into recovery mode");
 		}
 		else {
-			MyLogger.info("Canceled");
+			MyLogger.getLogger().info("Canceled");
 		}
 	}
 	
@@ -66,15 +66,15 @@ public class DeviceEntry {
 		String current = rsel.getVersion();
 		if (current.length()>0) {
 			if (AdbUtility.Sysremountrw()) {
-			MyLogger.info("Setting default recovery");
+			MyLogger.getLogger().info("Setting default recovery");
 			Shell shell = new Shell("setdefaultrecovery");
 			shell.setProperty("RECOV_VERSION", current);
 			shell.runRoot();
-			MyLogger.info("Done");
+			MyLogger.getLogger().info("Done");
 			}
 		}
 		else {
-			MyLogger.info("Canceled");
+			MyLogger.getLogger().info("Canceled");
 		}
 	}
 	

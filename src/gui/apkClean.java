@@ -184,7 +184,7 @@ public class apkClean extends JDialog {
 													if (entry.getName().toLowerCase().endsWith("apk")) {
 														InputStream in = j.getInputStream(entry);
 														String outname = "."+OS.getFileSeparator()+"custom"+OS.getFileSeparator()+"apps_saved"+OS.getFileSeparator()+entry.getName();
-														MyLogger.debug("Writing Entry to "+outname);
+														MyLogger.getLogger().debug("Writing Entry to "+outname);
 														OutputStream out = new BufferedOutputStream(new FileOutputStream(outname));
 														byte[] buffer = new byte[1024];
 														int len;
@@ -200,7 +200,7 @@ public class apkClean extends JDialog {
 													if (entry.getName().toLowerCase().startsWith("safelist")) {
 														InputStream in = j.getInputStream(entry);
 														String outname = "."+OS.getFileSeparator()+"custom"+OS.getFileSeparator()+"clean"+OS.getFileSeparator()+entry.getName();
-														MyLogger.debug("Writing Entry to "+outname);
+														MyLogger.getLogger().debug("Writing Entry to "+outname);
 														OutputStream out = new BufferedOutputStream(new FileOutputStream(outname));
 														byte[] buffer = new byte[1024];
 														int len;

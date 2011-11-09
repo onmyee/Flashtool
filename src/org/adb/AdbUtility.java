@@ -20,6 +20,7 @@ public class AdbUtility  {
 	
 	private static String fsep = OS.getFileSeparator();
 	private static String shellpath = "."+fsep+"custom"+fsep+"shells";
+	private static String adbpath = OS.getAdbPath();
 
 	public static String getShellPath() {
 		return shellpath;
@@ -32,7 +33,7 @@ public class AdbUtility  {
 	public static boolean hasRootNative() {
 		try {
 			if (rootnative) return true;
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell id");
+			OsRun command = new OsRun(adbpath+" shell id");
 			command.run();
 			rootnative=command.getStdOut().contains("uid=0(root)");
 		}
@@ -42,7 +43,7 @@ public class AdbUtility  {
 	}
 	
 	public static void forward(String type,String local, String remote) throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb forward "+type.toUpperCase()+":"+local+" "+type.toUpperCase()+":"+remote);
+		OsRun command = new OsRun(adbpath+" forward "+type.toUpperCase()+":"+local+" "+type.toUpperCase()+":"+remote);
 		command.run();
 		System.out.println(command.getCommand());
 		System.out.println(command.getStdOut());
@@ -50,7 +51,7 @@ public class AdbUtility  {
 	}
 	
 	public static HashSet<String> listSysApps() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell ls /system/app/*");
+		OsRun command = new OsRun(adbpath+" shell ls /system/app/*");
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -61,7 +62,7 @@ public class AdbUtility  {
 	}
 	
 	public static HashSet<String> listKernels() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell find /system/kernel -name 'kernel.desc' -type f");
+		OsRun command = new OsRun(adbpath+" shell find /system/kernel -name 'kernel.desc' -type f");
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -75,7 +76,7 @@ public class AdbUtility  {
 	}
 
 	public static HashSet<String> listRecoveries() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell find /system/recovery -name 'recovery.desc' -type f");
+		OsRun command = new OsRun(adbpath+" shell find /system/recovery -name 'recovery.desc' -type f");
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -102,7 +103,7 @@ public class AdbUtility  {
 	
 	public static boolean isMounted(String mountpoint) throws Exception {
 		boolean result = false;
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"mount\"");
+		OsRun command = new OsRun(adbpath+" shell \"mount\"");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
@@ -117,7 +118,7 @@ public class AdbUtility  {
 	public static boolean hasSU() {
 		boolean result = true;
 		try {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"ls /system/bin/su\"");
+		OsRun command = new OsRun(adbpath+" shell \"ls /system/bin/su\"");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
@@ -138,7 +139,7 @@ public class AdbUtility  {
 			boolean systemmounted = isMounted("/system");
 			String result = "";
 			if (!systemmounted) mount("/system","ro","yaffs2");
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell getprop "+key);
+			OsRun command = new OsRun(adbpath+" shell getprop "+key);
 			command.run();
 			result = command.getStdOut().replaceAll("\n","");
 			if (!systemmounted) umount("/system");
@@ -151,7 +152,7 @@ public class AdbUtility  {
 	
 	public static String getFilePerms(String file) {
 		try {
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell stat "+file);
+			OsRun command = new OsRun(adbpath+" shell stat "+file);
 			command.run();
 			Scanner sc = new Scanner(command.getStdOut());
 			while (sc.hasNextLine()) {
@@ -168,7 +169,7 @@ public class AdbUtility  {
 	}
 	
 	public static ByteArrayInputStream getBuildProp() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell cat /system/build.prop");
+		OsRun command = new OsRun(adbpath+" shell cat /system/build.prop");
 		command.run();
 		return new ByteArrayInputStream(command.getStdOut().getBytes());
 	}
@@ -192,7 +193,7 @@ public class AdbUtility  {
 	}
 
 	public static HashSet<String> ls(String basedir,String type) throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell find "+basedir+" -maxdepth 1 -type "+type);
+		OsRun command = new OsRun(adbpath+" shell find "+basedir+" -maxdepth 1 -type "+type);
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -205,20 +206,20 @@ public class AdbUtility  {
 	
 	public static void uninstall(String apk, boolean silent) throws Exception {
 		if (!silent)
-			MyLogger.info("Uninstalling "+apk);
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb uninstall "+apk);
+			MyLogger.getLogger().info("Uninstalling "+apk);
+		OsRun command = new OsRun(adbpath+" uninstall "+apk);
 		command.run();
 	}
 
 	public static void killServer() throws Exception {
-		MyLogger.info("Killing adb service");
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb kill-server");
+		MyLogger.getLogger().info("Killing adb service");
+		OsRun command = new OsRun(adbpath+" kill-server");
 		command.run();
 	}
 
 	public static void startServer() throws Exception {
-			MyLogger.info("Starting adb service");
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb start-server");
+			MyLogger.getLogger().info("Starting adb service");
+			OsRun command = new OsRun(adbpath+" start-server");
 			command.run();
 	}
 
@@ -227,11 +228,11 @@ public class AdbUtility  {
 	}
 	
 	public static void push(String source, String destination, boolean log) throws Exception {
-		if (log) MyLogger.info("Pushing "+source+" to "+destination);
-		else MyLogger.debug("Pushing "+source+" to "+destination);
+		if (log) MyLogger.getLogger().info("Pushing "+source+" to "+destination);
+		else MyLogger.getLogger().debug("Pushing "+source+" to "+destination);
 		File f = new File(source);
 		if (!f.exists()) throw new AdbException(source+" : Not found");
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb push "+source+" "+destination);
+		OsRun command = new OsRun(adbpath+" push "+source+" "+destination);
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
@@ -243,10 +244,10 @@ public class AdbUtility  {
 		try {
 			OsRun command;
 			if (isMounted("/system")) {
-				command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell "+path+"/busybox");
+				command = new OsRun(adbpath+" shell "+path+"/busybox");
 			}
 			else {
-				command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell /sbin/busybox");				
+				command = new OsRun(adbpath+" shell /sbin/busybox");				
 			}
 			command.run();
 			Scanner sc = new Scanner(command.getStdOut());
@@ -263,21 +264,21 @@ public class AdbUtility  {
 	
 	public static void mount(String mountpoint,String options, String type) throws Exception {
 		if (hasRootNative()) {
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell mount -o "+options+" -t "+type+" "+mountpoint);
+			OsRun command = new OsRun(adbpath+" shell mount -o "+options+" -t "+type+" "+mountpoint);
 			command.run();			
 		}
 	}
 	
 	public static void umount(String mountpoint) throws Exception {
 		if (hasRootNative()) {
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell umount "+mountpoint);
+			OsRun command = new OsRun(adbpath+" shell umount "+mountpoint);
 			command.run();
 		}		
 	}
 	
 	public static void pull(String source, String destination) throws Exception {
-		MyLogger.info("Pulling "+source+" to "+destination);
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb pull "+source+" "+destination);
+		MyLogger.getLogger().info("Pulling "+source+" to "+destination);
+		OsRun command = new OsRun(adbpath+" pull "+source+" "+destination);
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
@@ -304,10 +305,10 @@ public class AdbUtility  {
 	public static String run(Shell shell, boolean debug) throws Exception {
 		push(shell.getPath(),GlobalConfig.getProperty("deviceworkdir")+"/"+shell.getName(),false);
 		if (debug)
-			MyLogger.debug("Running "+shell.getName());
+			MyLogger.getLogger().debug("Running "+shell.getName());
 		else
-			MyLogger.info("Running "+shell.getName());
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/"+shell.getName()+";exit $?");
+			MyLogger.getLogger().info("Running "+shell.getName());
+		OsRun command = new OsRun(adbpath+" shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/"+shell.getName()+";exit $?");
 		command.run();
 		if (command.getStdOut().contains("FTError")) throw new Exception(command.getStdErr()+" "+command.getStdOut());
 		return command.getStdOut();
@@ -315,10 +316,10 @@ public class AdbUtility  {
 
 	public static String run(String com, boolean debug) throws Exception {
 		if (debug)
-			MyLogger.debug("Running "+ com + " command");
+			MyLogger.getLogger().debug("Running "+ com + " command");
 		else
-			MyLogger.info("Running "+ com + " command");
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell "+com);
+			MyLogger.getLogger().info("Running "+ com + " command");
+		OsRun command = new OsRun(adbpath+" shell "+com);
 		command.run();
 		return command.getStdOut().trim();
 	}
@@ -338,55 +339,55 @@ public class AdbUtility  {
 		s.clean();
 		push(shell.getPath(),GlobalConfig.getProperty("deviceworkdir")+"/runscript",false);
 		if (log)
-			MyLogger.info("Running "+shell.getName()+"  as root thru sysrun");
+			MyLogger.getLogger().info("Running "+shell.getName()+"  as root thru sysrun");
 		else
-			MyLogger.debug("Running "+shell.getName()+"  as root thru sysrun");
+			MyLogger.getLogger().debug("Running "+shell.getName()+"  as root thru sysrun");
 		OsRun command;
 		if (rootnative)
-			command=new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun");
+			command=new OsRun(adbpath+" shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun");
 		else
-			command=new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell su -c 'sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun'");
+			command=new OsRun(adbpath+" shell su -c 'sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun'");
 		command.run();
 		return command.getStdOut();
 	}
 
 	public static boolean Sysremountrw() throws Exception {
-		MyLogger.info("Remounting system read-write");
+		MyLogger.getLogger().info("Remounting system read-write");
 		Shell shell = new Shell("remount");
 		return !shell.runRoot(false).contains("FTError");
 	}
 
 	public static void clearcache() throws Exception {
-		MyLogger.info("Clearing dalvik cache");
+		MyLogger.getLogger().info("Clearing dalvik cache");
 		Shell shell = new Shell("clearcache");
 		shell.runRoot(false);
 	}
 
 	public static void install(String apk) throws Exception {
-		MyLogger.info("Installing "+apk);
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb install \""+apk+"\"");
+		MyLogger.getLogger().info("Installing "+apk);
+		OsRun command = new OsRun(adbpath+" install \""+apk+"\"");
 		command.run();
 		if (command.getStdOut().contains("Failure")) {
 			uninstall(APKUtility.getPackageName(apk),true);
-			command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb install \""+apk+"\"");
+			command = new OsRun(adbpath+" install \""+apk+"\"");
 			command.run();
 			if (command.getStdOut().contains("Failure")) {
 				Scanner sc = new Scanner(command.getStdOut());
 				sc.nextLine();
-				MyLogger.error(sc.nextLine());
+				MyLogger.getLogger().error(sc.nextLine());
 			}
 		}
 	}
 
 	public static void scanStatus() throws Exception {
-		OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb status-window");
+		OsRun command = new OsRun(adbpath+" status-window");
 		command.run();
 	}
 
 	public static boolean isConnected() {
 		try {
 			MyLogger.getLogger().debug("Testing if device is connected by sending an adb command");
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb shell \"ls /\"");
+			OsRun command = new OsRun(adbpath+" shell ls /");
 			command.run();
 			return (command.getStdOut().contains("system"));
 		}
@@ -396,7 +397,7 @@ public class AdbUtility  {
 	}
 /*	public static boolean isConnected() {
 		try {
-			MyLogger.info("Searching Adb Device");
+			MyLogger.getLogger().info("Searching Adb Device");
 			String res =Device.AdbId();
 			if (res.equals("ErrNotPlugged")) {
 				MyLogger.error("Please plug your device with USB Debugging and Unknown sources on");
@@ -407,7 +408,7 @@ public class AdbUtility  {
 				return false;
 			}
 			boolean connected = false;
-			OsRun command = new OsRun("."+fsep+"x10flasher_lib"+fsep+"adb devices");
+			OsRun command = new OsRun(adbpath+" devices");
 			command.run();
 			String[] result = command.getStdOut().split("\n");
 			for (int i=1;i<result.length; i++) {

@@ -29,7 +29,7 @@ import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
 import org.plugins.PluginActionListenerAbout;
 import org.plugins.PluginInterface;
-import org.system.AdbShell;
+import org.system.AdbStatus;
 import org.system.ClassPath;
 import org.system.CommentedPropertiesFile;
 import org.system.Device;
@@ -111,7 +111,7 @@ public class FlasherGUI extends JFrame {
 	//private static JMenuItem mntmInstallBootkit;
 	private String lang;
 	public static FlasherGUI _root;
-	private static AdbShell adb;
+	private static AdbStatus adb;
 	private static Thread adbWatchdog;
 	private static JMenu mnPlugins;
 	/**
@@ -139,7 +139,7 @@ public class FlasherGUI extends JFrame {
 		adbWatchdog = new Thread() {
 			public void run() {
 				try {
-					adb = new AdbShell();
+					adb = new AdbStatus();
 					adb.start();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -743,10 +743,10 @@ public class FlasherGUI extends JFrame {
 						while (keys.hasNext()) {
 							String key = (String)keys.next();
 							if (safeList.getProperty(key).equals("safe") && !set.contains(key)) {
-								MyLogger.debug(key);
+								MyLogger.getLogger().debug(key);
 								if (TextFile.exists("."+fsep+"custom"+fsep+"apps_saved"+fsep+key)) {
 									String packageName = APKUtility.getPackageName("."+fsep+"custom"+fsep+"apps_saved"+fsep+key);
-									MyLogger.debug(packageName);
+									MyLogger.getLogger().debug(packageName);
 									AdbUtility.uninstall(packageName,false);
 								}
 							}
@@ -791,7 +791,7 @@ public class FlasherGUI extends JFrame {
 						}
 						catch (Exception e) {
 							e.printStackTrace();
-							MyLogger.error(e.getMessage());
+							MyLogger.getLogger().error(e.getMessage());
 						}
 						bundle.close();
 						return null;
@@ -823,11 +823,11 @@ public class FlasherGUI extends JFrame {
 							}
 						}
 						catch (BundleException ioe) {
-							MyLogger.error("Error preparing files");
+							MyLogger.getLogger().error("Error preparing files");
 						}
 						catch (Exception e) {
 							e.printStackTrace();
-							MyLogger.error(e.getMessage());
+							MyLogger.getLogger().error(e.getMessage());
 						}
 						bundle.close();
 						return null;
@@ -862,7 +862,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -888,7 +888,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -940,12 +940,12 @@ public class FlasherGUI extends JFrame {
 									MyLogger.getLogger().info("Rebrand finished. Rebooting phone ...");
 								}
 							}
-							else {MyLogger.error("You are not on a stock ROM");}
+							else {MyLogger.getLogger().error("You are not on a stock ROM");}
 						}
-						else MyLogger.error("Error mounting /system rw");
+						else MyLogger.getLogger().error("Error mounting /system rw");
 				}
 				catch (Exception e) {
-					MyLogger.error(e.getMessage());
+					MyLogger.getLogger().error(e.getMessage());
 					e.printStackTrace();}
 				return null;
 			}
@@ -1041,7 +1041,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());
+					MyLogger.getLogger().error(e.getMessage());
 				}
 				return null;
 			}
@@ -1118,11 +1118,11 @@ public class FlasherGUI extends JFrame {
 							MyLogger.getLogger().info("Recovery successfully installed");
 						}
 						}
-						else MyLogger.error("Error mounting /system rw");
+						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());
+					MyLogger.getLogger().error(e.getMessage());
 				}
 				return null;
 			}
@@ -1181,7 +1181,7 @@ public class FlasherGUI extends JFrame {
 		        }
 	        	catch (Exception e) {
 	        		e.printStackTrace();
-	        		MyLogger.error(e.getMessage());
+	        		MyLogger.getLogger().error(e.getMessage());
 	        	}
 	 			return null;
 			}
@@ -1259,7 +1259,7 @@ public class FlasherGUI extends JFrame {
         		}
         	}
         	if (!found) {
-        		MyLogger.error("Cannot identify your device.");
+        		MyLogger.getLogger().error("Cannot identify your device.");
         		if (Devices.listDevices(false).hasMoreElements()) {
 	        		MyLogger.getLogger().info("Selecting from user input");
 	        		deviceSelectGui devsel = new deviceSelectGui(null);
@@ -1271,7 +1271,7 @@ public class FlasherGUI extends JFrame {
 	        		}
         		}
         		else {
-        			MyLogger.error("You can only flash devices.");
+        			MyLogger.getLogger().error("You can only flash devices.");
         		}
         	}
     	if (found) {
@@ -1280,29 +1280,29 @@ public class FlasherGUI extends JFrame {
     			MyLogger.getLogger().info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
     		}
 			if (Devices.getCurrent().hasRoot()) doGiveRoot();
-			MyLogger.debug("Now setting buttons availability - btnRoot");
+			MyLogger.getLogger().debug("Now setting buttons availability - btnRoot");
     		if (Devices.getCurrent().isRecovery()) {
     			MyLogger.getLogger().info("Phone in recovery mode");
     			btnRoot.setEnabled(false);
     		}
     		else
     			btnRoot.setEnabled(!Devices.getCurrent().hasSU());
-    		MyLogger.debug("mtmRootzergRush menu");
+    		MyLogger.getLogger().debug("mtmRootzergRush menu");
     		mntmRootzergRush.setEnabled(true);
-    		MyLogger.debug("mtmRootPsneuter menu");
+    		MyLogger.getLogger().debug("mtmRootPsneuter menu");
     		mntmRootPsneuter.setEnabled(true);
-    		MyLogger.debug("flashBtn button");
+    		MyLogger.getLogger().debug("flashBtn button");
     		flashBtn.setEnabled(Devices.getCurrent().canFlash());
-    		MyLogger.debug("btnAskRootPerms button");
+    		MyLogger.getLogger().debug("btnAskRootPerms button");
     		btnAskRootPerms.setEnabled((!Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU()));
-    		MyLogger.debug("custBtn button");
+    		MyLogger.getLogger().debug("custBtn button");
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
-        	MyLogger.debug("Now adding plugins");
+        	MyLogger.getLogger().debug("Now adding plugins");
         	mnPlugins.removeAll();
         	addDevicesPlugins();
         	addGenericPlugins();
-    		MyLogger.debug("Stop waiting for device");
+    		MyLogger.getLogger().debug("Stop waiting for device");
     		if (Devices.isWaitingForReboot())
     			Devices.stopWaitForReboot();
         	isidentrun=false;
@@ -1336,9 +1336,9 @@ public class FlasherGUI extends JFrame {
     public static void doAskRoot() {
 		Worker.post(new Job() {
 			public Object run() {
-				MyLogger.warn("Please check your Phone and 'ALLOW' Superuseraccess!");
+				MyLogger.getLogger().warn("Please check your Phone and 'ALLOW' Superuseraccess!");
         		if (!AdbUtility.hasRootPerms()) {
-        			MyLogger.error("Please Accept root permissions on the phone");
+        			MyLogger.getLogger().error("Please Accept root permissions on the phone");
         		}
         		else {
         			doGiveRoot();
@@ -1362,7 +1362,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1386,7 +1386,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1404,11 +1404,11 @@ public class FlasherGUI extends JFrame {
 							shell.runRoot();
 							MyLogger.getLogger().info("bootkit successfully installed");
 						}
-						else MyLogger.error("Error mounting /system rw");
+						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1431,11 +1431,11 @@ public class FlasherGUI extends JFrame {
 								MyLogger.getLogger().info("kernel successfully installed");
 							}
 						}
-						else MyLogger.error("Error mounting /system rw");
+						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
 					e.printStackTrace();
-					MyLogger.error(e.getMessage());}
+					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
 		});
@@ -1521,7 +1521,7 @@ public class FlasherGUI extends JFrame {
 	    }
 	    catch (Exception e) {
 	    	e.printStackTrace();
-	    	MyLogger.error(e.getMessage());
+	    	MyLogger.getLogger().error(e.getMessage());
 	    }
     }
 
@@ -1568,7 +1568,7 @@ public class FlasherGUI extends JFrame {
 	    }
 	    catch (Exception e) {
 	    	e.printStackTrace();
-	    	MyLogger.error(e.getMessage());
+	    	MyLogger.getLogger().error(e.getMessage());
 	    }
     }
 

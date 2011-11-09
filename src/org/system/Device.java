@@ -12,7 +12,7 @@ public class Device {
     	boolean retcode=false;
         HDEVINFO hDevInfo = JsetupAPi.getHandleForAllClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.error("Cannot have device list");
+        	MyLogger.getLogger().error("Cannot have device list");
         }
         else {
         	int index = 0;
@@ -36,7 +36,7 @@ public class Device {
     	boolean retcode=false;
         HDEVINFO hDevInfo = JsetupAPi.getHandleForAllClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.error("Cannot have device list");
+        	MyLogger.getLogger().error("Cannot have device list");
         }
         else {
         	int index = 0;
@@ -60,7 +60,7 @@ public class Device {
     	String DevicePath="ErrNotPlugged";
         HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.error("Cannot have device list");
+        	MyLogger.getLogger().error("Cannot have device list");
         }
         else {
         	SP_DEVINFO_DATA DeviceInfoData;
@@ -85,7 +85,7 @@ public class Device {
     	String DevicePath="ErrNotPlugged";
         HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.error("Cannot have device list");
+        	MyLogger.getLogger().error("Cannot have device list");
         }
         else {
         	SP_DEVINFO_DATA DeviceInfoData;
@@ -109,7 +109,7 @@ public class Device {
     public static void CheckAdbDrivers() {
         HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.error("Cannot have device list");
+        	MyLogger.getLogger().error("Cannot have device list");
         }
         else {
         	SP_DEVINFO_DATA DeviceInfoData;
@@ -119,8 +119,8 @@ public class Device {
 	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
 	            if (result.contains("USB\\VID_0FCE")) {
 	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		MyLogger.error(result+" : Driver Error");
-	            	else MyLogger.info(result+" : OK");
+	            		MyLogger.getLogger().error(result+" : Driver Error");
+	            	else MyLogger.getLogger().info(result+" : OK");
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);

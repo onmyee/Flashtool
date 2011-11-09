@@ -86,7 +86,7 @@ public class firmSelect extends JDialog {
 		    			hasElements = true;
 		    			JarFile jf = new JarFile(chld[i]);
 		    			modelFirm.addRow(new String[]{chld[i].getName(),jf.getManifest().getMainAttributes().getValue("device"),jf.getManifest().getMainAttributes().getValue("version"),jf.getManifest().getMainAttributes().getValue("branding")});
-		    			MyLogger.debug("Adding "+chld[i].getName()+" to list of firmwares");
+		    			MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of firmwares");
 		    	}
 		    }
 	    }
@@ -142,7 +142,7 @@ public class firmSelect extends JDialog {
 				    	}
 				    	else
 				    		model_1.addRow(new String[]{el.getName()});
-			    	MyLogger.debug("Adding "+el.getName()+" to the content of "+result);
+			    	MyLogger.getLogger().debug("Adding "+el.getName()+" to the content of "+result);
 			    }
 			}
 			else {
@@ -359,7 +359,7 @@ public class firmSelect extends JDialog {
 		setVisible(true);
 		if (retcode) {
 			if (GlobalConfig.getProperty("bundle").equals("file")) {
-				MyLogger.debug("Choosed bundle "+result);
+				MyLogger.getLogger().debug("Choosed bundle "+result);
 			}
 			else {
 				selected=new Bundle(result,Bundle.FOLDERTYPE);
@@ -369,7 +369,7 @@ public class firmSelect extends JDialog {
 			}
 			selected.setWipeData(chckbxWipeUserdata.isSelected());
 			selected.setExcludeSystem(chckbxwipesystem.isSelected());
-			MyLogger.info("Selected "+result);
+			MyLogger.getLogger().info("Selected "+result);
 			return selected;
 		}
 		return null;

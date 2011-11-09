@@ -43,18 +43,18 @@ public final class Bundle {
 	private void feedFromJar(String path) {
 		try {
 			_firmware = new JarFile(path);
-			MyLogger.debug("Creating bundle from ftf file : "+_firmware.getName());
+			MyLogger.getLogger().debug("Creating bundle from ftf file : "+_firmware.getName());
 			Enumeration<JarEntry> e = _firmware.entries();
 			while (e.hasMoreElements()) {
 				BundleEntry entry = new BundleEntry(this,e.nextElement());
 				if (entry.getName().toUpperCase().endsWith("SIN") || entry.getName().toUpperCase().endsWith("TA")) {
 					bundleList.put(entry.getName(), entry);
-					MyLogger.debug("Added this entry to the bundle list : "+entry.getName());
+					MyLogger.getLogger().debug("Added this entry to the bundle list : "+entry.getName());
 				}
 			}
 		}
 		catch (IOException ioe) {
-			MyLogger.error("Cannot open the file "+path);
+			MyLogger.getLogger().error("Cannot open the file "+path);
 		}
 	}
 
@@ -63,7 +63,7 @@ public final class Bundle {
 		for (int i=0;i<list.length;i++) {
 			BundleEntry entry = new BundleEntry(list[i],list[i].getName());
 			bundleList.put(entry.getName(), entry);
-			MyLogger.debug("Added this entry to the bundle list : "+entry.getName());
+			MyLogger.getLogger().debug("Added this entry to the bundle list : "+entry.getName());
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class Bundle {
 		Enumeration<BundleEntry> e = allEntries();
 		while (e.hasMoreElements()) {
 			BundleEntry entry = e.nextElement();
-			MyLogger.info("Adding "+entry.getName()+" to the bundle");
+			MyLogger.getLogger().info("Adding "+entry.getName()+" to the bundle");
 		    JarEntry jarAdd = new JarEntry(BundleTrans.getInternal(entry.getName()));
 	        out.putNextEntry(jarAdd);
 	        InputStream in = entry.getInputStream();
@@ -227,10 +227,10 @@ public final class Bundle {
 
 	private void saveEntry(BundleEntry entry) throws IOException {
 		if (entry.isJarEntry()) {
-			MyLogger.debug("Saving entry "+entry.getName()+" to disk");
+			MyLogger.getLogger().debug("Saving entry "+entry.getName()+" to disk");
 			InputStream in = entry.getInputStream();
 			String outname = "."+OS.getFileSeparator()+"firmwares"+OS.getFileSeparator()+"prepared"+OS.getFileSeparator()+entry.getName();
-			MyLogger.debug("Writing Entry to "+outname);
+			MyLogger.getLogger().debug("Writing Entry to "+outname);
 			OutputStream out = new BufferedOutputStream(new FileOutputStream(outname));
 			byte[] buffer = new byte[1024];
 			int len;
@@ -247,7 +247,7 @@ public final class Bundle {
 		try {
 			File f = new File("."+OS.getFileSeparator()+"firmwares"+OS.getFileSeparator()+"prepared");
 			f.mkdir();
-			MyLogger.debug("Created the "+f.getName()+" folder");
+			MyLogger.getLogger().debug("Created the "+f.getName()+" folder");
 			Enumeration<BundleEntry> e = allEntries();
 			while (e.hasMoreElements()) {
 				BundleEntry entry = e.nextElement();

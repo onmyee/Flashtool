@@ -19,7 +19,7 @@ public class PluginFiles {
 			return true;
 		}
 		catch (Exception e) {
-			MyLogger.error("Error sending "+file+" to device");
+			MyLogger.getLogger().error("Error sending "+file+" to device");
 			return false;
 		}
 	}
@@ -30,7 +30,7 @@ public class PluginFiles {
 			return true;
 		}
 		catch (Exception e) {
-			MyLogger.error("Error sending "+file+" to device");
+			MyLogger.getLogger().error("Error sending "+file+" to device");
 			return false;			
 		}
 	}
@@ -41,7 +41,7 @@ public class PluginFiles {
 			return true;
 		}
 		catch (Exception e) {
-			MyLogger.error("Error sending "+file+" to device");
+			MyLogger.getLogger().error("Error sending "+file+" to device");
 			return false;			
 		}
 	}

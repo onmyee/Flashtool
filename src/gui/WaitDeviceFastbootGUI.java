@@ -126,7 +126,7 @@ public class WaitDeviceFastbootGUI extends JDialog {
 					}
 					else {
 						result=false;
-						MyLogger.error(device);
+						MyLogger.getLogger().error(device);
 					}
 					if (cancel) {
 						result=false;

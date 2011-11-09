@@ -89,13 +89,14 @@ public class MyLogger {
 		}
 	}
 
-	public static Logger getLogger() {
-		return logger;
-	}
-	
 	public static void debug (Object obj) {
 		if (isinit)
 			logger.debug(obj);
 	}
+
+	public static Logger getLogger() {
+		return logger;
+	}
+	
 
 }

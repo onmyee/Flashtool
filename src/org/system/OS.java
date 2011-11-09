@@ -23,6 +23,22 @@ public class OS {
 		  return os;
 	}
 	
+	public static String getAdbPath() {
+			String fsep = OS.getFileSeparator();
+		   if (OS.getName().equals("linux"))
+			   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"adb").getAbsolutePath();
+		   else
+			   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"adb.exe").getAbsolutePath();	
+	}
+
+	public static String getFastBootPath() {
+		String fsep = OS.getFileSeparator();
+	   if (OS.getName().equals("linux"))
+		   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"fastboot").getAbsolutePath();
+	   else
+		   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"fastboot.exe").getAbsolutePath();	
+}
+	
 	public static String getMD5(File f) {
 		byte[] buffer = new byte[8192];
 		int read = 0;
