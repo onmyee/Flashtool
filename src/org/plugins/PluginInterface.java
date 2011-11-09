@@ -2,6 +2,8 @@ package org.plugins;
 
 import java.util.Enumeration;
 
+import javax.swing.JMenu;
+
 public interface  PluginInterface {
 
 	public void setWorkdir(String workdir);
@@ -11,5 +13,6 @@ public interface  PluginInterface {
 	public Enumeration<String> getCompatibleKernelVersions();
 	public Enumeration<String> getCompatibleDevices();
 	public void showAbout();
+	public void setMenu(JMenu menu);
 
 }

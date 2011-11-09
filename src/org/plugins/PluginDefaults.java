@@ -3,16 +3,19 @@ package org.plugins;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.JMenu;
+
 import org.system.OS;
 import org.system.PropertiesFile;
 
 public class PluginDefaults {
 
 	static protected String fsep = OS.getFileSeparator();
-	protected String _workdir;
-	protected PropertiesFile featureProperties;
-	protected FeatureShellFactory sfactory;
-	protected PluginFiles files;
+	static protected String _workdir;
+	static protected PropertiesFile featureProperties;
+	static protected FeatureShellFactory sfactory;
+	static protected PluginFiles files;
+	static protected JMenu menu;
 
 	public void setWorkdir(String workdir) {
 		_workdir = workdir;
@@ -44,10 +47,13 @@ public class PluginDefaults {
 		return v.elements();
 	}
 
-	public String getProperty(String property) {
+	public static String getProperty(String property) {
 		if (featureProperties==null)
 			featureProperties = new PropertiesFile("",_workdir+fsep+"feature.properties");
 		return featureProperties.getProperty(property);
 	}
 
+	public void setMenu(JMenu pmenu) {
+		menu=pmenu;
+	}
 }

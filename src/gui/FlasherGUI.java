@@ -106,7 +106,7 @@ public class FlasherGUI extends JFrame {
 	private static JMenuItem mntmRootPsneuter;
 	private static JMenuItem mntmRootzergRush;
 	//private static JMenuItem mntmCleanUninstalled;
-	//private static JMenuItem mntmRecoveryControler;
+	//private static JMenuItem mntmRecoveryer;
 	private static JMenuItem mntmBackupSystemApps;
 	//private static JMenuItem mntmInstallBootkit;
 	private String lang;
@@ -1490,9 +1490,9 @@ public class FlasherGUI extends JFrame {
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             pluginObject.setWorkdir(workdir);
             JMenu deviceMenu = new JMenu(Devices.getCurrent().getId());
-            JMenu menu = new JMenu(pluginObject.getName());
-            deviceMenu.add(menu);
-            JMenuItem item = new JMenuItem("Run");
+            JMenu pluginmenu = new JMenu(pluginObject.getName());
+            deviceMenu.add(pluginmenu);
+            JMenuItem run = new JMenuItem("Run");
             JMenuItem about = new JMenuItem("About");
             boolean aenabled = false;
             Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
@@ -1508,13 +1508,15 @@ public class FlasherGUI extends JFrame {
             	String pversion = e2.nextElement();
             	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
-            item.setEnabled(aenabled&&kenabled);
+            run.setEnabled(aenabled&&kenabled);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
-            item.addActionListener(p);
+            run.addActionListener(p);
             about.addActionListener(p1);
-            menu.add(item);
-            menu.add(about);
+            pluginmenu.add(run);
+            pluginObject.setMenu(pluginmenu);
+            pluginmenu.addSeparator();
+            pluginmenu.add(about);
             mnPlugins.add(deviceMenu);
 	    }
 	    catch (Exception e) {
@@ -1559,6 +1561,8 @@ public class FlasherGUI extends JFrame {
             run.addActionListener(p);
             about.addActionListener(p1);
             menu.add(run);
+            pluginObject.setMenu(menu);
+            menu.addSeparator();
             menu.add(about);
             mnPlugins.add(menu);
 	    }
