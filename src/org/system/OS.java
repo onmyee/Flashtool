@@ -37,7 +37,11 @@ public class OS {
 		   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"fastboot").getAbsolutePath();
 	   else
 		   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"fastboot.exe").getAbsolutePath();	
-}
+	}
+	
+	public static String getWorkDir() {
+		return System.getProperty("user.dir");
+	}
 	
 	public static String getMD5(File f) {
 		byte[] buffer = new byte[8192];

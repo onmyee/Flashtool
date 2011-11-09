@@ -77,6 +77,7 @@ public class FlasherGUI extends JFrame {
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
 	private static boolean isidentrun = false;
+	private static JToolBar toolBar;
 	private JPanel contentPane;
 	static JTextPane textArea = new JTextPane();
 	private Bundle bundle;
@@ -149,6 +150,10 @@ public class FlasherGUI extends JFrame {
 		adbWatchdog.start();
 	}
 
+	public static void addToolbar(JButton button) {
+		toolBar.add(button);
+	}
+	
 	public static void main(String[] args) throws Exception {
 		initLogger();
 		String userdir = System.getProperty("user.dir");
@@ -575,7 +580,7 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));						
 		
-		JToolBar toolBar = new JToolBar();
+		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
 		contentPane.add(toolBar, "2, 2, 17, 1");
 
@@ -1291,10 +1296,12 @@ public class FlasherGUI extends JFrame {
     		mntmRootzergRush.setEnabled(true);
     		MyLogger.getLogger().debug("mtmRootPsneuter menu");
     		mntmRootPsneuter.setEnabled(true);
-    		MyLogger.getLogger().debug("flashBtn button");
-    		flashBtn.setEnabled(Devices.getCurrent().canFlash());
-    		MyLogger.getLogger().debug("btnAskRootPerms button");
-    		btnAskRootPerms.setEnabled((!Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU()));
+    		boolean flash = Devices.getCurrent().canFlash();
+    		MyLogger.getLogger().debug("flashBtn button "+flash);
+    		flashBtn.setEnabled(flash);
+    		boolean hasroot=(Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU());
+    		MyLogger.getLogger().debug("btnAskRootPerms button "+hasroot);
+    		btnAskRootPerms.setEnabled(hasroot);
     		MyLogger.getLogger().debug("custBtn button");
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
@@ -1306,7 +1313,7 @@ public class FlasherGUI extends JFrame {
     		if (Devices.isWaitingForReboot())
     			Devices.stopWaitForReboot();
         	isidentrun=false;
-        	MyLogger.getLogger().debug("Message debug");
+        	MyLogger.getLogger().debug("End of identification");
     	}
         }
 	}
@@ -1445,11 +1452,13 @@ public class FlasherGUI extends JFrame {
     	try {
 	    	File dir = new File("./devices/"+Devices.getCurrent().getId()+"/features");
 		    File[] chld = dir.listFiles();
+		    MyLogger.getLogger().debug("Found "+chld.length+" device plugins to add");
 		    for(int i = 0; i < chld.length; i++){
 		    	if (chld[i].isDirectory()) {
 		    		try {
 		    			Properties p = new Properties();
 		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
+		    			MyLogger.getLogger().debug("Registering "+p.getProperty("classname"));
 		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
 		    			registerPluginDevices(p.getProperty("classname"),chld[i].getPath());
 		    		}
@@ -1458,14 +1467,14 @@ public class FlasherGUI extends JFrame {
 		    	}
 		    }
     	}
-    	catch (Exception e) {
-    	}
+    	catch (Exception e) {}
     }
 
     public static void addGenericPlugins() {
     	try {
 	    	File dir = new File("./custom/features");
 		    File[] chld = dir.listFiles();
+		    MyLogger.debug("Found "+chld.length+" generic plugins to add");
 		    for(int i = 0; i < chld.length; i++){
 		    	if (chld[i].isDirectory()) {
 		    		try {
@@ -1479,8 +1488,7 @@ public class FlasherGUI extends JFrame {
 		    	}
 		    }
     	}
-    	catch (Exception e) {
-    	}
+    	catch (Exception e) {}
     }
 
     public static void registerPluginDevices(String classname,String workdir) {

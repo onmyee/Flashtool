@@ -228,11 +228,11 @@ public class AdbUtility  {
 	}
 	
 	public static void push(String source, String destination, boolean log) throws Exception {
-		if (log) MyLogger.getLogger().info("Pushing "+source+" to "+destination);
-		else MyLogger.getLogger().debug("Pushing "+source+" to "+destination);
 		File f = new File(source);
 		if (!f.exists()) throw new AdbException(source+" : Not found");
-		OsRun command = new OsRun(adbpath+" push "+source+" "+destination);
+		if (log) MyLogger.getLogger().info("Pushing "+f.getAbsolutePath()+" to "+destination);
+		else MyLogger.getLogger().debug("Pushing "+f.getAbsolutePath()+" to "+destination);
+		OsRun command = new OsRun(adbpath+" push "+f.getAbsolutePath()+" "+destination);
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
