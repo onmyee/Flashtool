@@ -99,7 +99,11 @@ public class DeviceEntry {
 	}
 	
 	public String getWorkDir() {
-		return "."+fsep+"devices"+fsep+getId()+fsep+"work";
+		return OS.getWorkDir()+fsep+"devices"+fsep+getId()+fsep+"work";
+	}
+	
+	public String getDeviceDir() {
+		return OS.getWorkDir()+fsep+"devices"+fsep+getId();
 	}
 	
 	public String getBuildProp() {

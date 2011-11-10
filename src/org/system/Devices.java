@@ -40,7 +40,7 @@ public class Devices  {
 	private static void load() {
 		if (props==null) props=new Properties();
 		else props.clear();
-		File[] list = (new File("./devices")).listFiles();
+		File[] list = (new File(OS.getWorkDir()+OS.getFileSeparator()+"devices")).listFiles();
 		if (list==null) return;
 		for (int i=0;i<list.length;i++) {
 			if (list[i].isDirectory()) {

@@ -449,9 +449,9 @@ public class FlasherGUI extends JFrame {
 
 		JMenu mnHelp = new JMenu("Help");
 		mnHelp.setName("mnHelp");
-		menuBar.add(mnHelp);
 		mnPlugins = new JMenu("Plugins");
 		menuBar.add(mnPlugins);
+		menuBar.add(mnHelp);
 
 		JMenu mnLoglevel = new JMenu("Loglevel");
 		mnLoglevel.setName("mnLoglevel");
@@ -504,7 +504,7 @@ public class FlasherGUI extends JFrame {
 
 		rdbtnmntmError.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				MyLogger.setLevel("ERR");
+				MyLogger.setLevel("ERROR");
 			}
 		});
 		
@@ -1299,9 +1299,9 @@ public class FlasherGUI extends JFrame {
     		boolean flash = Devices.getCurrent().canFlash();
     		MyLogger.getLogger().debug("flashBtn button "+flash);
     		flashBtn.setEnabled(flash);
-    		boolean hasroot=(Devices.getCurrent().hasRoot()) && (Devices.getCurrent().hasSU());
-    		MyLogger.getLogger().debug("btnAskRootPerms button "+hasroot);
-    		btnAskRootPerms.setEnabled(hasroot);
+    		if (Devices.getCurrent().hasSU()) {
+    			btnAskRootPerms.setEnabled(!Devices.getCurrent().hasRoot());
+    		}
     		MyLogger.getLogger().debug("custBtn button");
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
@@ -1450,17 +1450,17 @@ public class FlasherGUI extends JFrame {
     
     public static void addDevicesPlugins() {
     	try {
-	    	File dir = new File("./devices/"+Devices.getCurrent().getId()+"/features");
+	    	File dir = new File(Devices.getCurrent().getDeviceDir()+fsep+"features");
 		    File[] chld = dir.listFiles();
 		    MyLogger.getLogger().debug("Found "+chld.length+" device plugins to add");
 		    for(int i = 0; i < chld.length; i++){
 		    	if (chld[i].isDirectory()) {
 		    		try {
 		    			Properties p = new Properties();
-		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
+		    			p.load(new FileInputStream(new File(chld[i].getAbsolutePath()+fsep+"feature.properties")));
 		    			MyLogger.getLogger().debug("Registering "+p.getProperty("classname"));
-		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-		    			registerPluginDevices(p.getProperty("classname"),chld[i].getPath());
+		    			ClassPath.addFile(chld[i].getAbsolutePath()+fsep+p.getProperty("plugin"));
+		    			registerPluginDevices(p.getProperty("classname"),chld[i].getAbsolutePath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
@@ -1472,16 +1472,16 @@ public class FlasherGUI extends JFrame {
 
     public static void addGenericPlugins() {
     	try {
-	    	File dir = new File("./custom/features");
+	    	File dir = new File(OS.getWorkDir()+fsep+"features");
 		    File[] chld = dir.listFiles();
 		    MyLogger.debug("Found "+chld.length+" generic plugins to add");
 		    for(int i = 0; i < chld.length; i++){
 		    	if (chld[i].isDirectory()) {
 		    		try {
 		    			Properties p = new Properties();
-		    			p.load(new FileInputStream(new File(chld[i].getPath()+fsep+"feature.properties")));
-		    			ClassPath.addFile(chld[i].getPath()+fsep+p.getProperty("plugin"));
-		    			registerPluginGeneric(p.getProperty("classname"),chld[i].getPath());
+		    			p.load(new FileInputStream(new File(chld[i].getAbsolutePath()+fsep+"feature.properties")));
+		    			ClassPath.addFile(chld[i].getAbsolutePath()+fsep+p.getProperty("plugin"));
+		    			registerPluginGeneric(p.getProperty("classname"),chld[i].getAbsolutePath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
@@ -1528,7 +1528,6 @@ public class FlasherGUI extends JFrame {
             mnPlugins.add(deviceMenu);
 	    }
 	    catch (Exception e) {
-	    	e.printStackTrace();
 	    	MyLogger.getLogger().error(e.getMessage());
 	    }
     }

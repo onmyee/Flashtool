@@ -118,12 +118,12 @@ public class AdbUtility  {
 	public static boolean hasSU() {
 		boolean result = true;
 		try {
-		OsRun command = new OsRun(adbpath+" shell \"ls /system/bin/su\"");
+		OsRun command = new OsRun(adbpath+" shell \"type su\"");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
-			if (line.contains("No such")) {
+			if (line.toLowerCase().contains("not found")) {
 				result = false;
 			}
 		}

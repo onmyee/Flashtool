@@ -4,8 +4,14 @@
 	<target name="all" depends="core release,E15 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device,JRE"/>
 
 	<target name="7z" >
-	  <taskdef name="sevenzip" classname="org.apache.tools.ant.SevenZip1"/>
-	  <sevenzip input="C:\Users\Manu\git\Deploy\Flashtool" output="C:\Deploy\Flashtool.exe"/>
+	  <taskdef name="sevenzip" classname="org.apache.tools.ant.SevenZip"/>
+	  <delete file="../Deploy/Flashtool.exe"/>
+	  <sevenzip input="../Deploy/Flashtool" output="../Deploy/Flashtool.exe"/>
+	</target>
+
+	<target name="Rar" >
+	  <taskdef name="rar" classname="org.apache.tools.ant.Rar"/>
+	  <rar input="C:\Users\Manu\git\Deploy\Flashtool" output="C:\Deploy\FlashtoolRar.exe"/>
 	</target>
 
 	<target name="JRE" depends="32bits JRE on 64bits Systems,32bits JRE on 32bits Systems"/>
