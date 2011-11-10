@@ -1516,7 +1516,9 @@ public class FlasherGUI extends JFrame {
             	String pversion = e2.nextElement();
             	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
-            run.setEnabled(aenabled&&kenabled&&pluginObject.isRootNeeded());
+            boolean hasroot=false;
+            if (pluginObject.isRootNeeded()) hasroot=Devices.getCurrent().hasRoot();
+            run.setEnabled(aenabled&&kenabled&&hasroot);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             run.addActionListener(p);
@@ -1562,7 +1564,9 @@ public class FlasherGUI extends JFrame {
             	String pversion = e3.nextElement();
             	if (currdevid.equals(pversion) || pversion.equals("any")) denabled=true;
             }
-            run.setEnabled(aenabled&&kenabled&&denabled&&pluginObject.isRootNeeded());
+            boolean hasroot=false;
+            if (pluginObject.isRootNeeded()) hasroot=Devices.getCurrent().hasRoot();
+            run.setEnabled(aenabled&&kenabled&&denabled&&hasroot);
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             run.addActionListener(p);

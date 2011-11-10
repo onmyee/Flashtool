@@ -82,6 +82,17 @@ public final class Bundle {
 			bundleList.remove("system.sin");
 	}
 
+	public void setExcludeBB(boolean excludeBB) {
+		if (excludeBB) {
+			bundleList.remove("amss_fs.sin");
+			bundleList.remove("dsp1.sin");
+			bundleList.remove("fota0.sin");
+			bundleList.remove("fota1.sin");
+			bundleList.remove("amss.sin");
+			bundleList.remove("cache.sin");
+		}
+	}
+
 	public void setSimulate(boolean simulate) {
 		_simulate = simulate;
 	}

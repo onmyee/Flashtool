@@ -63,7 +63,8 @@ public class firmSelect extends JDialog {
 	private boolean retcode = false;
 	JButton okButton;
 	JCheckBox chckbxWipeUserdata;
-	JCheckBox chckbxwipesystem;
+	JCheckBox chckbxEcludeSystem;
+	JCheckBox chckbxExcludeBB;
 	private JTable table_1;
 	private JTextField folderSource;
 
@@ -121,6 +122,7 @@ public class firmSelect extends JDialog {
 		boolean hasElements = false;
 		boolean hasUserData = false;
 		boolean hasSystem = false;
+		boolean hasBB = false;
 		if (result!=null) {
 			if (GlobalConfig.getProperty("bundle").equals("file")) {
 				selected=new Bundle(folderSource.getText()+fsep+result,Bundle.JARTYPE);
@@ -137,11 +139,15 @@ public class firmSelect extends JDialog {
 			    	}
 			    	else
 				    	if (el.getName().toUpperCase().startsWith("SYSTEM")) {
-				    		if (!chckbxwipesystem.isSelected()) model_1.addRow(new String[]{el.getName()});
+				    		if (!chckbxEcludeSystem.isSelected()) model_1.addRow(new String[]{el.getName()});
 				    		hasSystem=true;
 				    	}
 				    	else
-				    		model_1.addRow(new String[]{el.getName()});
+				    		if (!el.getName().toUpperCase().startsWith("KERNEL")) {
+				    			hasBB=true;
+				    			if (!chckbxExcludeBB.isSelected()) model_1.addRow(new String[]{el.getName()});
+				    		}
+				    		else model_1.addRow(new String[]{el.getName()});
 			    	MyLogger.getLogger().debug("Adding "+el.getName()+" to the content of "+result);
 			    }
 			}
@@ -156,7 +162,7 @@ public class firmSelect extends JDialog {
 			    		}
 				    	else
 					    	if (list[i].toUpperCase().startsWith("SYSTEM")) {
-					    		if (!chckbxwipesystem.isSelected()) model_1.addRow(new String[]{list[i]});
+					    		if (!chckbxEcludeSystem.isSelected()) model_1.addRow(new String[]{list[i]});
 					    		hasSystem=true;
 					    	}
 					    	else
@@ -167,7 +173,8 @@ public class firmSelect extends JDialog {
 		    if (hasElements)
 		    	table_1.setRowSelectionInterval(0, 0);
 		    chckbxWipeUserdata.setVisible(hasUserData);
-		    chckbxwipesystem.setVisible(hasSystem);
+		    chckbxEcludeSystem.setVisible(hasSystem);
+		    chckbxExcludeBB.setVisible(hasBB);
 		}
 	}
 	
@@ -179,7 +186,7 @@ public class firmSelect extends JDialog {
 		setName("firmSelect");
 		setTitle("Firmware Selection");
 		setModal(true);
-		setBounds(100, 100, 602, 342);
+		setBounds(100, 100, 602, 353);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -192,11 +199,15 @@ public class firmSelect extends JDialog {
 				ColumnSpec.decode("left:max(60dlu;default)"),},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("29dlu:grow"),
+				RowSpec.decode("29dlu"),
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,
+				RowSpec.decode("default:grow"),}));
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				retcode=false;
@@ -268,7 +279,7 @@ public class firmSelect extends JDialog {
 			contentPanel.add(chckbxWipeUserdata, "6, 4, left, fill");
 		}
 		JScrollPane scrollPane = new JScrollPane();
-		contentPanel.add(scrollPane, "2, 6, left, fill");
+		contentPanel.add(scrollPane, "2, 6, 1, 5, left, fill");
 		tableFirm = new JTable() {
 		    /**
 			 * 
@@ -303,15 +314,15 @@ public class firmSelect extends JDialog {
 		scrollPane.setViewportView(tableFirm);
 		{
 			JScrollPane scrollPane_1 = new JScrollPane();
-			contentPanel.add(scrollPane_1, "4, 6, fill, fill");
+			contentPanel.add(scrollPane_1, "4, 6, 1, 5, fill, fill");
 			{
 				table_1 = new JTable(model_1);
 				scrollPane_1.setViewportView(table_1);
 			}
 		}
 		{
-			chckbxwipesystem = new JCheckBox("Exclude system");
-			chckbxwipesystem.addActionListener(new ActionListener() {
+			chckbxEcludeSystem = new JCheckBox("Exclude system");
+			chckbxEcludeSystem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					try {
 						filelist();
@@ -320,7 +331,19 @@ public class firmSelect extends JDialog {
 				}
 			});
 
-			contentPanel.add(chckbxwipesystem, "6, 6, left, top");
+			contentPanel.add(chckbxEcludeSystem, "6, 6, left, top");
+		}
+		{
+			chckbxExcludeBB = new JCheckBox("Exclude Baseband");
+			chckbxExcludeBB.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						filelist();
+					}
+					catch (Exception e) {}
+				}
+			});
+			contentPanel.add(chckbxExcludeBB, "6, 8");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -368,7 +391,7 @@ public class firmSelect extends JDialog {
 				selected.setBranding((String)modelFirm.getValueAt(tableFirm.getSelectedRow(), 3));
 			}
 			selected.setWipeData(chckbxWipeUserdata.isSelected());
-			selected.setExcludeSystem(chckbxwipesystem.isSelected());
+			selected.setExcludeSystem(chckbxEcludeSystem.isSelected());
 			MyLogger.getLogger().info("Selected "+result);
 			return selected;
 		}
