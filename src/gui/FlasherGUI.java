@@ -1516,7 +1516,7 @@ public class FlasherGUI extends JFrame {
             	String pversion = e2.nextElement();
             	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
-            run.setEnabled(aenabled&&kenabled);
+            run.setEnabled(aenabled&&kenabled&&pluginObject.isRootNeeded());
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             run.addActionListener(p);
@@ -1562,7 +1562,7 @@ public class FlasherGUI extends JFrame {
             	String pversion = e3.nextElement();
             	if (currdevid.equals(pversion) || pversion.equals("any")) denabled=true;
             }
-            run.setEnabled(aenabled&&kenabled&&denabled);
+            run.setEnabled(aenabled&&kenabled&&denabled&&pluginObject.isRootNeeded());
             PluginActionListener p =  new PluginActionListener(pluginObject);
             PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             run.addActionListener(p);

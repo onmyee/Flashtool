@@ -12,6 +12,7 @@ public interface  PluginInterface {
 	public Enumeration<String> getCompatibleAndroidVersions();
 	public Enumeration<String> getCompatibleKernelVersions();
 	public Enumeration<String> getCompatibleDevices();
+	public boolean isRootNeeded();
 	public void showAbout();
 	public void setMenu(JMenu menu);
 

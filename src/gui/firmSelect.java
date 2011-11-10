@@ -229,7 +229,7 @@ public class firmSelect extends JDialog {
 			{
 				folderSource = new JTextField();
 				folderSource.setEditable(false);
-				folderSource.setText("."+fsep+"firmwares");
+				folderSource.setText(OS.getWorkDir()+fsep+"firmwares");
 				panel.add(folderSource, "1, 3, 2, 1, fill, default");
 				folderSource.setColumns(10);
 			}

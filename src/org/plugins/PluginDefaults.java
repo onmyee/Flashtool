@@ -47,6 +47,10 @@ public class PluginDefaults {
 		return v.elements();
 	}
 
+	public boolean isRootNeeded() {
+		return getProperty("needroot").equals("true");
+	}
+	
 	public static String getProperty(String property) {
 		if (featureProperties==null)
 			featureProperties = new PropertiesFile("",_workdir+fsep+"feature.properties");
