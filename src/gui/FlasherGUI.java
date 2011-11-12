@@ -808,6 +808,20 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public void doFlash() throws Exception {
+		BootModeSelectGUI bootmode = new BootModeSelectGUI();
+		String select = bootmode.selectMode();
+		if (select.equals("flashmode"))
+			doFlashmode();
+		if (select.equals("fastboot"))
+			doFastBoot();
+	}
+	
+	public void doFastBoot() throws Exception {
+		FastBootToolboxGUI box = new FastBootToolboxGUI();
+		box.setVisible(true);
+	}
+	
+	public void doFlashmode() throws Exception {
 		firmSelect sel = new firmSelect();
 		bundle = sel.getBundle();
 		if (bundle!=null) {
