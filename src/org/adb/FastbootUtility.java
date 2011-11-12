@@ -2,6 +2,7 @@ package org.adb;
 
 import org.system.OS;
 import org.system.OsRun;
+import org.system.RunOutputs;
 
 public class FastbootUtility {
 
@@ -13,14 +14,16 @@ public class FastbootUtility {
 		command.run();
 	}
 	
-	public static void hotBoot(String bootimg) throws Exception {
+	public static RunOutputs hotBoot(String bootimg) throws Exception {
 		OsRun command = new OsRun(fastbootpath+" boot "+bootimg);
-		command.run();		
+		command.run();	
+		return command.getOutputs();
 	}
 	
-	public static void flashBoot(String bootimg) throws Exception {
+	public static RunOutputs flashBoot(String bootimg) throws Exception {
 		OsRun command = new OsRun(fastbootpath+" flash boot "+bootimg);
 		command.run();		
+		return command.getOutputs();
 	}
 	
 	public static void rebootDevice() throws Exception {
@@ -34,17 +37,20 @@ public class FastbootUtility {
 	}
 	
 	public static void wipeDataCache() throws Exception {
+		// currently there seems to be some issue executing this
 		OsRun command = new OsRun(fastbootpath+" -w");
 		command.run();
 	}
 	
-	public static void getDeviceInfo() throws Exception {
+	public static RunOutputs getDeviceInfo() throws Exception {
 		OsRun command = new OsRun(fastbootpath+" devices");
 		command.run();
+		return command.getOutputs();
 	}
 	
-	public static void getFastbootVerInfo() throws Exception {
+	public static RunOutputs getFastbootVerInfo() throws Exception {
 		OsRun command = new OsRun(fastbootpath+" -i 0x0fce getvar version");
 		command.run();
+		return command.getOutputs();
 	}
 }
