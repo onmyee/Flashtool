@@ -72,20 +72,9 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnRebootIntoFastbootADB = new JButton("Reboot into fastboot mode (via ADB)");
 			btnRebootIntoFastbootADB.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Worker.post(new Job() {
-						public Object run() {
-							MyLogger.info("Reboot into fastboot mode (via ADB)");
 
-							try {
-								FastbootUtility.adbRebootFastboot();
-								MyLogger.info("Device will soon enter fastboot mode");
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});
+					adbRebootIntoFastboot();
+					
 				}
 
 			});
@@ -94,22 +83,12 @@ public class FastBootToolboxGUI extends JDialog {
 		}
 		
 		{
-			JButton btnFastbootReboot = new JButton("Reboot device");
+			JButton btnFastbootReboot = new JButton("Reboot device into system");
 			btnFastbootReboot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Worker.post(new Job() {
-						public Object run() {
-							MyLogger.info("Rebooting device from fastboot mode");
+					
+					fastbootReboot();
 
-							try {
-								FastbootUtility.rebootDevice();
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});
 				}
 				});
 			btnFastbootReboot.setBounds(285, 86, 128, 23);
@@ -120,20 +99,9 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnRebootIntoFastbootFB = new JButton("Reboot into fastboot mode (via Fastboot)");
 			btnRebootIntoFastbootFB.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Worker.post(new Job() {
-						public Object run() {
-							MyLogger.info("Reboot into fastboot mode (via Fastboot)");
+					
+					rebootBackIntoFastbootMode();
 
-							try {
-								FastbootUtility.rebootFastboot();
-								MyLogger.info("Device will soon reboot back into fastboot mode");
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});
 				}
 			});
 			btnRebootIntoFastbootFB.setBounds(10, 120, 248, 23);
@@ -144,20 +112,8 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnGetDeviceInfo = new JButton("Get Device Info");
 			btnGetDeviceInfo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Worker.post(new Job() {
-						public Object run() {
-
-							MyLogger.info("Fetching connected device info");
-
-							try {
-								FastbootUtility.getDeviceInfo();
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});
+					
+					getConnectedDeviceInfo();
 
 				}
 			});
@@ -169,20 +125,9 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnGetVerInfo = new JButton("Get Ver Info");
 			btnGetVerInfo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Worker.post(new Job() {
-						public Object run() {
+				
+					getFastbootVerInfo();
 
-							MyLogger.info("Fetching fastboot info from connected device");
-
-							try {
-								FastbootUtility.getFastbootVerInfo();
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});
 				}
 			});
 			btnGetVerInfo.setBounds(285, 154, 128, 23);
@@ -192,7 +137,9 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnSelectBootimgToHotBoot = new JButton("Select boot.img to HotBoot");
 			btnSelectBootimgToHotBoot.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
 					hotbootKernel();
+					
 				}
 			});
 			btnSelectBootimgToHotBoot.setBounds(43, 197, 163, 23);
@@ -202,7 +149,9 @@ public class FastBootToolboxGUI extends JDialog {
 			JButton btnSelectBootimgToFlash = new JButton("Select boot.img to Flash");
 			btnSelectBootimgToFlash.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					
 					flashKernel();
+					
 				}
 			});
 			btnSelectBootimgToFlash.setBounds(216, 197, 163, 23);
@@ -217,7 +166,9 @@ public class FastBootToolboxGUI extends JDialog {
 				JButton closeButton = new JButton("Close");
 				closeButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+					
 						dispose();
+						
 					}
 				});
 				closeButton.setActionCommand("Close");
@@ -228,6 +179,94 @@ public class FastBootToolboxGUI extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		//setLanguage();
 	}
+	
+	public void adbRebootIntoFastboot(){
+		Worker.post(new Job() {
+			public Object run() {
+				MyLogger.info("Reboot into fastboot mode (via ADB)");
+
+				try {
+					FastbootUtility.adbRebootFastboot();
+					MyLogger.info("Device will soon enter fastboot mode");
+				}
+				catch (Exception e1) {
+					MyLogger.error(e1.getMessage());
+				}
+				return null;
+			}
+		});		
+	}
+	
+	public void fastbootReboot(){
+		
+		Worker.post(new Job() {
+			public Object run() {
+				MyLogger.info("Rebooting device into system, device will now exit fastboot mode and start booting");
+
+				try {
+					FastbootUtility.rebootDevice();
+				}
+				catch (Exception e1) {
+					MyLogger.error(e1.getMessage());
+				}
+				return null;
+			}
+		});
+	}
+	
+	public void rebootBackIntoFastbootMode(){
+		
+		Worker.post(new Job() {
+			public Object run() {
+				MyLogger.info("Reboot into fastboot mode (via Fastboot)");
+
+				try {
+					FastbootUtility.rebootFastboot();
+					MyLogger.info("Device will soon reboot back into fastboot mode");
+				}
+				catch (Exception e1) {
+					MyLogger.error(e1.getMessage());
+				}
+				return null;
+			}
+		});
+	}
+	
+	public void getConnectedDeviceInfo(){
+		
+		Worker.post(new Job() {
+			public Object run() {
+
+				MyLogger.info("Fetching connected device info");
+
+				try {
+					FastbootUtility.getDeviceInfo();
+				}
+				catch (Exception e1) {
+					MyLogger.error(e1.getMessage());
+				}
+				return null;
+			}
+		});
+	}
+	
+	public void getFastbootVerInfo(){
+		Worker.post(new Job() {
+			public Object run() {
+
+				MyLogger.info("Fetching fastboot version info from connected device");
+
+				try {
+					FastbootUtility.getFastbootVerInfo();
+				}
+				catch (Exception e1) {
+					MyLogger.error(e1.getMessage());
+				}
+				return null;
+			}
+		});
+	}
+	
 	
 	public void setLanguage() {
 		Language.translate(this);
