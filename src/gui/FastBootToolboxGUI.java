@@ -44,7 +44,7 @@ public class FastBootToolboxGUI extends JDialog {
 		setModal(true);
 		setResizable(false);
 		setAlwaysOnTop(true);
-		setBounds(100, 100, 429, 289);
+		setBounds(100, 100, 530, 310);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -52,19 +52,19 @@ public class FastBootToolboxGUI extends JDialog {
 		{
 			JLabel lblName = new JLabel("Fastboot Toolbox");
 			lblName.setHorizontalAlignment(SwingConstants.CENTER);
-			lblName.setBounds(10, 11, 403, 14);
+			lblName.setBounds(10, 11, 504, 14);
 			contentPanel.add(lblName);
 		}
 		{
 			JLabel lblVersion = new JLabel("Version "+version);
 			lblVersion.setHorizontalAlignment(SwingConstants.CENTER);
-			lblVersion.setBounds(10, 36, 403, 14);
+			lblVersion.setBounds(10, 36, 504, 14);
 			contentPanel.add(lblVersion);
 		}
 		{
 			JLabel lblFrom = new JLabel(msg2);
 			lblFrom.setHorizontalAlignment(SwingConstants.CENTER);
-			lblFrom.setBounds(10, 61, 403, 14);
+			lblFrom.setBounds(10, 61, 504, 14);
 			contentPanel.add(lblFrom);
 		}
 		
@@ -78,7 +78,7 @@ public class FastBootToolboxGUI extends JDialog {
 				}
 
 			});
-			btnRebootIntoFastbootADB.setBounds(10, 86, 248, 23);
+			btnRebootIntoFastbootADB.setBounds(29, 106, 211, 23);
 			contentPanel.add(btnRebootIntoFastbootADB);
 		}
 		
@@ -91,7 +91,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 				});
-			btnFastbootReboot.setBounds(285, 86, 128, 23);
+			btnFastbootReboot.setBounds(336, 205, 163, 23);
 			contentPanel.add(btnFastbootReboot);
 		}
 		
@@ -104,7 +104,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 			});
-			btnRebootIntoFastbootFB.setBounds(10, 120, 248, 23);
+			btnRebootIntoFastbootFB.setBounds(264, 106, 235, 23);
 			contentPanel.add(btnRebootIntoFastbootFB);
 		}
 		
@@ -117,7 +117,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 			});
-			btnGetDeviceInfo.setBounds(285, 120, 128, 23);
+			btnGetDeviceInfo.setBounds(182, 205, 128, 23);
 			contentPanel.add(btnGetDeviceInfo);
 		}
 		
@@ -130,7 +130,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 			});
-			btnGetVerInfo.setBounds(285, 154, 128, 23);
+			btnGetVerInfo.setBounds(31, 205, 128, 23);
 			contentPanel.add(btnGetVerInfo);
 		}
 		{
@@ -142,7 +142,7 @@ public class FastBootToolboxGUI extends JDialog {
 					
 				}
 			});
-			btnSelectBootimgToHotBoot.setBounds(43, 197, 163, 23);
+			btnSelectBootimgToHotBoot.setBounds(75, 159, 163, 23);
 			contentPanel.add(btnSelectBootimgToHotBoot);
 		}
 		{
@@ -154,7 +154,7 @@ public class FastBootToolboxGUI extends JDialog {
 					
 				}
 			});
-			btnSelectBootimgToFlash.setBounds(216, 197, 163, 23);
+			btnSelectBootimgToFlash.setBounds(265, 159, 163, 23);
 			contentPanel.add(btnSelectBootimgToFlash);
 		}
 		
