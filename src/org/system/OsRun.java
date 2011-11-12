@@ -33,6 +33,10 @@ public class OsRun {
 		return stdout;
 	}
 
+	public RunOutputs getOutputs() {
+		return new RunOutputs(stdout, stderr);
+	}
+	
 	public String getStdErr() {
 		return stderr;
 	}
