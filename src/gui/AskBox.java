@@ -14,11 +14,23 @@ import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JTextArea;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class AskBox extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	String result = "no";
+	
+	public AskBox() {
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				//if (f!=null) f.delete();
+				result = "no";
+				dispose();
+			}
+		});
+	}
 	
 	static String getReplyOf(String message) {
 		String result = "no";
@@ -40,6 +52,7 @@ public class AskBox extends JDialog {
 				RowSpec.decode("default:grow"),}));
 		{
 			JTextArea msg = new JTextArea(message);
+			msg.setEditable(false);
 			box.contentPanel.add(msg, "2, 4, 3, 1, fill, fill");
 		}
 			JPanel buttonPane = new JPanel();
