@@ -11,11 +11,11 @@ import org.system.PropertiesFile;
 public class PluginDefaults {
 
 	static protected String fsep = OS.getFileSeparator();
-	static protected String _workdir;
-	static protected PropertiesFile featureProperties;
-	static protected FeatureShellFactory sfactory;
-	static protected PluginFiles files;
-	static protected JMenu menu;
+	protected String _workdir;
+	protected PropertiesFile featureProperties;
+	protected FeatureShellFactory sfactory;
+	protected PluginFiles files;
+	protected JMenu menu;
 
 	public void setWorkdir(String workdir) {
 		_workdir = workdir;
@@ -51,7 +51,7 @@ public class PluginDefaults {
 		return getProperty("needroot").equals("true");
 	}
 	
-	public static String getProperty(String property) {
+	public String getProperty(String property) {
 		if (featureProperties==null)
 			featureProperties = new PropertiesFile("",_workdir+fsep+"feature.properties");
 		return featureProperties.getProperty(property);

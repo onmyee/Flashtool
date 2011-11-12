@@ -77,19 +77,34 @@ public final class Bundle {
 			bundleList.remove("userdata.sin");
 	}
 
+	public void setWipeCache(boolean wipecache) {
+		if (!wipecache)
+			bundleList.remove("cache.sin");
+	}
+
 	public void setExcludeSystem(boolean excludesystem) {
 		if (excludesystem)
 			bundleList.remove("system.sin");
 	}
 
+	public void setExcludeKernel(boolean excludekernel) {
+		if (excludekernel)
+			bundleList.remove("kernel.sin");
+	}
+
 	public void setExcludeBB(boolean excludeBB) {
 		if (excludeBB) {
-			bundleList.remove("amss_fs.sin");
-			bundleList.remove("dsp1.sin");
-			bundleList.remove("fota0.sin");
-			bundleList.remove("fota1.sin");
-			bundleList.remove("amss.sin");
-			bundleList.remove("cache.sin");
+			Enumeration keys = bundleList.keys();
+			while (keys.hasMoreElements()) {
+				String key = (String)keys.nextElement();
+			    if (!key.toUpperCase().startsWith("KERNEL") &&
+				    	!key.toUpperCase().startsWith("LOADER") &&
+				    	!key.toUpperCase().startsWith("USERDATA") &&
+				    	!key.toUpperCase().startsWith("CACHE") &&
+				    	!key.toUpperCase().startsWith("SYSTEM")) {
+			    	bundleList.remove(key);
+			    }
+			}
 		}
 	}
 

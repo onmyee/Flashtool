@@ -68,6 +68,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 
 public class FlasherGUI extends JFrame {
 
@@ -175,6 +176,7 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public FlasherGUI() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(FlasherGUI.class.getResource("/gui/ressources/icons/flash_32.png")));
 		_root=this;
 		setName("FlasherGUI");
 		setTitle("SonyEricsson X10 Flasher by Bin4ry & Androxyde");
@@ -1460,7 +1462,7 @@ public class FlasherGUI extends JFrame {
 		    			p.load(new FileInputStream(new File(chld[i].getAbsolutePath()+fsep+"feature.properties")));
 		    			MyLogger.getLogger().debug("Registering "+p.getProperty("classname"));
 		    			ClassPath.addFile(chld[i].getAbsolutePath()+fsep+p.getProperty("plugin"));
-		    			registerPluginDevices(p.getProperty("classname"),chld[i].getAbsolutePath());
+		    			registerPlugin("device",p.getProperty("classname"),chld[i].getAbsolutePath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
@@ -1472,7 +1474,7 @@ public class FlasherGUI extends JFrame {
 
     public static void addGenericPlugins() {
     	try {
-	    	File dir = new File(OS.getWorkDir()+fsep+"features");
+	    	File dir = new File(OS.getWorkDir()+fsep+"custom"+fsep+"features");
 		    File[] chld = dir.listFiles();
 		    MyLogger.debug("Found "+chld.length+" generic plugins to add");
 		    for(int i = 0; i < chld.length; i++){
@@ -1481,106 +1483,85 @@ public class FlasherGUI extends JFrame {
 		    			Properties p = new Properties();
 		    			p.load(new FileInputStream(new File(chld[i].getAbsolutePath()+fsep+"feature.properties")));
 		    			ClassPath.addFile(chld[i].getAbsolutePath()+fsep+p.getProperty("plugin"));
-		    			registerPluginGeneric(p.getProperty("classname"),chld[i].getAbsolutePath());
+		    			registerPlugin("generic",p.getProperty("classname"),chld[i].getAbsolutePath());
 		    		}
 		    		catch (IOException ioe) {
 		    		}
 		    	}
 		    }
     	}
-    	catch (Exception e) {}
+    	catch (Exception e) {
+    		MyLogger.getLogger().debug(e.getMessage());
+    	}
     }
 
-    public static void registerPluginDevices(String classname,String workdir) {
+    public static void registerPlugin(String type, String classname, String workdir) {
 	    try {
+
 	    	Class pluginClass = Class.forName(classname);
             Constructor constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             pluginObject.setWorkdir(workdir);
-            JMenu deviceMenu = new JMenu(Devices.getCurrent().getId());
-            JMenu pluginmenu = new JMenu(pluginObject.getName());
-            deviceMenu.add(pluginmenu);
-            JMenuItem run = new JMenuItem("Run");
-            JMenuItem about = new JMenuItem("About");
+
             boolean aenabled = false;
-            Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
             String aversion = Devices.getCurrent().getVersion();
+            Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
             while (e1.hasMoreElements()) {
             	String pversion = e1.nextElement();
             	if (aversion.startsWith(pversion) || pversion.equals("any")) aenabled=true;
             }
-            Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
-            String kversion = Devices.getCurrent().getKernelVersion();
+            
             boolean kenabled = false;
+            String kversion = Devices.getCurrent().getKernelVersion();
+            Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
             while (e2.hasMoreElements()) {
             	String pversion = e2.nextElement();
             	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
             }
+            
+            boolean denabled = false;
+            if (type.equals("generic")) {
+	            String currdevid = Devices.getCurrent().getId();
+	            Enumeration <String> e3 = pluginObject.getCompatibleDevices();
+	            while (e3.hasMoreElements()) {
+	            	String pversion = e3.nextElement();
+	            	if (currdevid.equals(pversion) || pversion.equals("any")) denabled=true;
+	            }
+            }
+            else
+            	denabled=true;
+
             boolean hasroot=false;
             if (pluginObject.isRootNeeded()) hasroot=Devices.getCurrent().hasRoot();
-            run.setEnabled(aenabled&&kenabled&&hasroot);
+            
+            JMenu pluginmenu = new JMenu(pluginObject.getName());
+
+            JMenuItem run = new JMenuItem("Run");
+            run.setEnabled(aenabled&&kenabled&&denabled&&hasroot);
             PluginActionListener p =  new PluginActionListener(pluginObject);
-            PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             run.addActionListener(p);
+
+            JMenuItem about = new JMenuItem("About");
+            PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
             about.addActionListener(p1);
             pluginmenu.add(run);
             pluginObject.setMenu(pluginmenu);
             pluginmenu.addSeparator();
             pluginmenu.add(about);
-            mnPlugins.add(deviceMenu);
-	    }
-	    catch (Exception e) {
-	    	MyLogger.getLogger().error(e.getMessage());
-	    }
-    }
 
-    public static void registerPluginGeneric(String classname,String workdir) {
-	    try {
-	    	Class pluginClass = Class.forName(classname);
-            Constructor constr = pluginClass.getConstructor();
-            PluginInterface pluginObject = (PluginInterface)constr.newInstance();
-            pluginObject.setWorkdir(workdir);
-            JMenu menu = new JMenu(pluginObject.getName());
-            JMenuItem run = new JMenuItem("Run");
-            JMenuItem about = new JMenuItem("About");
-            boolean aenabled = false;
-            Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
-            String aversion = Devices.getCurrent().getVersion();
-            while (e1.hasMoreElements()) {
-            	String pversion = e1.nextElement();
-            	if (aversion.startsWith(pversion) || pversion.equals("any")) aenabled=true;
+            if (type.equals("device")&&aenabled&&kenabled&&denabled&&hasroot) {
+            	JMenu deviceMenu = new JMenu(Devices.getCurrent().getId());
+            	deviceMenu.add(pluginmenu);
+            	mnPlugins.add(deviceMenu);
             }
-            Enumeration <String> e2 = pluginObject.getCompatibleKernelVersions();
-            String kversion = Devices.getCurrent().getKernelVersion();
-            boolean kenabled = false;
-            while (e2.hasMoreElements()) {
-            	String pversion = e2.nextElement();
-            	if (kversion.equals(pversion) || pversion.equals("any")) kenabled=true;
-            }
-            Enumeration <String> e3 = pluginObject.getCompatibleDevices();
-            String currdevid = Devices.getCurrent().getId();
-            boolean denabled = false;
-            while (e3.hasMoreElements()) {
-            	String pversion = e3.nextElement();
-            	if (currdevid.equals(pversion) || pversion.equals("any")) denabled=true;
-            }
-            boolean hasroot=false;
-            if (pluginObject.isRootNeeded()) hasroot=Devices.getCurrent().hasRoot();
-            run.setEnabled(aenabled&&kenabled&&denabled&&hasroot);
-            PluginActionListener p =  new PluginActionListener(pluginObject);
-            PluginActionListenerAbout p1 = new PluginActionListenerAbout(pluginObject);
-            run.addActionListener(p);
-            about.addActionListener(p1);
-            menu.add(run);
-            pluginObject.setMenu(menu);
-            menu.addSeparator();
-            menu.add(about);
-            mnPlugins.add(menu);
+            else
+            	if (aenabled&&kenabled&&denabled&&hasroot)
+            		mnPlugins.add(pluginmenu);
 	    }
 	    catch (Exception e) {
 	    	e.printStackTrace();
 	    	MyLogger.getLogger().error(e.getMessage());
-	    }
+	    }    	
     }
-
+    
 }
