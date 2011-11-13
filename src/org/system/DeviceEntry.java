@@ -3,6 +3,7 @@ package org.system;
 import gui.BusyBoxSelectGUI;
 import gui.RecoveryBootSelectGUI;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -165,11 +166,17 @@ public class DeviceEntry {
 	}
 	
 	public boolean canKernel() {
-		return _entry.getProperty("cankernel").equals("true");
+		File f=new File(getDeviceDir()+fsep+"kernel");
+		return (_entry.getProperty("cankernel").equals("true") && f.isDirectory());
 	}
 
 	public boolean canRecovery() {
-		return _entry.getProperty("canrecovery").equals("true");
+		File f=new File(getDeviceDir()+fsep+"recovery");
+		return (_entry.getProperty("canrecovery").equals("true") && f.isDirectory());
+	}
+
+	public boolean canFastboot() {
+		return _entry.getProperty("canfastboot").equals("true");
 	}
 
 	public String getBusybox(boolean select) {

@@ -35,7 +35,7 @@ public class AdbUtility  {
 			if (rootnative) return true;
 			OsRun command = new OsRun(adbpath+" shell id");
 			command.run();
-			rootnative=command.getStdOut().contains("uid=0(root)");
+			rootnative=command.getStdOut().contains("uid=0");
 		}
 		catch (Exception e) {
 		}
@@ -180,11 +180,11 @@ public class AdbUtility  {
 		try {
 			Shell shell = new Shell("checkperms");
 			String result=shell.runRoot(false);
-			while (result.contains("Segmentation fault")) {
+			while (result.toLowerCase().contains("segmentation fault")) {
 				Thread.sleep(10000);
 				result=shell.runRoot(false);
 			}
-			rootperms=result.contains("uid=0(root)");
+			rootperms=result.contains("uid=0");
 			return rootperms;
 		}
 		catch (Exception e) {

@@ -1300,14 +1300,22 @@ public class FlasherGUI extends JFrame {
     			MyLogger.getLogger().info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
     			MyLogger.getLogger().info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
     		}
-			if (Devices.getCurrent().hasRoot()) doGiveRoot();
-			MyLogger.getLogger().debug("Now setting buttons availability - btnRoot");
     		if (Devices.getCurrent().isRecovery()) {
     			MyLogger.getLogger().info("Phone in recovery mode");
     			btnRoot.setEnabled(false);
+    			btnAskRootPerms.setEnabled(false);
+    			doGiveRoot();
     		}
-    		else
-    			btnRoot.setEnabled(!Devices.getCurrent().hasSU());
+    		else {
+    			boolean hasSU = Devices.getCurrent().hasSU();
+    			btnRoot.setEnabled(!hasSU);
+    			if (hasSU) {
+    				boolean hasRoot = Devices.getCurrent().hasRoot();
+    				if (hasRoot) doGiveRoot();
+    				btnAskRootPerms.setEnabled(!hasRoot);
+    			}
+    		}
+			MyLogger.getLogger().debug("Now setting buttons availability - btnRoot");
     		MyLogger.getLogger().debug("mtmRootzergRush menu");
     		mntmRootzergRush.setEnabled(true);
     		MyLogger.getLogger().debug("mtmRootPsneuter menu");
@@ -1315,9 +1323,6 @@ public class FlasherGUI extends JFrame {
     		boolean flash = Devices.getCurrent().canFlash();
     		MyLogger.getLogger().debug("flashBtn button "+flash);
     		flashBtn.setEnabled(flash);
-    		if (Devices.getCurrent().hasSU()) {
-    			btnAskRootPerms.setEnabled(!Devices.getCurrent().hasRoot());
-    		}
     		MyLogger.getLogger().debug("custBtn button");
     		custBtn.setEnabled(true);
     		//mntmCleanUninstalled.setEnabled(true);
@@ -1339,7 +1344,7 @@ public class FlasherGUI extends JFrame {
 		mntmInstallBusybox.setEnabled(true);
 		mntmClearCache.setEnabled(true);
 		mntmBuildpropEditor.setEnabled(true);
-		if (new File("."+fsep+"devices"+fsep+Devices.getCurrent().getId()+fsep+"rebrand").isDirectory())
+		if (new File(OS.getWorkDir()+fsep+"devices"+fsep+Devices.getCurrent().getId()+fsep+"rebrand").isDirectory())
 			mntmBuildpropRebrand.setEnabled(true);
 		mntmRebootIntoRecoveryT.setEnabled(Devices.getCurrent().canRecovery());
 		mntmRebootDefaultRecovery.setEnabled(Devices.getCurrent().canRecovery());

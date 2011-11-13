@@ -17,7 +17,16 @@ public class Devices  {
 	private static DeviceEntry _current=null;;
 	private static Properties props = null;
 	private static boolean waitforreboot=false;
+
+	public static boolean HasOneAdbConnected() {
+		return AdbUtility.isConnected();
+	}
 	
+	public static boolean HasOneFastbootConnected() {
+		String device = Device.getDeviceIdFastbootMode();
+		return (!device.startsWith("Err"));
+	}
+
 	public static Enumeration listDevices(boolean reload) {
 		if (reload || props==null) load();
 		return props.keys();
