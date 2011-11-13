@@ -122,7 +122,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 			});
-			btnGetDeviceInfo.setBounds(267, 173, 128, 23);
+			btnGetDeviceInfo.setBounds(266, 173, 233, 23);
 			contentPanel.add(btnGetDeviceInfo);
 		}
 		
@@ -135,7 +135,7 @@ public class FastBootToolboxGUI extends JDialog {
 
 				}
 			});
-			btnGetVerInfo.setBounds(114, 173, 128, 23);
+			btnGetVerInfo.setBounds(31, 173, 211, 23);
 			contentPanel.add(btnGetVerInfo);
 		}
 		{
@@ -147,7 +147,7 @@ public class FastBootToolboxGUI extends JDialog {
 					
 				}
 			});
-			btnSelectKernelToHotBoot.setBounds(75, 122, 163, 23);
+			btnSelectKernelToHotBoot.setBounds(31, 122, 211, 23);
 			contentPanel.add(btnSelectKernelToHotBoot);
 		}
 		{
@@ -159,7 +159,7 @@ public class FastBootToolboxGUI extends JDialog {
 					
 				}
 			});
-			btnSelectKernelToFlash.setBounds(265, 122, 163, 23);
+			btnSelectKernelToFlash.setBounds(266, 122, 233, 23);
 			contentPanel.add(btnSelectKernelToFlash);
 		}
 		
@@ -180,7 +180,7 @@ public class FastBootToolboxGUI extends JDialog {
 		*/
 		
 		JButton btnCheck = new JButton("CHECK Current Device Status");
-		btnCheck.setBounds(166, 26, 177, 23);
+		btnCheck.setBounds(159, 26, 184, 23);
 		contentPanel.add(btnCheck);
 		btnCheck.setHorizontalAlignment(SwingConstants.LEFT);		
 		btnCheck.addActionListener(new ActionListener() {
