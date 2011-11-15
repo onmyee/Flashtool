@@ -33,24 +33,22 @@ public class AdbUtility  {
 	
 	public static String getShPath(boolean force) {
 		if (shpath==null || force) {
-		try {
-			OsRun command = new OsRun(adbpath+" shell type /system/xbin/sh");
-			command.run();
-			if (command.getStdOut().contains("not found")) {
-				OsRun command1 = new OsRun(adbpath+" shell type /system/bin/sh");
+			try {
+				OsRun command = new OsRun(adbpath+" shell type /system/xbin/sh");
 				command.run();
 				if (command.getStdOut().contains("not found")) {
-					shpath = "";
+					OsRun command1 = new OsRun(adbpath+" shell 'echo $0'");
+					command.run();
+					shpath = command.getStdOut().trim();
 				}
-				else shpath = "/system/bin/sh";
+				else
+					shpath = "/system/xbin/sh";
 			}
-			else
-				shpath = "/system/xbin/sh";
+			catch (Exception e) {
+				shpath = "";
+			}
 		}
-		catch (Exception e) {
-			shpath = "";
-		}
-		}
+		MyLogger.getLogger().debug("Default shell for scripts : "+shpath);
 		return shpath;
 	}
 
