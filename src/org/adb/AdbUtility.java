@@ -21,6 +21,7 @@ public class AdbUtility  {
 	private static String fsep = OS.getFileSeparator();
 	private static String shellpath = "."+fsep+"custom"+fsep+"shells";
 	private static String adbpath = OS.getAdbPath();
+	private static String shpath ="";
 
 	public static String getShellPath() {
 		return shellpath;
@@ -30,6 +31,29 @@ public class AdbUtility  {
 		shellpath = path;
 	}
 	
+	public static String getShPath(boolean force) {
+		if (shpath==null || force) {
+		try {
+			OsRun command = new OsRun(adbpath+" shell type /system/xbin/sh");
+			command.run();
+			if (command.getStdOut().contains("not found")) {
+				OsRun command1 = new OsRun(adbpath+" shell type /system/bin/sh");
+				command.run();
+				if (command.getStdOut().contains("not found")) {
+					shpath = "";
+				}
+				else shpath = "/system/bin/sh";
+			}
+			else
+				shpath = "/system/xbin/sh";
+		}
+		catch (Exception e) {
+			shpath = "";
+		}
+		}
+		return shpath;
+	}
+
 	public static boolean hasRootNative() {
 		try {
 			if (rootnative) return true;
@@ -99,6 +123,7 @@ public class AdbUtility  {
 	public static void init() {
 		rootnative=false;
 		rootperms=false;
+		shpath=null;
 	}
 	
 	public static boolean isMounted(String mountpoint) throws Exception {

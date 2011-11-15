@@ -1,7 +1,7 @@
-#!/system/xbin/sh
+#!SHELLPATH
 
 chmod 755 DEVICEWORKDIR/runscript
-/system/xbin/sh DEVICEWORKDIR/runscript
+SHELLPATH DEVICEWORKDIR/runscript
 
 if test -e DEVICEWORKDIR/busybox
 then

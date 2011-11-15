@@ -26,6 +26,7 @@ public class Shell {
 		content = IOUtils.toString(fin, "ISO-8859-1");
 		fin.close();
 		setProperty("DEVICEWORKDIR",GlobalConfig.getProperty("deviceworkdir"));
+		setProperty("SHELLPATH",AdbUtility.getShPath(false));
 	}
 	
 	public Shell(String shell) throws Exception {

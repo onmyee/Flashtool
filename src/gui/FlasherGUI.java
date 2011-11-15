@@ -730,6 +730,8 @@ public class FlasherGUI extends JFrame {
 			else {
 				OsRun cmd = new OsRun("taskkill /F /T /IM adb*");
 				cmd.run();
+				OsRun cmd1 = new OsRun("taskkill /F /T /IM fastboot*");
+				cmd1.run();
 				try {
 					adbWatchdog.interrupt();
 					adbWatchdog.join();

@@ -1,4 +1,4 @@
-#!/system/xbin/sh
+#!SHELLPATH
 
 touch DEVICEWORKDIR/recoveryboot
 touch /cache/recovery/boot
