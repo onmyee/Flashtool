@@ -139,13 +139,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/LT15"/>
     	<mkdir dir="../Deploy/FlashTool/devices/LT15/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/LT15/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/LT15/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT15/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/LT15">
 			  <fileset dir="./devicesConfig/LT15"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/LT15/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/LT15/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -156,13 +156,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/LT18"/>
     	<mkdir dir="../Deploy/FlashTool/devices/LT18/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/LT18/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/LT18/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/LT18/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/LT18">
 			  <fileset dir="./devicesConfig/LT18"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/LT18/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/LT18/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -173,13 +173,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/MK16"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MK16/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MK16/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/MK16/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MK16/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/MK16">
 			  <fileset dir="./devicesConfig/MK16"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/MK16/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/MK16/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -190,13 +190,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/MT11"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MT11/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MT11/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/MT11/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT11/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/MT11">
 			  <fileset dir="./devicesConfig/MT11"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/MT11/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/MT11/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -207,13 +207,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/MT15"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MT15/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/MT15/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/MT15/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/MT15/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/MT15">
 			  <fileset dir="./devicesConfig/MT15"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/MT15/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/MT15/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -224,13 +224,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/R800"/>
     	<mkdir dir="../Deploy/FlashTool/devices/R800/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/R800/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/R800/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/R800/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/R800">
 			  <fileset dir="./devicesConfig/R800"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/R800/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/R800/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -241,13 +241,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/SK17"/>
     	<mkdir dir="../Deploy/FlashTool/devices/SK17/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/SK17/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/SK17/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/SK17/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/SK17">
 			  <fileset dir="./devicesConfig/SK17"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/SK17/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/SK17/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -258,13 +258,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/ST15"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST15/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST15/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/ST15/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST15/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/ST15">
 			  <fileset dir="./devicesConfig/ST15"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/ST15/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/ST15/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -275,13 +275,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/ST17"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST17/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST17/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/ST17/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST17/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/ST17">
 			  <fileset dir="./devicesConfig/ST17"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/ST17/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/ST17/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -292,13 +292,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/ST18"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST18/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/ST18/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/ST18/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/ST18/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/ST18">
 			  <fileset dir="./devicesConfig/ST18"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/ST18/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/ST18/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>
@@ -309,13 +309,13 @@
         <mkdir dir="../Deploy/FlashTool/devices/WT19"/>
     	<mkdir dir="../Deploy/FlashTool/devices/WT19/features"/>
     	<mkdir dir="../Deploy/FlashTool/devices/WT19/busybox"/>
-    	<mkdir dir="../Deploy/FlashTool/devices/WT19/busybox/1.18.4"/>
+    	<mkdir dir="../Deploy/FlashTool/devices/WT19/busybox/1.19.0"/>
 		<copy todir="../Deploy/FlashTool/devices/WT19">
 			  <fileset dir="./devicesConfig/WT19"
 			           excludes="**/.svn"/>
 		</copy>
-		<copy todir="../Deploy/FlashTool/devices/WT19/busybox/1.18.4">
-			  <fileset dir="./devicesConfig/X10/busybox/1.18.4"
+		<copy todir="../Deploy/FlashTool/devices/WT19/busybox/1.19.0">
+			  <fileset dir="./devicesConfig/X10/busybox/1.19.0"
 			           excludes="**/.svn"/>
 		</copy>
     </target>

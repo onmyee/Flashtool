@@ -92,4 +92,8 @@ public class DriversConfig {
 		fastboot.add(id);
 	}
 
+	public static void addNormal(String id) {
+		normal.add(id);
+	}
+
 }

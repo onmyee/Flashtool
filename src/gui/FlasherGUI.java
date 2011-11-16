@@ -161,7 +161,9 @@ public class FlasherGUI extends JFrame {
 						currentStatus=Device.getStatus();
 						if (!status.equals(currentStatus)) {
 							status = currentStatus;
-							MyLogger.getLogger().debug("Device connected : "+status);
+							if (currentStatus.startsWith("Err")) {
+								MyLogger.getLogger().error("Drivers need to be installed for connected device");
+							}
 							if (currentStatus.equals("adb")) {
 				    		  if (!AdbUtility.isConnected()) {
 					    		  while (!AdbUtility.isConnected()) {
@@ -183,13 +185,6 @@ public class FlasherGUI extends JFrame {
 							if (currentStatus.equals("normal")) {
 								MyLogger.info("Your phone is connected but USB debugging is off");
 								doDisableIdent();
-							}
-							if (currentStatus.contains("unknow")) {
-								MyLogger.info("Unkown phone connected");
-								Scanner sc = new Scanner(currentStatus);
-							    while (sc.hasNextLine())
-							    	MyLogger.info(sc.nextLine());
-								doDisableIdent();								
 							}
 						}
 					}
