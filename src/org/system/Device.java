@@ -95,9 +95,24 @@ public class Device {
         return retcode;
     }
     
+    public static String getType(String type, Enumeration<String> e, String result, HDEVINFO hDevInfo, SP_DEVINFO_DATA DeviceInfoData) {
+    	String device="";
+        while (e.hasMoreElements()) {
+            if (result.contains(e.nextElement())) {
+            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
+            		device="Err"+type;
+            	}
+            	else {
+            		device=type;
+            	}
+            	break;
+            }
+        }
+        return device;
+    }
+
     public static String getStatus() {
-    	String device="none";
-    	String result;
+    	String device="";
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
         	MyLogger.getLogger().error("Cannot have device list");
@@ -107,65 +122,37 @@ public class Device {
         	int index = 0;
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            String localdevice;
 	            if (result.contains("VID_0FCE")) {
-	            	device="normal";
-		            Enumeration<String> adb = DriversConfig.getAdb();
-		            while (adb.hasMoreElements()) {
-			            if (result.contains(adb.nextElement())) {
-			            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
-			            		device="Erradb";
-			            	}
-			            	else {
-			            		device="adb";
-			            	}
-			            	break;
-			            }
-		            }
-		            if (device.contains("adb")) break;
-		            Enumeration<String> fastboot = DriversConfig.getFastboot();
-		            while (fastboot.hasMoreElements()) {
-			            if (result.contains(fastboot.nextElement())) {
-			            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
-			            		device="Errfastboot";
-			            	}
-			            	else {
-			            		device="fastboot";
-			            	}
-			            	break;
-			            }
-		            }
-		            if (device.contains("fastboot")) break;
-		            Enumeration<String> flash = DriversConfig.getFlash();
-		            while (flash.hasMoreElements()) {
-			            if (result.contains(flash.nextElement())) {
-			            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
-			            		device="Errflash";
-			            	}
-			            	else {
-			            		device="flash";
-			            	}
-			            	break;
-			            }
-		            }
-		            if (device.contains("flash")) break;
-		            Enumeration<String> normal = DriversConfig.getFlash();
-		            while (flash.hasMoreElements()) {
-			            if (result.contains(flash.nextElement())) {
-			            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
-			            		device="Errnormal";
-			            	}
-			            	else {
-			            		device="normal";
-			            	}
-			            	break;
-			            }
-		            }
+	            	localdevice=getType("adb",DriversConfig.getAdb(),result,hDevInfo, DeviceInfoData);
+	            	if (localdevice.length()==0)
+	            		localdevice=getType("fastboot",DriversConfig.getFastboot(),result,hDevInfo, DeviceInfoData);
+	            	else {
+	            		device=localdevice;
+	            		break;
+	            	}
+	            	if (localdevice.length()==0)
+	            		localdevice=getType("flash",DriversConfig.getFlash(),result,hDevInfo, DeviceInfoData);
+	            	else {
+	            		device=localdevice;
+	            		break;
+	            	}
+	            	if (localdevice.length()==0)
+	            		localdevice=getType("normal",DriversConfig.getNormal(),result,hDevInfo, DeviceInfoData);
+	            	else {
+	            		device=localdevice;
+	            		break;
+	            	}
+	            	if (localdevice.length()==0)
+	            		if (!device.contains(result.substring(4,21)))
+	            			device=device+"unknown : " + result.substring(4,21)+"\n";
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
+        if (device.length()==0) device="none";
         return device;
     }
 

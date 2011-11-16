@@ -154,6 +154,7 @@ public class FlasherGUI extends JFrame {
 		phoneWatchdog = new Thread() {
 			public void run() {
 				String status = "none";
+				if (OS.getName().equals("windows")) {
 				try {
 					while (true) {
 						this.sleep(2000);
@@ -183,9 +184,17 @@ public class FlasherGUI extends JFrame {
 								MyLogger.info("Your phone is connected but USB debugging is off");
 								doDisableIdent();
 							}
+							if (currentStatus.contains("unknow")) {
+								MyLogger.info("Unkown phone connected");
+								Scanner sc = new Scanner(currentStatus);
+							    while (sc.hasNextLine())
+							    	MyLogger.info(sc.nextLine());
+								doDisableIdent();								
+							}
 						}
 					}
 				} catch (Exception e) {
+				}
 				}
 			}			
 		};

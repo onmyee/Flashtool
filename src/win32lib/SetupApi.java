@@ -174,5 +174,10 @@ public interface SetupApi extends Library {
     		  int PropertyBufferSize,
     		  IntByReference RequiredSize
     		);
-
+    boolean SetupDiClassGuidsFromName(
+    		  String ClassName,
+    		  GUID[] ClassGuidList,
+    		  int ClassGuidListSize,
+    		  IntByReference RequiredSize
+    		);
 }

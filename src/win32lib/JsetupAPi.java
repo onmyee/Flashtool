@@ -6,6 +6,7 @@ import win32lib.SetupApi.HDEVINFO;
 import win32lib.SetupApi.SP_DEVINFO_DATA;
 
 import com.sun.jna.platform.win32.Guid.GUID;
+import com.sun.jna.ptr.IntByReference;
 
 import com.sun.jna.Native;
 import com.sun.jna.win32.W32APIOptions;
@@ -13,7 +14,7 @@ import com.sun.jna.win32.W32APIOptions;
 public class JsetupAPi {
 	static SetupApi setupapi = (SetupApi) Native.loadLibrary("setupapi", SetupApi.class, W32APIOptions.UNICODE_OPTIONS);
 	
-	public static String getClassName(GUID guid) {		
+	public static String getClassName(GUID guid) {
 		char[] ClassName = new char[100];
 		boolean result = setupapi.SetupDiClassNameFromGuid(guid, ClassName, 100, null);
 		if (result) {
@@ -29,7 +30,20 @@ public class JsetupAPi {
 		}
 		return "";
 	}
-	
+
+	public static GUID[] getGUIDs(String classname) {
+		GUID[] ClassGuidList= new GUID[100];
+		IntByReference size = new IntByReference();
+		boolean result = setupapi.SetupDiClassGuidsFromName(classname, ClassGuidList, 100, size);
+		if (result) {
+			return ClassGuidList;
+		}
+		else {
+			MyLogger.getLogger().error("Error calling SetupDiClassNameFromGuid");
+		}
+		return null;
+	}
+
 	public static void destroyHandle(HDEVINFO hDevInfo) {
 		setupapi.SetupDiDestroyDeviceInfoList(hDevInfo);
 	}
@@ -43,13 +57,11 @@ public class JsetupAPi {
 	}
 	
 	public static HDEVINFO getHandleForAllClasses() {
-		GUID Guid = new GUID();
-		return setupapi.SetupDiGetClassDevs(Guid, null, null, SetupApi.DIGCF_ALLCLASSES);
+		return setupapi.SetupDiGetClassDevs(null, null, null, SetupApi.DIGCF_ALLCLASSES);
 	}
 
 	public static HDEVINFO getHandleForConnectedClasses() {
-		GUID Guid = new GUID();
-		return setupapi.SetupDiGetClassDevs(Guid, null, null, SetupApi.DIGCF_PRESENT | SetupApi.DIGCF_ALLCLASSES);
+		return setupapi.SetupDiGetClassDevs(null, "USB", null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_ALLCLASSES);
 	}
 	
 	public static boolean isInstalled(HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData) {
