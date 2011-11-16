@@ -2,6 +2,8 @@ package org.system;
 
 import java.util.Enumeration;
 
+import org.adb.AdbUtility;
+import org.adb.FastbootUtility;
 import org.logger.MyLogger;
 import com.sun.jna.platform.win32.WinBase;
 import win32lib.JsetupAPi;
@@ -124,7 +126,7 @@ public class Device {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
 	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
 	            String localdevice;
-	            if (result.contains("VID_0FCE")) {
+	            if (result.contains("VID_0FCE") && !result.contains("MI")) {
 	            	localdevice=getType("adb",DriversConfig.getAdb(),result,hDevInfo, DeviceInfoData);
 	            	if (localdevice.length()==0)
 	            		localdevice=getType("fastboot",DriversConfig.getFastboot(),result,hDevInfo, DeviceInfoData);
@@ -144,9 +146,29 @@ public class Device {
 	            		device=localdevice;
 	            		break;
 	            	}
-	            	if (localdevice.length()==0)
-	            		if (!device.contains(result.substring(4,21)))
-	            			device=device+"unknown : " + result.substring(4,21)+"\n";
+	            	if (localdevice.length()==0) {
+	            		Enumeration<String> devlist = AdbUtility.getDevices();
+	            		while (devlist.hasMoreElements()) {
+	            			if (result.contains(devlist.nextElement())) {
+	            				localdevice="adb";
+	            				device = "adb";
+	            				DriversConfig.addAdb(result.substring(4,21));
+	            				DriversConfig.write();
+	            				break;
+	            			}
+	            		}
+	            		Enumeration<String> devlist1 = FastbootUtility.getDevices();
+	            		while (devlist1.hasMoreElements()) {
+	            				localdevice="fastboot";
+	            				device = "fastboot";
+	            				DriversConfig.addFastboot(result.substring(4,21));
+	            				DriversConfig.write();
+	            				break;
+	            		}
+	            		if (localdevice.length()==0)
+	            			if (!device.contains(result.substring(4,21)))
+	            				device=device+"unknown : " + result.substring(4,21)+"\n";
+	            	}
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);

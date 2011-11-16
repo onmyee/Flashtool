@@ -2,9 +2,12 @@ package org.adb;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Vector;
+
 import org.logger.MyLogger;
 import org.system.Devices;
 import org.system.GlobalConfig;
@@ -448,4 +451,20 @@ public class AdbUtility  {
 		}
 	}*/
 
+	public static Enumeration<String> getDevices() {
+		Vector<String> v = new Vector<String>();
+		try {
+			OsRun command = new OsRun(adbpath+" devices");
+			command.run();
+			Scanner sc = new Scanner(command.getStdOut());
+			while (sc.hasNextLine()) {
+				String line = sc.nextLine();
+				if (!line.startsWith("List")) {
+					v.add(line.trim().substring(0,line.indexOf(9)));
+				}
+			}
+		}
+		catch (Exception e) {}
+		return v.elements();
+	}
 }

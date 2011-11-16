@@ -1,5 +1,9 @@
 package org.adb;
 
+import java.util.Enumeration;
+import java.util.Scanner;
+import java.util.Vector;
+
 import org.system.OS;
 import org.system.OsRun;
 import org.system.RunOutputs;
@@ -14,6 +18,21 @@ public class FastbootUtility {
 		command.run();
 	}
 	
+	public static Enumeration<String> getDevices() {
+		Vector<String>  v = new Vector<String>();
+		try {
+			OsRun command = new OsRun(fastbootpath+" devices");
+			command.run();
+			Scanner sc = new Scanner(command.getStdOut());
+			while (sc.hasNextLine()) {
+				v.add(sc.nextLine());
+			}
+		}
+		catch (Exception e) {
+		}
+		return v.elements();
+	}
+
 	public static RunOutputs hotBoot(String bootimg) throws Exception {
 		OsRun command = new OsRun(fastbootpath+" boot "+bootimg);
 		command.run();	
