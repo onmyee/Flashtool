@@ -127,6 +127,7 @@ public class Device {
 	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
 	            String localdevice;
 	            if (result.contains("VID_0FCE") && !result.contains("MI")) {
+	            	MyLogger.getLogger().info("Connected device : "+result);
 	            	localdevice=getType("adb",DriversConfig.getAdb(),result,hDevInfo, DeviceInfoData);
 	            	if (localdevice.length()==0)
 	            		localdevice=getType("fastboot",DriversConfig.getFastboot(),result,hDevInfo, DeviceInfoData);
