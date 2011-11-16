@@ -157,16 +157,7 @@ public class FlasherGUI extends JFrame {
 				try {
 					while (true) {
 						this.sleep(2000);
-						if (Device.isConnected()) {
-							if (!Device.getDeviceIdAdbMode().startsWith("Err")) {
-								currentStatus="adb";
-							}
-							if (!Device.getDeviceIdFastbootMode().startsWith("Err"))
-								currentStatus="fastboot";						
-						}
-						else {
-							currentStatus="none";
-						}
+						currentStatus=Device.getStatus();
 						if (!status.equals(currentStatus)) {
 							status = currentStatus;
 							MyLogger.getLogger().debug("Device connected : "+status);
@@ -180,13 +171,21 @@ public class FlasherGUI extends JFrame {
 				    		  doIdent();
 							}
 							if (currentStatus.equals("none")) doDisableIdent();
-							if (currentStatus.equals("flash")) doDisableIdent();
-							if (currentStatus.equals("fastboot")) doDisableIdent();
+							if (currentStatus.equals("flash")) {
+								MyLogger.info("Your phone is in flash mode");
+								doDisableIdent();
+							}
+							if (currentStatus.equals("fastboot")) {
+								MyLogger.info("Your phone is in fastboot mode");
+								doDisableIdent();
+							}
+							if (currentStatus.equals("normal")) {
+								MyLogger.info("Your phone is connected but USB debugging is off");
+								doDisableIdent();
+							}
 						}
 					}
 				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println("d");
 				}
 			}			
 		};
@@ -757,6 +756,8 @@ public class FlasherGUI extends JFrame {
 		try {
 			if (GlobalConfig.getProperty("killadbonexit").equals("yes")) {
 				killAdb();
+				phoneWatchdog.interrupt();
+				phoneWatchdog.join();
 			}
 			System.exit(0);
 		}
