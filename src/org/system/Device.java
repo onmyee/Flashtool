@@ -55,7 +55,60 @@ public class Device {
         }
         return retcode;
     }
-    	
+    
+    public static boolean isConnected() {
+    	String DevicePath="ErrNotPlugged";
+        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
+        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
+        	MyLogger.getLogger().error("Cannot have device list");
+        }
+        else {
+        	SP_DEVINFO_DATA DeviceInfoData;
+        	int index = 0;
+	        do {
+	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
+	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            if (result.contains("VID_0FCE")) {
+	            	System.out.println(result);
+	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
+	            		DevicePath="ErrDriverError";
+	            	}
+	            	else {
+	            		if (!DevicePath.equals("ErrDriverError")) DevicePath=result;
+	            	}
+	            }
+	            index++;
+	        } while (DeviceInfoData!=null);
+	        JsetupAPi.destroyHandle(hDevInfo);
+        }
+        return !DevicePath.contains("Err");    	
+    }
+
+    public static String getDeviceIdAdbMode() {
+    	String DevicePath="ErrNotPlugged";
+        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
+        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
+        	MyLogger.getLogger().error("Cannot have device list");
+        }
+        else {
+        	SP_DEVINFO_DATA DeviceInfoData;
+        	int index = 0;
+	        do {
+	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
+	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            if (result.contains("VID_0FCE&PID_612E")) {
+	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
+	            		DevicePath="ErrDriverError";
+	            	else DevicePath=result;
+	            	break;
+	            }
+	            index++;
+	        } while (DeviceInfoData!=null);
+	        JsetupAPi.destroyHandle(hDevInfo);
+        }
+        return DevicePath;
+    }
+
     public static String getDeviceIdFlashMode() {
     	String DevicePath="ErrNotPlugged";
         HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();

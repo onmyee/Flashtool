@@ -115,7 +115,9 @@ public class FlasherGUI extends JFrame {
 	public static FlasherGUI _root;
 	private static AdbStatus adb;
 	private static Thread adbWatchdog;
+	private static Thread phoneWatchdog;
 	private static JMenu mnPlugins;
+	private static String currentStatus="none";
 	/**
 	 * Launch the application.
 	 */
@@ -149,6 +151,46 @@ public class FlasherGUI extends JFrame {
 			}
 		};
 		adbWatchdog.start();
+		phoneWatchdog = new Thread() {
+			public void run() {
+				String status = "none";
+				try {
+					while (true) {
+						this.sleep(2000);
+						if (Device.isConnected()) {
+							if (!Device.getDeviceIdAdbMode().startsWith("Err")) {
+								currentStatus="adb";
+							}
+							if (!Device.getDeviceIdFastbootMode().startsWith("Err"))
+								currentStatus="fastboot";						
+						}
+						else {
+							currentStatus="none";
+						}
+						if (!status.equals(currentStatus)) {
+							status = currentStatus;
+							MyLogger.getLogger().debug("Device connected : "+status);
+							if (currentStatus.equals("adb")) {
+				    		  if (!AdbUtility.isConnected()) {
+					    		  while (!AdbUtility.isConnected()) {
+					    			  sleep(1000);
+					    		  }
+				    		  }
+				    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
+				    		  doIdent();
+							}
+							if (currentStatus.equals("none")) doDisableIdent();
+							if (currentStatus.equals("flash")) doDisableIdent();
+							if (currentStatus.equals("fastboot")) doDisableIdent();
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("d");
+				}
+			}			
+		};
+		phoneWatchdog.start();
 	}
 
 	public static void addToolbar(JButton button) {

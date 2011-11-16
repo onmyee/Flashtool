@@ -31,7 +31,7 @@ public class AdbStatus  {
       Scanner sc = new Scanner(processInput);
       while (sc.hasNextLine()) {
     	  String line = sc.nextLine();
-    	  if (line.contains("State: device")) {
+    	  /*if (line.contains("State: device")) {
     		  if (!AdbUtility.isConnected()) { 
 	    		  while (!AdbUtility.isConnected()) {
 	    			  try {
@@ -44,7 +44,7 @@ public class AdbStatus  {
     		  MyLogger.getLogger().debug("Device connected, continuing with identification");
     		  FlasherGUI.doIdent();
     	  }
-    	  else if (line.contains("State: unknown")) FlasherGUI.doDisableIdent();
+    	  else if (line.contains("State: unknown")) FlasherGUI.doDisableIdent();*/
       }
    }
 
