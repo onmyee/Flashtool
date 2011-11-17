@@ -9,7 +9,7 @@ RequestExecutionLevel highest
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.4.2
+!define VERSION 0.5.0.0
 !define COMPANY Androxyde
 !define URL http://androxyde.github.com/Flashtool/
 
@@ -48,7 +48,7 @@ InstallDir C:\Flashtool
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 0.4.2.0
+VIProductVersion 0.5.0.0
 VIAddVersionKey ProductName Flashtool
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -157,4 +157,3 @@ Function un.onInit
     !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuGroup
     !insertmacro SELECT_UNSECTION Flashtool ${UNSEC0000}
 FunctionEnd
-
