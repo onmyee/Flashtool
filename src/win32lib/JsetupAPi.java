@@ -62,7 +62,7 @@ public class JsetupAPi {
 
 	public static HDEVINFO getHandleForConnectedClasses() {
 		GUID guid = getGUIDs("USB")[0];
-		return setupapi.SetupDiGetClassDevs(guid, "USB", null, SetupApi.DIGCF_PRESENT);
+		return setupapi.SetupDiGetClassDevs(guid, "USB", null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_ALLCLASSES);
 	}
 	
 	public static boolean isInstalled(HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData) {
