@@ -170,20 +170,24 @@ public class FlasherGUI extends JFrame {
 					    			  sleep(1000);
 					    		  }
 				    		  }
+				    		  MyLogger.getLogger().info("Device connected with USB debugging on");
 				    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
 				    		  doIdent();
 							}
-							if (currentStatus.equals("none")) doDisableIdent();
+							if (currentStatus.equals("none")) {
+								MyLogger.getLogger().info("Device disconnected");
+								doDisableIdent();
+							}
 							if (currentStatus.equals("flash")) {
-								MyLogger.info("Your phone is in flash mode");
+								MyLogger.getLogger().info("Device connected in flash mode");
 								doDisableIdent();
 							}
 							if (currentStatus.equals("fastboot")) {
-								MyLogger.info("Your phone is in fastboot mode");
+								MyLogger.getLogger().info("Device connected in fastboot mode");
 								doDisableIdent();
 							}
 							if (currentStatus.equals("normal")) {
-								MyLogger.info("Your phone is connected but USB debugging is off");
+								MyLogger.getLogger().info("Device connected with USB debugging off");
 								doDisableIdent();
 							}
 						}
@@ -993,7 +997,7 @@ public class FlasherGUI extends JFrame {
 			try {
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
-							AdbUtility.pull("/system/build.prop", Devices.getCurrent().getWorkDir()+fsep+".");
+							AdbUtility.pull("/system/build.prop", Devices.getCurrent().getWorkDir()+fsep+"build.prop");
 							CommentedPropertiesFile build = new CommentedPropertiesFile();
 							build.load(new File(Devices.getCurrent().getWorkDir()+fsep+"build.prop"));
 							String current = build.getProperty("ro.semc.version.cust");
@@ -1016,7 +1020,7 @@ public class FlasherGUI extends JFrame {
 				}
 				catch (Exception e) {
 					MyLogger.getLogger().error(e.getMessage());
-					e.printStackTrace();}
+				}
 				return null;
 			}
 		});
@@ -1178,15 +1182,18 @@ public class FlasherGUI extends JFrame {
 						MyLogger.getLogger().info("Installing Recovery to device...");
 						Devices.getCurrent().doBusyboxHelper();
 						if (AdbUtility.Sysremountrw()) {
-						RecoverySelectGUI sel = new RecoverySelectGUI(Devices.getCurrent().getId());
-						String selVersion = sel.getVersion();
-						if (selVersion.length()>0) {
-							doInstallCustKit();
-							AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
-							Shell shell = new Shell("installrecovery");
-							shell.runRoot();
-							MyLogger.getLogger().info("Recovery successfully installed");
-						}
+							RecoverySelectGUI sel = new RecoverySelectGUI(Devices.getCurrent().getId());
+							String selVersion = sel.getVersion();
+							if (selVersion.length()>0) {
+								doInstallCustKit();
+								AdbUtility.push("./devices/"+Devices.getCurrent().getId()+"/recovery/"+selVersion+"/recovery.tar",GlobalConfig.getProperty("deviceworkdir")+"/recovery.tar");
+								Shell shell = new Shell("installrecovery");
+								shell.runRoot();
+								MyLogger.getLogger().info("Recovery successfully installed");
+							}
+							else {
+								MyLogger.getLogger().info("Canceled");
+							}
 						}
 						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
@@ -1400,7 +1407,7 @@ public class FlasherGUI extends JFrame {
 		mntmSetDefaultRecovery.setEnabled(Devices.getCurrent().canRecovery());
 		mntmSetDefaultKernel.setEnabled(Devices.getCurrent().canKernel());
 		mntmRebootCustomKernel.setEnabled(Devices.getCurrent().canKernel());
-		mntmRebootDefaultKernel.setEnabled(Devices.getCurrent().canKernel());
+		mntmRebootDefaultKernel.setEnabled(true);
 		//mntmInstallBootkit.setEnabled(true);
 		//mntmRecoveryControler.setEnabled(true);
 		mntmBackupSystemApps.setEnabled(true);
@@ -1506,6 +1513,9 @@ public class FlasherGUI extends JFrame {
 								Shell shell = new Shell("installkernel");
 								shell.runRoot();
 								MyLogger.getLogger().info("kernel successfully installed");
+							}
+							else {
+								MyLogger.getLogger().info("Canceled");
 							}
 						}
 						else MyLogger.getLogger().error("Error mounting /system rw");

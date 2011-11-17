@@ -166,13 +166,11 @@ public class DeviceEntry {
 	}
 	
 	public boolean canKernel() {
-		File f=new File(getDeviceDir()+fsep+"kernel");
-		return (_entry.getProperty("cankernel").equals("true") && f.isDirectory());
+		return (_entry.getProperty("cankernel").equals("true"));
 	}
 
 	public boolean canRecovery() {
-		File f=new File(getDeviceDir()+fsep+"recovery");
-		return (_entry.getProperty("canrecovery").equals("true") && f.isDirectory());
+		return (_entry.getProperty("canrecovery").equals("true"));
 	}
 
 	public boolean canFastboot() {
