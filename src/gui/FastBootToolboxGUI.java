@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
@@ -86,6 +88,13 @@ public class FastBootToolboxGUI extends JDialog {
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("23px"),}));
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				MyLogger.getLogger().info("Finished " + msg1);
+				dispose();
+			}
+		});
+
 		{
 			JLabel lblVersion = new JLabel("Version "+version);
 			lblVersion.setHorizontalAlignment(SwingConstants.CENTER);
@@ -216,8 +225,7 @@ public class FastBootToolboxGUI extends JDialog {
 				closeButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						
-						MyLogger.info("Finished " + msg1);
-						
+						MyLogger.getLogger().info("Finished " + msg1);
 						dispose();
 						
 					}
@@ -312,7 +320,10 @@ public class FastBootToolboxGUI extends JDialog {
 	}
 	
 	public void fastbootReboot(){
-		if (Devices.HasOneFastbootConnected()) {
+		if (!Devices.HasOneFastbootConnected()) {
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
+		}
 		Worker.post(new Job() {
 			public Object run() {
 				MyLogger.info("Device will now exit fastboot mode and start booting into system");
@@ -326,38 +337,34 @@ public class FastBootToolboxGUI extends JDialog {
 				return null;
 			}
 		});
-		}
-		else MyLogger.getLogger().error("Reboot into fastboot mode first");
 	}
 	
 	public void rebootBackIntoFastbootMode(){
 		if (!Devices.HasOneFastbootConnected()) {
-			if (Devices.HasOneAdbConnected()) {
-				if (Devices.getCurrent().canFastboot()) {
-					Worker.post(new Job() {
-						public Object run() {
-							MyLogger.info("Please wait device is rebooting into fastboot mode (via Fastboot)");
-
-							try {
-								FastbootUtility.rebootFastboot();
-								MyLogger.info("Device will soon reboot back into fastboot mode");
-							}
-							catch (Exception e1) {
-								MyLogger.error(e1.getMessage());
-							}
-							return null;
-						}
-					});					
-				}
-				else MyLogger.getLogger().error("This device cannot enter into fastboot");
-			}
-			else MyLogger.getLogger().error("Please connect your device first");
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
 		}
-		else MyLogger.getLogger().warn("Your device is already in fastboot mode");
+		Worker.post(new Job() {
+			public Object run() {
+				MyLogger.getLogger().info("Please wait device is rebooting into fastboot mode (via Fastboot)");
+
+				try {
+					FastbootUtility.rebootFastboot();
+					MyLogger.getLogger().info("Device will soon reboot back into fastboot mode");
+				}
+				catch (Exception e1) {
+					MyLogger.getLogger().error(e1.getMessage());
+				}
+				return null;
+			}
+		});					
 	}
 	
 	public void getConnectedDeviceInfo(){
-		if (Devices.HasOneFastbootConnected()) {
+		if (!Devices.HasOneFastbootConnected()) {
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
+		}
 		Worker.post(new Job() {
 			public Object run() {
 
@@ -373,12 +380,13 @@ public class FastBootToolboxGUI extends JDialog {
 				return null;
 			}
 		});
-		}
-		else MyLogger.getLogger().error("Reboot into fastboot mode first");
 	}
 	
 	public void getFastbootVerInfo(){
-		if (Devices.HasOneFastbootConnected()) {
+		if (!Devices.HasOneFastbootConnected()) {
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
+		}
 		Worker.post(new Job() {
 			public Object run() {
 
@@ -395,8 +403,6 @@ public class FastBootToolboxGUI extends JDialog {
 				return null;
 			}
 		});
-		}
-		else MyLogger.getLogger().error("Reboot into fastboot mode first");
 	}
 	
 	
@@ -405,7 +411,10 @@ public class FastBootToolboxGUI extends JDialog {
 	}
 
 	public void hotbootKernel() {
-		if (Devices.HasOneFastbootConnected()) {
+		if (!Devices.HasOneFastbootConnected()) {
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
+		}
 		Worker.post(new Job() {
 			public Object run() {
 				try {
@@ -430,14 +439,13 @@ public class FastBootToolboxGUI extends JDialog {
 				return null;
 			}
 		});
-		}
-		else {
-			MyLogger.getLogger().error("Reboot into fastboot mode first");
-		}
 	}
 	
 	public void flashKernel() {
-		if (Devices.HasOneFastbootConnected()) {
+		if (!Devices.HasOneFastbootConnected()) {
+			MyLogger.getLogger().error("This action can only be done in fastboot mode");
+			return;
+		}
 		Worker.post(new Job() {
 			public Object run() {
 				try {
@@ -455,9 +463,7 @@ public class FastBootToolboxGUI extends JDialog {
 						MyLogger.info("Flashing selected kernel");
 						RunOutputs outputsRun = FastbootUtility.flashBoot(kernel);
 						MyLogger.info("FASTBOOT Output: \n " + outputsRun.getStdErr().trim() + "\n");
-
-						MyLogger.info("Rebooting device");
-						FastbootUtility.rebootDevice();
+						MyLogger.getLogger().info("Please check the log before rebooting into system");
 					}
 				}
 				catch (Exception e1) {
@@ -466,10 +472,6 @@ public class FastBootToolboxGUI extends JDialog {
 				return null;
 			}
 		});
-		}
-		else {
-			MyLogger.getLogger().error("Reboot into fastboot mode first");
-		}
 	}
 	
 	public String chooseKernel() {
