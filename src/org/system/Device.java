@@ -128,7 +128,6 @@ public class Device {
 	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
 	            String localdevice;
 	            if (result.contains("VID_0FCE") && !result.contains("MI")) {
-	            	MyLogger.getLogger().debug("Connected device : "+result);
 	            	localdevice=getType("adb",DriversConfig.getAdb(),result,hDevInfo, DeviceInfoData);
 
 	            	if (localdevice.length()==0) {
