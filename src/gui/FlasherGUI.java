@@ -29,7 +29,7 @@ import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
 import org.plugins.PluginActionListenerAbout;
 import org.plugins.PluginInterface;
-import org.system.AdbStatus;
+import org.system.AdbThread;
 import org.system.ClassPath;
 import org.system.CommentedPropertiesFile;
 import org.system.Device;
@@ -38,6 +38,7 @@ import org.system.Devices;
 import org.system.GlobalConfig;
 import org.system.OS;
 import org.system.OsRun;
+import org.system.PhoneThread;
 import org.system.PropertiesFile;
 import org.system.RunStack;
 import org.system.Shell;
@@ -64,8 +65,6 @@ import gui.EncDecGUI.MyFile;
 import javax.swing.JProgressBar;
 import java.awt.SystemColor;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
@@ -113,11 +112,9 @@ public class FlasherGUI extends JFrame {
 	//private static JMenuItem mntmInstallBootkit;
 	private String lang;
 	public static FlasherGUI _root;
-	private static AdbStatus adb;
-	private static Thread adbWatchdog;
-	private static Thread phoneWatchdog;
+	private static AdbThread adbWatchdog;
+	private static PhoneThread phoneWatchdog;
 	private static JMenu mnPlugins;
-	private static String currentStatus="none";
 	/**
 	 * Launch the application.
 	 */
@@ -139,65 +136,12 @@ public class FlasherGUI extends JFrame {
 			OsRun giveRights = new OsRun("chmod 755 ./x10flasher_lib/adb");
 			giveRights.run();
 		}
-		killAdb();
-		adbWatchdog = new Thread() {
-			public void run() {
-				try {
-					adb = new AdbStatus();
-					adb.start();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		};
+		killAdbandFastboot();
+
+		adbWatchdog = new AdbThread();
 		adbWatchdog.start();
-		phoneWatchdog = new Thread() {
-			public void run() {
-				String status = "none";
-				if (OS.getName().equals("windows")) {
-				try {
-					while (true) {
-						this.sleep(2000);
-						currentStatus=Device.getStatus(Device.getConnectedDevice());
-						if (!status.equals(currentStatus)) {
-							status = currentStatus;
-							if (currentStatus.startsWith("Err")) {
-								MyLogger.getLogger().error("Device connected in "+currentStatus.replace("Err","")+" mode.");
-								MyLogger.getLogger().error("Drivers need to be installed for connected device.");
-							}
-							if (currentStatus.equals("adb")) {
-				    		  if (!AdbUtility.isConnected()) {
-					    		  while (!AdbUtility.isConnected()) {
-					    			  sleep(1000);
-					    		  }
-				    		  }
-				    		  MyLogger.getLogger().info("Device connected with USB debugging on");
-				    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
-				    		  doIdent();
-							}
-							if (currentStatus.equals("none")) {
-								MyLogger.getLogger().info("Device disconnected");
-								doDisableIdent();
-							}
-							if (currentStatus.equals("flash")) {
-								MyLogger.getLogger().info("Device connected in flash mode");
-								doDisableIdent();
-							}
-							if (currentStatus.equals("fastboot")) {
-								MyLogger.getLogger().info("Device connected in fastboot mode");
-								doDisableIdent();
-							}
-							if (currentStatus.equals("normal")) {
-								MyLogger.getLogger().info("Device connected with USB debugging off");
-								doDisableIdent();
-							}
-						}
-					}
-				} catch (Exception e) {
-				}
-				}
-			}			
-		};
+		
+		phoneWatchdog = new PhoneThread();
 		phoneWatchdog.start();
 	}
 
@@ -763,35 +707,72 @@ public class FlasherGUI extends JFrame {
 		
 	public void exitProgram() {
 		try {
+			MyLogger.getLogger().info("Stopping watchdogs and exiting ...");
 			if (GlobalConfig.getProperty("killadbonexit").equals("yes")) {
-				killAdb();
-				phoneWatchdog.interrupt();
-				phoneWatchdog.join();
+				killAdbandFastboot();
 			}
 			System.exit(0);
 		}
 		catch (Exception e) {}		
 	}
 
-	public static void killAdb() {
+	public static void killAdbLinux() {
 		try {
-			if (OS.getName().equals("linux")) {
-				OsRun cmd = new OsRun("/usr/bin/killall adb");
-				cmd.run();				
+			OsRun cmd = new OsRun("/usr/bin/killall adb");
+			cmd.run();				
+		}
+		catch (Exception e) {
+		}
+	}
+	
+	public static void killAdbWindows() {
+		try {
+			OsRun adb = new OsRun("taskkill /F /T /IM adb*");
+			adb.run();
+		}
+		catch (Exception e) {
+		}
+	}
+
+	public static void killFastbootWindows() {
+		try {
+			OsRun fastboot = new OsRun("taskkill /F /T /IM fastboot*");
+			fastboot.run();
+		}
+		catch (Exception e) {
+		}		
+	}
+	
+	public static void stopAdbWatchdog() {
+		if (adbWatchdog!=null) {
+			adbWatchdog.done();
+			try {
+				adbWatchdog.join();
 			}
-			else {
-				OsRun cmd = new OsRun("taskkill /F /T /IM adb*");
-				cmd.run();
-				OsRun cmd1 = new OsRun("taskkill /F /T /IM fastboot*");
-				cmd1.run();
-				try {
-					adbWatchdog.interrupt();
-					adbWatchdog.join();
-				} catch (Exception e) {}
-				
+			catch (Exception e) {
 			}
 		}
-		catch (Exception e) {}
+	}
+
+	public static void stopPhoneWatchdog() {
+		if (phoneWatchdog!=null) {
+			phoneWatchdog.done();
+			try {
+				phoneWatchdog.join();
+			}
+			catch (Exception e) {
+			}
+		}
+	}
+	
+	public static void killAdbandFastboot() {
+		if (OS.getName().equals("linux")) {
+			stopAdbWatchdog();
+		}
+		else {
+			stopPhoneWatchdog();
+			stopAdbWatchdog();
+		}
 	}
 
 	public void doCleanUninstall() {
