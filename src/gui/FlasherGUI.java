@@ -158,11 +158,12 @@ public class FlasherGUI extends JFrame {
 				try {
 					while (true) {
 						this.sleep(2000);
-						currentStatus=Device.getStatus();
+						currentStatus=Device.getStatus(Device.getConnectedDevice());
 						if (!status.equals(currentStatus)) {
 							status = currentStatus;
 							if (currentStatus.startsWith("Err")) {
-								MyLogger.getLogger().error("Drivers need to be installed for connected device");
+								MyLogger.getLogger().error("Device connected in "+currentStatus.replace("Err","")+" mode.");
+								MyLogger.getLogger().error("Drivers need to be installed for connected device.");
 							}
 							if (currentStatus.equals("adb")) {
 				    		  if (!AdbUtility.isConnected()) {

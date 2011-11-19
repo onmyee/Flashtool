@@ -10,112 +10,10 @@ import win32lib.JsetupAPi;
 import win32lib.SetupApi.HDEVINFO;
 import win32lib.SetupApi.SP_DEVINFO_DATA;
 
-public class Device {
-	
-	public static String longestSubstring(String str1, String str2) {
-		StringBuilder sb = new StringBuilder();
-		if (str1 == null || str1.isEmpty() || str2 == null || str2.isEmpty())
-		return "";
-		// ignore case
-		str1 = str1.toLowerCase();
-		str2 = str2.toLowerCase();
-		// java initializes them already with 0
-		int[][] num = new int[str1.length()][str2.length()];
-		int maxlen = 0;
-		int lastSubsBegin = 0;
-		for (int i = 0; i < str1.length(); i++) {
-		for (int j = 0; j < str2.length(); j++) {
-		if (str1.charAt(i) == str2.charAt(j)) {
-		if ((i == 0) || (j == 0))
-		num[i][j] = 1;
-		else
-		num[i][j] = 1 + num[i - 1][j - 1];
-		if (num[i][j] > maxlen) {
-		maxlen = num[i][j];
-		// generate substring from str1 => i
-		int thisSubsBegin = i - num[i][j] + 1;
-		if (lastSubsBegin == thisSubsBegin) {
-		//if the current LCS is the same as the last time this block ran
-		sb.append(str1.charAt(i));
-		} else {
-		//this block resets the string builder if a different LCS is found
-		lastSubsBegin = thisSubsBegin;
-		sb = new StringBuilder();
-		sb.append(str1.substring(lastSubsBegin, i + 1));
-		}
-		}
-		}
-		}}
-		return sb.toString().toUpperCase();
-		}
-
-    public static boolean previouslyConnected() {
-    	boolean retcode=false;
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForAllClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	int index = 0;
-	        do {
-	        	SP_DEVINFO_DATA DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            if (DeviceInfoData == null) {
-	                break;
-	            }
-	            String DevicePath = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (DevicePath.contains("VID_0FCE&PID_ADDE")) {
-	            	retcode = true;
-	            }
-	            index++;
-	        } while (!retcode);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
-        return retcode;
-    }
-
-    public static boolean isInstalled() {
-    	boolean retcode=false;
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForAllClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	int index = 0;
-	        do {
-	        	SP_DEVINFO_DATA DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            if (DeviceInfoData == null) {
-	                break;
-	            }
-	            String DevicePath = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (DevicePath.contains("VID_0FCE&PID_ADDE")) {
-	            	retcode = JsetupAPi.isInstalled(hDevInfo, DeviceInfoData);
-	            }
-	            index++;
-	        } while (!retcode);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
-        return retcode;
-    }
+public class Device {	
     
-    public static String getType(String type, Enumeration<String> e, String result, HDEVINFO hDevInfo, SP_DEVINFO_DATA DeviceInfoData) {
-    	String device="";
-        while (e.hasMoreElements()) {
-        	String value = e.nextElement();
-            if (result.contains(value)) {
-            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) {
-            		device="Err"+type;
-            	}
-            	else {
-            		device=type;
-            	}
-            	break;
-            }
-        }
-        return device;
-    }
-
-    public static String getStatus() {
-    	String device="";
+    public static String getConnectedDevice() {
+    	String result = "none";
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
         	MyLogger.getLogger().error("Cannot have device list");
@@ -125,73 +23,34 @@ public class Device {
         	int index = 0;
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            String localdevice;
-	            if (result.contains("VID_0FCE") && !result.contains("MI")) {
-	            	localdevice=getType("adb",DriversConfig.getAdb(),result,hDevInfo, DeviceInfoData);
-
-	            	if (localdevice.length()==0) {
-	            		localdevice=getType("fastboot",DriversConfig.getFastboot(),result,hDevInfo, DeviceInfoData);
-	            	}
-	            	else {
-	            		device=localdevice;
-	            		break;
-	            	}
-	            	if (localdevice.length()==0) {
-	            		localdevice=getType("flash",DriversConfig.getFlash(),result,hDevInfo, DeviceInfoData);
-	            	}
-	            	else {
-	            		device=localdevice;
-	            		break;
-	            	}
-	            	if (localdevice.length()==0) {
-	            		localdevice=getType("normal",DriversConfig.getNormal(),result,hDevInfo, DeviceInfoData);
-	            	}
-	            	else {
-	            		device=localdevice;
-	            		break;
-	            	}	            	
-	            	if (localdevice.length()==0) {
-	            		String err = "";
-	            		if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData)) err="Err"; 
-	            		Enumeration<String> devlist = AdbUtility.getDevices();
-	            		while (devlist.hasMoreElements()) {
-	            			if (result.contains(devlist.nextElement())) {
-	            				localdevice=err+"adb";
-	            				device = err+"adb";
-	            				DriversConfig.addAdb(result.substring(4,21));
-	            				DriversConfig.write();
-	            				break;
-	            			}
-	            		}
-	            		Enumeration<String> devlist1 = FastbootUtility.getDevices();
-	            		while (devlist1.hasMoreElements()) {
-	            				localdevice=err+"fastboot";
-	            				device = err+"fastboot";
-	            				DriversConfig.addFastboot(result.substring(4,21));
-	            				DriversConfig.write();
-	            				break;
-	            		}
-	            		if (localdevice.length()==0) {
-	            			device = err+"normal";
-	            			if (!device.startsWith("Err")) {
-	            				DriversConfig.addNormal(result.substring(4,21));
-            					DriversConfig.write();
-	            			}
-	            			break;
-	            		}
-	            	}
-	            	else {
-	            		device=localdevice;
-	            		break;
-	            	}
+	            String id = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            if (id.contains("VID_0FCE") && !result.contains("MI")) {
+	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
+	            		result = id + ": Not OK";
+	            	else
+	            		result = id + ": OK";
+	            	break;
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
-        if (device.length()==0) device="none";
-        return device;
+        return result.trim();
+    }
+    
+    public static String getStatus(String device) {
+    	String err="";
+    	String status = "none";
+    	if (!device.equals("none")) {
+    		if (device.contains("Not OK"))
+    			err = "Err";
+    		String type = device.substring(17,18);
+    		if (type.equals("6")) status="adb";
+    		if (type.equals("E")) status="normal";
+    		if (type.equals("A")) status="flash";
+    		if (type.equals("0")) status="fastboot";
+    	}
+    	return err+status;
     }
 
     public static String getDeviceIdAdbMode() {
@@ -220,28 +79,11 @@ public class Device {
     }
 
     public static String getDeviceIdFlashMode() {
-    	String DevicePath="ErrNotPlugged";
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	SP_DEVINFO_DATA DeviceInfoData;
-        	int index = 0;
-	        do {
-	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (result.contains("VID_0FCE&PID_ADDE")) {
-	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		DevicePath="ErrDriverError";
-	            	else DevicePath=result;
-	            	break;
-	            }
-	            index++;
-	        } while (DeviceInfoData!=null);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
-        return DevicePath;
+    	String DevicePath=getConnectedDevice();
+    	String status = getStatus(DevicePath);
+    	if (status.equals("Errflash")) return "ErrDriverError";
+    	if (!status.equals("flash")) return "ErrNotPlugged";
+    	return DevicePath.substring(0,DevicePath.indexOf(":"));
     }
 
     public static String getDeviceIdFastbootMode() {
@@ -270,24 +112,8 @@ public class Device {
     }
 
     public static void CheckAdbDrivers() {
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	SP_DEVINFO_DATA DeviceInfoData;
-        	int index = 0;
-	        do {
-	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (result.contains("USB\\VID_0FCE")) {
-	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		MyLogger.getLogger().error(result+" : Driver Error");
-	            	else MyLogger.getLogger().info(result+" : OK");
-	            }
-	            index++;
-	        } while (DeviceInfoData!=null);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
+    	String result = getConnectedDevice();
+	    MyLogger.getLogger().info(result);
     }    
+
 }

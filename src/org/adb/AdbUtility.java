@@ -412,10 +412,8 @@ public class AdbUtility  {
 
 	public static boolean isConnected() {
 		try {
-			MyLogger.getLogger().debug("Testing if device is connected by sending an adb command");
-			OsRun command = new OsRun(adbpath+" shell ls /");
-			command.run();
-			return (command.getStdOut().contains("system"));
+			MyLogger.getLogger().debug("Testing if device is connected");
+			return AdbUtility.getDevices().hasMoreElements();
 		}
 		catch (Exception e) {
 			return false;
