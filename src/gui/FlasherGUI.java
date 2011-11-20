@@ -29,7 +29,6 @@ import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
 import org.plugins.PluginActionListenerAbout;
 import org.plugins.PluginInterface;
-import org.system.AdbThread;
 import org.system.ClassPath;
 import org.system.CommentedPropertiesFile;
 import org.system.Device;
@@ -112,7 +111,6 @@ public class FlasherGUI extends JFrame {
 	//private static JMenuItem mntmInstallBootkit;
 	private String lang;
 	public static FlasherGUI _root;
-	private static AdbThread adbWatchdog;
 	private static PhoneThread phoneWatchdog;
 	private static JMenu mnPlugins;
 	/**
@@ -138,9 +136,6 @@ public class FlasherGUI extends JFrame {
 		}
 		killAdbandFastboot();
 
-		adbWatchdog = new AdbThread();
-		adbWatchdog.start();
-		
 		phoneWatchdog = new PhoneThread();
 		phoneWatchdog.start();
 	}
@@ -743,16 +738,6 @@ public class FlasherGUI extends JFrame {
 		}		
 	}
 	
-	public static void stopAdbWatchdog() {
-		if (adbWatchdog!=null) {
-			adbWatchdog.done();
-			try {
-				adbWatchdog.join();
-			}
-			catch (Exception e) {
-			}
-		}
-	}
 
 	public static void stopPhoneWatchdog() {
 		if (phoneWatchdog!=null) {
@@ -766,13 +751,7 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void killAdbandFastboot() {
-		if (OS.getName().equals("linux")) {
-			stopAdbWatchdog();
-		}
-		else {
 			stopPhoneWatchdog();
-			stopAdbWatchdog();
-		}
 	}
 
 	public void doCleanUninstall() {

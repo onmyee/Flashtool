@@ -1,7 +1,6 @@
 package org.system;
 
 import java.util.Enumeration;
-
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
 import org.logger.MyLogger;
@@ -112,8 +111,18 @@ public class Device {
     }
 
     public static void CheckAdbDrivers() {
-    	String result = getConnectedDevice();
-	    MyLogger.getLogger().info(result);
-    }    
+    	MyLogger.getLogger().info("List of connected devices (Device Id) :");
+    	MyLogger.getLogger().info("      - "+getConnectedDevice());
+	    MyLogger.getLogger().info("List of ADB devices :");
+	    Enumeration<String> e = AdbUtility.getDevices();
+	    while (e.hasMoreElements()) {
+	    	MyLogger.getLogger().info("      - "+e.nextElement());
+	    }
+	    MyLogger.getLogger().info("List of fastboot devices :");
+	    Enumeration<String> e2 = FastbootUtility.getDevices();
+	    while (e2.hasMoreElements()) {
+	    	MyLogger.getLogger().info("      - "+e2.nextElement());
+	    }
+    }
 
 }
