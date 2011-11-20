@@ -1282,9 +1282,14 @@ public class FlasherGUI extends JFrame {
         		isidentrun=true;
         	Enumeration e = Devices.listDevices(true);
         	boolean found = false;
+        	String globaldev = AdbUtility.getProperty("ro.product.model");
         	while (e.hasMoreElements() && !found) {
         		DeviceEntry current = Devices.getDevice((String)e.nextElement());
-        		String dev = AdbUtility.getProperty(current.getBuildProp());
+        		String dev;
+        		if (current.getBuildProp().equals("ro.product.model"))
+        			dev = globaldev;
+        		else
+        			dev = AdbUtility.getProperty(current.getBuildProp());
         		Iterator<String> i = current.getRecognitionList().iterator();
         		while (i.hasNext() && !found) {
         			if (dev.toUpperCase().contains(i.next().toUpperCase())) {
