@@ -34,13 +34,13 @@ public class FastbootUtility {
 	}
 
 	public static RunOutputs hotBoot(String bootimg) throws Exception {
-		OsRun command = new OsRun(fastbootpath+" boot "+bootimg);
+		OsRun command = new OsRun(fastbootpath+" boot \""+bootimg+"\"");
 		command.run();	
 		return command.getOutputs();
 	}
 	
 	public static RunOutputs flashBoot(String bootimg) throws Exception {
-		OsRun command = new OsRun(fastbootpath+" flash boot "+bootimg);
+		OsRun command = new OsRun(fastbootpath+" flash boot \""+bootimg+"\"");
 		command.run();		
 		return command.getOutputs();
 	}
