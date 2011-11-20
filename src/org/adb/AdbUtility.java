@@ -22,7 +22,7 @@ public class AdbUtility  {
 	static boolean rootperms=false;
 	
 	private static String fsep = OS.getFileSeparator();
-	private static String shellpath = "."+fsep+"custom"+fsep+"shells";
+	private static String shellpath = OS.getWorkDir()+fsep+"custom"+fsep+"shells";
 	private static String adbpath = OS.getAdbPath();
 	private static String shpath ="";
 
@@ -258,7 +258,7 @@ public class AdbUtility  {
 		if (!f.exists()) throw new AdbException(source+" : Not found");
 		if (log) MyLogger.getLogger().info("Pushing "+f.getAbsolutePath()+" to "+destination);
 		else MyLogger.getLogger().debug("Pushing "+f.getAbsolutePath()+" to "+destination);
-		OsRun command = new OsRun(adbpath+" push "+f.getAbsolutePath()+" "+destination);
+		OsRun command = new OsRun(adbpath+" push "+"\""+f.getAbsolutePath()+"\" "+destination);
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
@@ -304,7 +304,7 @@ public class AdbUtility  {
 	
 	public static void pull(String source, String destination) throws Exception {
 		MyLogger.getLogger().info("Pulling "+source+" to "+destination);
-		OsRun command = new OsRun(adbpath+" pull "+source+" "+destination);
+		OsRun command = new OsRun(adbpath+" pull "+source+" "+"\""+destination+"\"");
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());

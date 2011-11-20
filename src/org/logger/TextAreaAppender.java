@@ -24,6 +24,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import org.apache.log4j.Level;
 import org.apache.log4j.WriterAppender;
 import org.apache.log4j.spi.LoggingEvent;
+import org.system.OS;
 
 public class TextAreaAppender extends WriterAppender {
 	
@@ -43,15 +44,17 @@ public class TextAreaAppender extends WriterAppender {
     }
 
 	public static void writeFile() {
+		String logname=OS.getWorkDir()+OS.getFileSeparator()+"flashtool_"+timestamp+".log";
 		FileWriter writer = null;
 		try {
-			writer = new FileWriter(new File("./flashtool_"+timestamp+".log"));
+			writer = new FileWriter(new File(logname));
 			writer.write(builder.toString());
 		}
 		catch (IOException exception) {}
 		finally {
 			if (writer != null) {
 				try {
+					MyLogger.getLogger().info("Log written to "+logname);
 					writer.close();
 				}
 				catch (Exception exception) {}
