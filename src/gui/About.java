@@ -20,7 +20,7 @@ public class About extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	public static final String version = "0.5.1.0";
+	public static final String version = "0.5.2.0";
 
 
 	public static String getVersion() {
