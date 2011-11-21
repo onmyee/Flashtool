@@ -16,10 +16,10 @@ RequestExecutionLevel highest
 # MUI Symbol Definitions
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install-colorful.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
-!define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
-!define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
-!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER Flashtool
+#!define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
+#!define MUI_STARTMENUPAGE_REGISTRY_KEY ${REGKEY}
+#!define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
+#!define MUI_STARTMENUPAGE_DEFAULTFOLDER Flashtool
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall-colorful.ico"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
@@ -27,22 +27,18 @@ RequestExecutionLevel highest
 !include Sections.nsh
 !include MUI2.nsh
 
-# Variables
-Var StartMenuGroup
-
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
-!insertmacro MUI_UNPAGE_CONFIRM
-!insertmacro MUI_UNPAGE_INSTFILES
+#!insertmacro MUI_UNPAGE_CONFIRM
+#!insertmacro MUI_UNPAGE_INSTFILES
 
 # Installer languages
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
 OutFile update.exe
-InstallDir C:\Flashtool
 CRCCheck on
 XPStyle on
 ShowInstDetails show
@@ -60,12 +56,7 @@ ShowUninstDetails show
 # Installer sections
 Section -Flashtool SEC0000
     ReadRegStr $INSTDIR HKLM "${REGKEY}" Path
-    StrCmp $INSTDIR "" canceled
-    SetOutPath $INSTDIR
-    SetOverwrite on
-    File /r ..\Deploy\FlashTool\*
-    WriteRegStr HKLM "${REGKEY}\Components" Flashtool 1
-    return
+    StrCmp $INSTDIR "" canceled continue
 canceled:
   MessageBox MB_OK|MB_ICONEXCLAMATION \
   "$(^Name) is not installed. $\n$\nThe installation \
@@ -73,6 +64,14 @@ canceled:
   IDOK aborted
 aborted:
   Abort
+continue:
+    SetOutPath $INSTDIR
+    SetOverwrite on
+    Delete $INSTDIR\x10flasher_lib\driverid.properties
+    RmDir /r $INSTDIR\custom\features\UnlockBL
+    RmDir /r $INSTDIR\devices
+    File /r ..\Deploy\FlashTool\*
+    WriteRegStr HKLM "${REGKEY}\Components" Flashtool 1
 SectionEnd
 
 # Installer functions
