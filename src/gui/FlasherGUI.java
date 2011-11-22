@@ -1270,25 +1270,30 @@ public class FlasherGUI extends JFrame {
         public static void doIdent() {
         	if (!isidentrun) {
         		isidentrun=true;
-        	Enumeration e = Devices.listDevices(true);
         	boolean found = false;
         	String globaldev = AdbUtility.getProperty("ro.product.model");
         	String localdev;
-        	while (e.hasMoreElements() && !found) {
+        	Properties founditems = new Properties();
+        	Enumeration e = Devices.listDevices(true);
+        	while (e.hasMoreElements()) {
         		DeviceEntry current = Devices.getDevice((String)e.nextElement());
         		if (current.getBuildProp().equals("ro.product.model"))
         			localdev = globaldev;
         		else
         			localdev = AdbUtility.getProperty(current.getBuildProp());
         		Iterator<String> i = current.getRecognitionList().iterator();
-        		while (i.hasNext() && !found) {
-        			if (localdev.toUpperCase().contains(i.next().toUpperCase())) {
-        				found = true;
-        				Devices.setCurrent(current.getId());
-        				if (!Devices.isWaitingForReboot())
-        					MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
+        		while (i.hasNext()) {
+        			String pattern = i.next().toUpperCase();
+        			if (localdev.toUpperCase().contains(pattern)) {
+        				founditems.put(current.getId(), current.getName());
         			}
         		}
+        	}
+        	if (founditems.size()==1) {
+        		found = true;
+        		Devices.setCurrent((String)founditems.keys().nextElement());
+				if (!Devices.isWaitingForReboot())
+					MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
         	}
         	if (!found) {
         		MyLogger.getLogger().error("Cannot identify your device.");
