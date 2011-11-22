@@ -727,17 +727,7 @@ public class FlasherGUI extends JFrame {
 		}
 		catch (Exception e) {
 		}
-	}
-
-	public static void killFastbootWindows() {
-		try {
-			OsRun fastboot = new OsRun("taskkill /F /T /IM fastboot*");
-			fastboot.run();
-		}
-		catch (Exception e) {
-		}		
-	}
-	
+	}	
 
 	public static void stopPhoneWatchdog() {
 		if (phoneWatchdog!=null) {

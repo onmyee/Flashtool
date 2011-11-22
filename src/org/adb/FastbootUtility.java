@@ -72,4 +72,14 @@ public class FastbootUtility {
 		command.run();
 		return command.getOutputs();
 	}
+
+	public static void killFastbootWindows() {
+		try {
+			OsRun fastboot = new OsRun("taskkill /F /T /IM fastboot*");
+			fastboot.run();
+		}
+		catch (Exception e) {
+		}		
+	}
+
 }
