@@ -1283,17 +1283,16 @@ public class FlasherGUI extends JFrame {
         	Enumeration e = Devices.listDevices(true);
         	boolean found = false;
         	String globaldev = AdbUtility.getProperty("ro.product.model");
+        	String localdev;
         	while (e.hasMoreElements() && !found) {
         		DeviceEntry current = Devices.getDevice((String)e.nextElement());
-        		String dev;
         		if (current.getBuildProp().equals("ro.product.model"))
-        			dev = globaldev;
+        			localdev = globaldev;
         		else
-        			dev = AdbUtility.getProperty(current.getBuildProp());
+        			localdev = AdbUtility.getProperty(current.getBuildProp());
         		Iterator<String> i = current.getRecognitionList().iterator();
         		while (i.hasNext() && !found) {
-        			if (dev.toUpperCase().contains(i.next().toUpperCase())) {
-        				dev = current.getId();
+        			if (localdev.toUpperCase().contains(i.next().toUpperCase())) {
         				found = true;
         				Devices.setCurrent(current.getId());
         				if (!Devices.isWaitingForReboot())
@@ -1306,10 +1305,15 @@ public class FlasherGUI extends JFrame {
         		if (Devices.listDevices(false).hasMoreElements()) {
 	        		MyLogger.getLogger().info("Selecting from user input");
 	        		deviceSelectGui devsel = new deviceSelectGui(null);
-	        		String dev = devsel.getDevice();
-	        		if (dev.length()>0) {
+	        		String devid = devsel.getDevice();
+	        		if (devid.length()>0) {
 	        			found = true;
-	        			Devices.setCurrent(dev);
+	        			Devices.setCurrent(devid);
+	        			String reply = AskBox.getReplyOf("Do you want to permanently identify this device as \n"+Devices.getCurrent().getName()+"?");
+	        			if (reply.equals("yes")) {
+	        				String prop = AdbUtility.getProperty(Devices.getCurrent().getBuildProp());
+	        				Devices.getCurrent().addRecognitionToList(prop);
+	        			}
 	        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
 	        		}
         		}

@@ -53,19 +53,17 @@ public class Devices  {
 		if (list==null) return;
 		for (int i=0;i<list.length;i++) {
 			if (list[i].isDirectory()) {
-				Properties p = new Properties();
+				PropertiesFile p = new PropertiesFile();
 				String device = list[i].getPath().substring(list[i].getPath().lastIndexOf(OS.getFileSeparator())+1);
 				try {
-					p.load(new FileInputStream(new File(list[i].getPath()+OS.getFileSeparator()+device+".properties")));
+					p.open("",new File(list[i].getPath()+OS.getFileSeparator()+device+".properties").getAbsolutePath());
 					DeviceEntry entry = new DeviceEntry(p);
 					if (device.equals(entry.getId()))
 						props.put(device, entry);
 					else MyLogger.getLogger().error(device + " : this bundle is not valid");
 				}
-				catch (FileNotFoundException fne) {
+				catch (Exception fne) {
 					MyLogger.getLogger().error(device + " : this bundle is not valid");
-				}
-				catch (IOException ioe) {
 				}
 			}
 		}

@@ -13,7 +13,7 @@ import org.logger.MyLogger;
 public class DeviceEntry {
 
 
-	Properties _entry;
+	PropertiesFile _entry;
 	private static String fsep = OS.getFileSeparator();
 	private Boolean hasBusybox=null;
 	private boolean isRecoveryMode=false;
@@ -87,7 +87,7 @@ public class DeviceEntry {
 		return _entry.getProperty("kernel.version");
 	}
 	
-	public DeviceEntry(Properties entry) {
+	public DeviceEntry(PropertiesFile entry) {
 		_entry = entry;
 	}
 	
@@ -120,7 +120,7 @@ public class DeviceEntry {
 	}
 
 	public boolean hasUnlockedLoader() {
-		return _entry.containsKey("loader_unlocked");
+		return _entry.getProperties().containsKey("loader_unlocked");
 	}
 
 	public String getBusyBoxInstallPath() {
@@ -143,6 +143,13 @@ public class DeviceEntry {
 			set.add(result[i]);
 		}
 		return set;
+	}
+	
+	public void addRecognitionToList(String recog) {
+		String current = _entry.getProperty("recognition");
+		current = current + ","+recog;
+		_entry.setProperty("recognition", current);
+		_entry.write("ISO-8859-1");
 	}
 	
 	public String getLoader() {
