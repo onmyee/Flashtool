@@ -1274,6 +1274,7 @@ public class FlasherGUI extends JFrame {
         	String globaldev = AdbUtility.getProperty("ro.product.model");
         	String localdev;
         	Properties founditems = new Properties();
+        	founditems.clear();
         	Enumeration e = Devices.listDevices(true);
         	while (e.hasMoreElements()) {
         		DeviceEntry current = Devices.getDevice((String)e.nextElement());
@@ -1297,20 +1298,28 @@ public class FlasherGUI extends JFrame {
         	}
         	if (!found) {
         		MyLogger.getLogger().error("Cannot identify your device.");
-        		if (Devices.listDevices(false).hasMoreElements()) {
-	        		MyLogger.getLogger().info("Selecting from user input");
-	        		deviceSelectGui devsel = new deviceSelectGui(null);
-	        		String devid = devsel.getDevice();
-	        		if (devid.length()>0) {
-	        			found = true;
-	        			Devices.setCurrent(devid);
+        		MyLogger.getLogger().info("Selecting from user input");
+        		String devid="";
+        		deviceSelectGui devsel = new deviceSelectGui(null);
+        		if (founditems.size()==0) {
+        			if (Devices.listDevices(false).hasMoreElements())
+        				devid = devsel.getDevice();
+        		}
+        		else {
+        				MyLogger.getLogger().warn("Your device has been matched with more than one device");
+        				devid = devsel.getDevice(founditems);
+        		}
+    			if (devid.length()>0) {
+        			found = true;
+        			Devices.setCurrent(devid);
+        			if (founditems.size()==1) {
 	        			String reply = AskBox.getReplyOf("Do you want to permanently identify this device as \n"+Devices.getCurrent().getName()+"?");
 	        			if (reply.equals("yes")) {
 	        				String prop = AdbUtility.getProperty(Devices.getCurrent().getBuildProp());
 	        				Devices.getCurrent().addRecognitionToList(prop);
 	        			}
-	        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
-	        		}
+        			}
+        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
         		}
         		else {
         			MyLogger.getLogger().error("You can only flash devices.");

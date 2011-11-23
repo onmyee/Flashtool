@@ -52,6 +52,38 @@ public class deviceSelectGui extends JDialog {
 	private JTable tableDevices;
 	private DefaultTableModel modelDevices;
 
+	public void fillTable() {
+    	modelDevices = new DefaultTableModel();
+    	modelDevices.addColumn("Id");
+    	modelDevices.addColumn("Name");
+    	tableDevices.setModel(modelDevices);
+    	tableDevices.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    	tableDevices.getColumn("Id").setPreferredWidth(50);
+    	tableDevices.getColumn("Name").setPreferredWidth(170);
+    	Enumeration e = Devices.listDevices(false);
+    	while (e.hasMoreElements()) {
+    		DeviceEntry entry = Devices.getDevice((String)e.nextElement());
+    		modelDevices.addRow(new String[]{entry.getId(),entry.getName()});
+    		tableDevices.setRowSelectionInterval(0, 0);
+    	}
+	}
+
+	public void fillTable(Properties list) {
+    	modelDevices = new DefaultTableModel();
+    	modelDevices.addColumn("Id");
+    	modelDevices.addColumn("Name");
+    	tableDevices.setModel(modelDevices);
+    	tableDevices.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+    	tableDevices.getColumn("Id").setPreferredWidth(50);
+    	tableDevices.getColumn("Name").setPreferredWidth(170);
+    	Enumeration e = list.keys();
+    	while (e.hasMoreElements()) {
+    		DeviceEntry entry = Devices.getDevice((String)e.nextElement());
+    		modelDevices.addRow(new String[]{entry.getId(),entry.getName()});
+    		tableDevices.setRowSelectionInterval(0, 0);
+    	}
+	}
+
 	/**
 	 * Create the dialog.
 	 */
@@ -85,20 +117,6 @@ public class deviceSelectGui extends JDialog {
 				dispose();
 			}
 		});
-		
-    	Enumeration e = Devices.listDevices(false);
-    	modelDevices = new DefaultTableModel();
-    	modelDevices.addColumn("Id");
-    	modelDevices.addColumn("Name");
-    	tableDevices.setModel(modelDevices);
-    	tableDevices.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    	tableDevices.getColumn("Id").setPreferredWidth(50);
-    	tableDevices.getColumn("Name").setPreferredWidth(170);
-    	while (e.hasMoreElements()) {
-    		DeviceEntry entry = Devices.getDevice((String)e.nextElement());
-    		modelDevices.addRow(new String[]{entry.getId(),entry.getName()});
-    		tableDevices.setRowSelectionInterval(0, 0);
-    	}
 
 		{
 			JPanel buttonPane = new JPanel();
@@ -133,6 +151,7 @@ public class deviceSelectGui extends JDialog {
 	}
 
 	public boolean isSelected() {
+		fillTable();
 		setVisible(!_bundle.hasLoader());
 		if (!_bundle.hasLoader() && (result.length()>0)) {
 			MyLogger.getLogger().debug("Choosed loader from device selection :"+result);
@@ -151,6 +170,13 @@ public class deviceSelectGui extends JDialog {
 	}
 
 	public String getDevice() {
+		fillTable();
+		setVisible(true);
+		return result;
+	}
+
+	public String getDevice(Properties list) {
+		fillTable(list);
 		setVisible(true);
 		return result;
 	}
