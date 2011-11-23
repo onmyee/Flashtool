@@ -48,6 +48,13 @@ public class Device {
     		if (type.equals("E")) status="normal";
     		if (type.equals("A")) status="flash";
     		if (type.equals("0")) status="fastboot";
+    		if (status.equals("none")) {
+    			if (AdbUtility.getDevices().hasMoreElements())
+    				status="adb";
+    			else if (FastbootUtility.getDevices().hasMoreElements())
+    				status="fastboot";
+    			else status="normal";
+    		}
     	}
     	return err+status;
     }
