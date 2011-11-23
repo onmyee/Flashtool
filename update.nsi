@@ -69,6 +69,8 @@ continue:
     SetOverwrite on
     Delete $INSTDIR\x10flasher_lib\driverid.properties
     RmDir /r $INSTDIR\custom\features\UnlockBL
+    RmDir /r $INSTDIR\custom\root
+    RmDir /r $INSTDIR\custom\shells
     RmDir /r $INSTDIR\devices
     File /r ..\Deploy\FlashTool\*
     WriteRegStr HKLM "${REGKEY}\Components" Flashtool 1
