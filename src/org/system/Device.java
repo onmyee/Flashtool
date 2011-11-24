@@ -11,6 +11,9 @@ import win32lib.SetupApi.SP_DEVINFO_DATA;
 
 public class Device {	
     
+	private static String lastdevice="";
+	private static String laststatus="";
+	
     public static String getConnectedDevice() {
     	String result = "none";
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
@@ -40,22 +43,23 @@ public class Device {
     public static String getStatus(String device) {
     	String err="";
     	String status = "none";
-    	if (!device.equals("none")) {
-    		if (device.contains("Not OK"))
-    			err = "Err";
-    		String type = device.substring(17,18);
-    		if (type.equals("6")) status="adb";
-    		if (type.equals("E")) status="normal";
-    		if (type.equals("A")) status="flash";
-    		if (type.equals("0")) status="fastboot";
-    		if (status.equals("none")) {
-    			if (AdbUtility.getDevices().hasMoreElements())
-    				status="adb";
-    			else if (FastbootUtility.getDevices().hasMoreElements())
-    				status="fastboot";
-    			else status="normal";
-    		}
+    	if (!device.equals(lastdevice)) {
+    		lastdevice=device;
+	    	if (!device.equals("none")) {
+	    		String tmppid=device.substring(device.indexOf("PID"),device.indexOf("PID")+12);
+	    		String pid=tmppid.substring(4,tmppid.indexOf("\\"));
+	    		if (device.contains("Not OK"))
+	    			err = "Err";
+	    		if (pid.equals("ADDE")) status="flash";
+	    		else if (AdbUtility.getDevices().hasMoreElements())
+	    			status="adb";
+	    		else if (FastbootUtility.getDevices().hasMoreElements())
+	    			status="fastboot";
+	    		else status="normal";
+	    	}
+	    	laststatus=status;
     	}
+    	else return laststatus;
     	return err+status;
     }
 
