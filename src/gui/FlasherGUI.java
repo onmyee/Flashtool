@@ -1271,14 +1271,14 @@ public class FlasherGUI extends JFrame {
         	if (!isidentrun) {
         		isidentrun=true;
         	boolean found = false;
-        	String globaldev = AdbUtility.getProperty("ro.product.model");
+        	String globaldev = AdbUtility.getProperty("ro.product.device");
         	String localdev;
         	Properties founditems = new Properties();
         	founditems.clear();
         	Enumeration e = Devices.listDevices(true);
         	while (e.hasMoreElements()) {
         		DeviceEntry current = Devices.getDevice((String)e.nextElement());
-        		if (current.getBuildProp().equals("ro.product.model"))
+        		if (current.getBuildProp().equals("ro.product.device"))
         			localdev = globaldev;
         		else
         			localdev = AdbUtility.getProperty(current.getBuildProp());
