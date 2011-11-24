@@ -77,7 +77,7 @@ public class PhoneThread extends Thread {
 					if (currentStatus.equals("adb")) {
 		    		  if (!AdbUtility.isConnected()) {
 			    		  while (!AdbUtility.isConnected()) {
-			    			  sleep(1000);
+			    			  sleep(500);
 			    		  }
 		    		  }
 		    		  MyLogger.getLogger().info("Device connected with USB debugging on");
@@ -98,6 +98,10 @@ public class PhoneThread extends Thread {
 					}
 					if (currentStatus.equals("normal")) {
 						MyLogger.getLogger().info("Device connected with USB debugging off");
+						FlasherGUI.doDisableIdent();
+					}
+					if (currentStatus.equals("mtp")) {
+						MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
 						FlasherGUI.doDisableIdent();
 					}
 				}

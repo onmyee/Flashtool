@@ -55,12 +55,16 @@ public class Device {
 	    			status="adb";
 	    		else if (FastbootUtility.getDevices().hasMoreElements())
 	    			status="fastboot";
-	    		else status="normal";
+	    		else {
+	    			if (pid.startsWith("0") || pid.startsWith("E")) 
+	    				status="normal";
+	    			else
+	    				status="mtp";
+	    		}
 	    	}
-	    	laststatus=status;
+	    	laststatus=err+status;
     	}
-    	else return laststatus;
-    	return err+status;
+    	return laststatus;
     }
 
     public static String getDeviceIdAdbMode() {
