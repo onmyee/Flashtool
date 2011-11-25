@@ -90,6 +90,11 @@ and questions I get from people using Flashtool.
 <dl>
 <dt>Troubleshooting<dd>
 	<a href="#faq1">I run flashtool and it says debug mode is off while it is on when I plug my device - what can I do ?</a><br>
+	<a href="#faq2">You say there is a Bootloader Unlock plugin but I can't see it in the plugin menu. Why ?</a><br>
+</dl>
+<dl>
+<dt>Using Flashtool<dd>
+    <a href="#use1">My device is not recognized. Does it mean Flashtool is not compatible with my device ?</a><br>
 </dl>
 </blockquote>
 </td></tr>
@@ -106,6 +111,25 @@ and questions I get from people using Flashtool.
 </tr>
 </table>
 </td></tr>
+<tr><td>
+<p><span style="float:right"><a href="#top">Back to Top</a></span><a name="faq2"><em>You say there is a Bootloader Unlock plugin but I can't see it in the plugin menu. Why ?</em></a>
+<p>Plugins will appear in the plugin menu if and only if all plugin requirements are met.
+<br>Here are requirements for BL Unlock plugin :
+<li>kernelversions=2.6.29,2.6.29-00054-g5f01537
+<li>androidversions=2.1,2.2,2.3
+<li>needroot=true
+<li>compatibledevices=X10,E10,E15,U20
+<p> If at least one of these criteria is not met, plugin will not be added to the Plugins menu
+<P>
+</td></tr>
+<tr><th class="th1">Using Flashtool</th></tr>
+<tr><td>
+<p><span style="float:right"><a href="#top">Back to Top</a></span><a name="use1"><em>My device is not recognized. Does it mean Flashtool is not compatible with my device ?</em></a>
+<p>Well, the flash button will ALWAYS be available. If your device is not recognized, Flashing will be the only feature available.
+<br>It means you can flash FTF bundles made for your device and upgrade / downgrade your device.
+</td></tr>
+<table>
+<tr>
 </table>
 	</div>
 	<div class="tab-page">
