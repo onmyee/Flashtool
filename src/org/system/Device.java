@@ -14,8 +14,8 @@ public class Device {
 	private static String lastdevice="";
 	private static String laststatus="";
 	
-    public static String getConnectedDevice() {
-    	String result = "none";
+    public static DeviceIdent getConnectedDevice() {
+    	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
         	MyLogger.getLogger().error("Cannot have device list");
@@ -25,46 +25,25 @@ public class Device {
         	int index = 0;
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String id = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (id.contains("VID_0FCE") && !result.contains("MI")) {
+	            id = new DeviceIdent(JsetupAPi.getDevId(hDevInfo, DeviceInfoData));
+	            if (id.getPid().equals("0FCE") && id.getDeviceId().contains("MI")) {
 	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		result = id + ": Not OK";
+	            		id.setDriverOk(false);
 	            	else
-	            		result = id + ": OK";
+	            		id.setDriverOk(true);
 	            	break;
+	            }
+	            else if (id.getPid().equals("0FCE")) {
+	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
+	            		id.setDriverOk(false);
+	            	else
+	            		id.setDriverOk(true);
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
-        return result.trim();
-    }
-    
-    public static String getStatus(String device) {
-    	String err="";
-    	String status = "none";
-    	if (!device.equals(lastdevice)) {
-    		lastdevice=device;
-	    	if (!device.equals("none")) {
-	    		String tmppid=device.substring(device.indexOf("PID"),device.indexOf("PID")+12);
-	    		String pid=tmppid.substring(4,tmppid.indexOf("\\"));
-	    		if (device.contains("Not OK"))
-	    			err = "Err";
-	    		if (pid.equals("ADDE")) status="flash";
-	    		else if (AdbUtility.getDevices().hasMoreElements())
-	    			status="adb";
-	    		else if (FastbootUtility.getDevices().hasMoreElements())
-	    			status="fastboot";
-	    		else {
-	    			if (pid.startsWith("0") || pid.startsWith("E")) 
-	    				status="normal";
-	    			else
-	    				status="mtp";
-	    		}
-	    	}
-	    	laststatus=err+status;
-    	}
-    	return laststatus;
+        return id;
     }
 
     public static String getDeviceIdAdbMode() {
@@ -93,11 +72,10 @@ public class Device {
     }
 
     public static String getDeviceIdFlashMode() {
-    	String DevicePath=getConnectedDevice();
-    	String status = getStatus(DevicePath);
-    	if (status.equals("Errflash")) return "ErrDriverError";
-    	if (!status.equals("flash")) return "ErrNotPlugged";
-    	return DevicePath.substring(0,DevicePath.indexOf(":"));
+    	DeviceIdent id=getConnectedDevice();
+    	if (!id.isDriverOk()) return "ErrDriverError";
+    	if (!id.getPid().equals("ADDE")) return "ErrNotPlugged";
+    	return id.getDeviceId();
     }
 
     public static String getDeviceIdFastbootMode() {
