@@ -11,7 +11,7 @@ import org.logger.MyLogger;
 
 public class PhoneThread extends Thread {
 	
-	String currentStatus="none";
+	String currentPid="none";
 	boolean done=false;
 
 	private ProcessBuilder builder;
@@ -25,7 +25,7 @@ public class PhoneThread extends Thread {
 	}
 	
 	public void run() {
-		String status = "none";
+		String pid = "none";
 		if (OS.getName().equals("windows")) {
 		try {
 			if (OS.getName().equals("linux"))
@@ -67,42 +67,47 @@ public class PhoneThread extends Thread {
 					count++;
 				}
 				if (!done) {
-				currentStatus=Device.getStatus(Device.getConnectedDevice());
-				if (!status.equals(currentStatus)) {
-					status = currentStatus;
-					if (currentStatus.startsWith("Err")) {
-						MyLogger.getLogger().error("Device connected in "+currentStatus.replace("Err","")+" mode.");
+					DeviceIdent id=Device.getConnectedDevice();
+				currentPid=id.getPid();
+				if (!pid.equals(currentPid)) {
+					pid = currentPid;
+					String status = id.getStatus();
+					boolean driverok = id.isDriverOk();
+					if (!driverok) {
 						MyLogger.getLogger().error("Drivers need to be installed for connected device.");
+						MyLogger.getLogger().error("You can find them in the drivers folder of Flashtool.");
 					}
-					if (currentStatus.equals("adb")) {
-		    		  if (!AdbUtility.isConnected()) {
-			    		  while (!AdbUtility.isConnected()) {
-			    			  sleep(500);
+					else {
+						if (status.equals("adb")) {
+			    		  if (!AdbUtility.isConnected()) {
+				    		  while (!AdbUtility.isConnected()) {
+				    			  sleep(500);
+				    		  }
 			    		  }
-		    		  }
-		    		  MyLogger.getLogger().info("Device connected with USB debugging on");
-		    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
-		    		  FlasherGUI.doIdent();
-					}
-					if (currentStatus.equals("none")) {
-						MyLogger.getLogger().info("Device disconnected");
-						FlasherGUI.doDisableIdent();
-					}
-					if (currentStatus.equals("flash")) {
-						MyLogger.getLogger().info("Device connected in flash mode");
-						FlasherGUI.doDisableIdent();
-					}
-					if (currentStatus.equals("fastboot")) {
-						MyLogger.getLogger().info("Device connected in fastboot mode");
-						FlasherGUI.doDisableIdent();
-					}
-					if (currentStatus.equals("normal")) {
-						MyLogger.getLogger().info("Device connected with USB debugging off");
-						FlasherGUI.doDisableIdent();
-					}
-					if (currentStatus.equals("mtp")) {
-						MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
-						FlasherGUI.doDisableIdent();
+			    		  MyLogger.getLogger().info("Device connected with USB debugging on");
+			    		  MyLogger.getLogger().debug("Device connected, continuing with identification");
+			    		  FlasherGUI.doIdent();
+						}
+						if (status.equals("none")) {
+							MyLogger.getLogger().info("Device disconnected");
+							FlasherGUI.doDisableIdent();
+						}
+						if (status.equals("flash")) {
+							MyLogger.getLogger().info("Device connected in flash mode");
+							FlasherGUI.doDisableIdent();
+						}
+						if (status.equals("fastboot")) {
+							MyLogger.getLogger().info("Device connected in fastboot mode");
+							FlasherGUI.doDisableIdent();
+						}
+						if (status.equals("normal")) {
+							MyLogger.getLogger().info("Device connected with USB debugging off");
+							FlasherGUI.doDisableIdent();
+						}
+						if (status.equals("mtp")) {
+							MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
+							FlasherGUI.doDisableIdent();
+						}
 					}
 				}
 				}

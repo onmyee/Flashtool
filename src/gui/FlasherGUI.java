@@ -146,6 +146,7 @@ public class FlasherGUI extends JFrame {
 	
 	public static void main(String[] args) throws Exception {
 		initLogger();
+		MyLogger.getLogger().info("Flashtool version "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
 		String pathsep = System.getProperty("path.separator");
 		System.setProperty("java.library.path", OS.getWinDir()+pathsep+OS.getSystem32Dir()+pathsep+userdir+fsep+"x10flasher_lib");

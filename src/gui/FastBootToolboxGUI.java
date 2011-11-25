@@ -286,8 +286,7 @@ public class FastBootToolboxGUI extends JDialog {
 		}
 		else
 		{
-			String device = Device.getDeviceIdFastbootMode();
-			if (!device.startsWith("Err")) {
+			if (FastbootUtility.getDevices().hasMoreElements()) {
 				deviceStatus="FASTBOOT mode";
 			}
 

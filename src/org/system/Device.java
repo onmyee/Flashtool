@@ -11,9 +11,6 @@ import win32lib.SetupApi.SP_DEVINFO_DATA;
 
 public class Device {	
     
-	private static String lastdevice="";
-	private static String laststatus="";
-	
     public static DeviceIdent getConnectedDevice() {
     	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
@@ -25,19 +22,13 @@ public class Device {
         	int index = 0;
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            id = new DeviceIdent(JsetupAPi.getDevId(hDevInfo, DeviceInfoData));
-	            if (id.getPid().equals("0FCE") && id.getDeviceId().contains("MI")) {
+	            String devid = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            if (devid.contains("VID_0FCE")) {
+	            	id.addDevId(devid);
 	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		id.setDriverOk(false);
+	            		id.setDriverOk(devid,false);
 	            	else
-	            		id.setDriverOk(true);
-	            	break;
-	            }
-	            else if (id.getPid().equals("0FCE")) {
-	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		id.setDriverOk(false);
-	            	else
-	            		id.setDriverOk(true);
+	            		id.setDriverOk(devid,true);
 	            }
 	            index++;
 	        } while (DeviceInfoData!=null);
@@ -46,66 +37,13 @@ public class Device {
         return id;
     }
 
-    public static String getDeviceIdAdbMode() {
-    	String DevicePath="ErrNotPlugged";
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	SP_DEVINFO_DATA DeviceInfoData;
-        	int index = 0;
-	        do {
-	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (result.contains("VID_0FCE&PID_612E")) {
-	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		DevicePath="ErrDriverError";
-	            	else DevicePath=result;
-	            	break;
-	            }
-	            index++;
-	        } while (DeviceInfoData!=null);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
-        return DevicePath;
-    }
-
-    public static String getDeviceIdFlashMode() {
-    	DeviceIdent id=getConnectedDevice();
-    	if (!id.isDriverOk()) return "ErrDriverError";
-    	if (!id.getPid().equals("ADDE")) return "ErrNotPlugged";
-    	return id.getDeviceId();
-    }
-
-    public static String getDeviceIdFastbootMode() {
-    	String DevicePath="ErrNotPlugged";
-        HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
-        if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
-        	MyLogger.getLogger().error("Cannot have device list");
-        }
-        else {
-        	SP_DEVINFO_DATA DeviceInfoData;
-        	int index = 0;
-	        do {
-	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
-	            String result = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (result.contains("VID_0FCE&PID_0DDE")) {
-	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
-	            		DevicePath="ErrDriverError";
-	            	else DevicePath=result;
-	            	break;
-	            }
-	            index++;
-	        } while (DeviceInfoData!=null);
-	        JsetupAPi.destroyHandle(hDevInfo);
-        }
-        return DevicePath;
-    }
-
     public static void CheckAdbDrivers() {
     	MyLogger.getLogger().info("List of connected devices (Device Id) :");
-    	MyLogger.getLogger().info("      - "+getConnectedDevice());
+    	DeviceIdent id=getConnectedDevice();
+    	String driverstatus;
+    	if (id.isDriverOk()) driverstatus = "Installed";
+    	else driverstatus = "Not Installed";
+    	MyLogger.getLogger().info("      - "+id.getDeviceId()+". Driver status : "+driverstatus);
 	    MyLogger.getLogger().info("List of ADB devices :");
 	    Enumeration<String> e = AdbUtility.getDevices();
 	    while (e.hasMoreElements()) {

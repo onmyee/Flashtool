@@ -1,6 +1,8 @@
 package org.system;
 
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Properties;
 
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
@@ -9,26 +11,27 @@ public class DeviceIdent {
 
 	private String pid;
 	private String vid;
-	private String devid;
-	private boolean isDriverOk;
+	private Properties devid;
 	
 	public DeviceIdent() {
 		pid="";
 		vid="";
-		devid="";
-		isDriverOk=false;
+		devid=new Properties();
 	}
-	public DeviceIdent(String device) {
-		String tmppid=device.substring(device.indexOf("PID"),device.indexOf("PID")+12);
-		pid=tmppid.substring(4,tmppid.indexOf("\\"));
-		String tmpvid=device.substring(device.indexOf("VID"),device.indexOf("VID")+12);
-		vid=tmpvid.substring(4,tmppid.indexOf("\\"));
+	public void addDevId(String device) {
+		String tmpvid=device.substring(device.indexOf("VID_"),device.indexOf("VID_")+12);
+		vid=tmpvid.substring(4,tmpvid.indexOf("&"));
+		String tmppid=device.substring(device.indexOf("PID_"),device.indexOf("PID_")+12);
+		int endindex = tmppid.indexOf("\\");
+		if (endindex == -1) endindex = tmppid.indexOf("&");
+		pid=tmppid.substring(4,endindex);
+		devid.setProperty(device, Boolean.toString(true));
 	}
 
-	public void setDriverOk(boolean status) {
-		isDriverOk = status;
+	public void setDriverOk(String device,boolean status) {
+		devid.setProperty(device, Boolean.toString(status));
 	}
-	
+
 	public String getPid() {
 		return pid;
 	}
@@ -38,36 +41,42 @@ public class DeviceIdent {
 	}
 	
 	public boolean isDriverOk() {
-		return isDriverOk;
+		Enumeration e = devid.elements();
+		while (e.hasMoreElements()) {
+			String value = (String)e.nextElement();
+			boolean b = Boolean.parseBoolean(value);
+			if (!b) return false;
+		}
+		return true;
 	}
 	
 	public String getDeviceId() {
-		return devid;
+		Enumeration e = devid.keys();
+		while (e.hasMoreElements()) {
+			String value = (String)e.nextElement();
+			if (!value.contains("MI")) return value;
+		}
+		return "none";
 	}
 
 	public String getStatus() {
-		
-		String err="";
+		String device = getDeviceId();
     	String status = "none";
-	    	if (!devid.equals("none")) {
-	    		DeviceIdent i = new DeviceIdent(device);
-	    		System.out.println(i.getDeviceId());
-	    		if (!i.isDriverOk())
-	    			err = "Err";
-	    		if (i.getPid().equals("ADDE")) status="flash";
-	    		else if (AdbUtility.getDevices().hasMoreElements())
+	    if (!device.equals("none")) {
+	    	if (getPid().equals("ADDE")) status="flash";
+	    	else
+	    		if (AdbUtility.getDevices().hasMoreElements())
 	    			status="adb";
-	    		else if (FastbootUtility.getDevices().hasMoreElements())
-	    			status="fastboot";
+	    		else
+	    			if (FastbootUtility.getDevices().hasMoreElements())
+	    				status="fastboot";
 	    		else {
-	    			if (i.getPid().startsWith("0") || i.getPid().startsWith("E")) 
+	    			if (getPid().startsWith("0") || getPid().startsWith("E")) 
 	    				status="normal";
 	    			else
 	    				status="mtp";
 	    		}
-	    	}
-	    	laststatus=err+status;
-    	}
-    	return laststatus;
+	    }
+    	return status;
 	}
 }

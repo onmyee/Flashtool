@@ -21,6 +21,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
 
+import org.adb.FastbootUtility;
 import org.lang.Language;
 import org.logger.MyLogger;
 import org.system.Device;
@@ -119,14 +120,13 @@ public class WaitDeviceFastbootGUI extends JDialog {
 						Thread.sleep(1000);
 					}
 					catch (Exception e) {}
-					String device = Device.getDeviceIdFastbootMode();
-					if (!device.startsWith("Err")) {
+					if (FastbootUtility.getDevices().hasMoreElements()) {
 						result=true;
 						break;
 					}
 					else {
 						result=false;
-						MyLogger.getLogger().error(device);
+						MyLogger.getLogger().error("Waiting for device in FastBoot Mode");
 					}
 					if (cancel) {
 						result=false;

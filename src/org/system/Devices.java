@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.Enumeration;
 
 import org.adb.AdbUtility;
+import org.adb.FastbootUtility;
 import org.logger.MyLogger;
 
 public class Devices  {
@@ -23,8 +24,7 @@ public class Devices  {
 	}
 	
 	public static boolean HasOneFastbootConnected() {
-		String device = Device.getDeviceIdFastbootMode();
-		return (!device.startsWith("Err"));
+		return FastbootUtility.getDevices().hasMoreElements();
 	}
 
 	public static Enumeration listDevices(boolean reload) {

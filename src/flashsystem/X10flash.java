@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.IOException;
 import org.logger.MyLogger;
 import org.system.Device;
+import org.system.DeviceIdent;
 import org.system.TextFile;
 
 import java.util.Enumeration;
@@ -305,28 +306,25 @@ public class X10flash {
     public boolean openDevice(boolean simulate) {
     	if (simulate) return true;
     	boolean found=false;
-    	String device = "";
+    	DeviceIdent device = new DeviceIdent();
     	my_a = com.sonyericsson.cs.usbflashnative.b.a.a();
     	MyLogger.getLogger().info("Searching Xperia....");
     	try {
-    		device=Device.getDeviceIdFlashMode();
-    		if (!device.startsWith("Err")) {
-    			MyLogger.getLogger().debug("Trying "+device);
-    			my_ch = my_a.openChannel(device, false);
-    			MyLogger.getLogger().info("Found at "+device);
+    		device=Device.getConnectedDevice();
+    		if (device.isDriverOk() && device.getStatus().equals("flash")) {
+    			MyLogger.getLogger().debug("Trying "+device.getDeviceId());
+    			my_ch = my_a.openChannel(device.getDeviceId(), false);
+    			MyLogger.getLogger().info("Found at "+device.getDeviceId());
     			found = true;
     		}
-    		else throw new Exception(device);
+    		else throw new Exception(device.getDeviceId());
     	}
     	catch (Exception e){
     		closeDevice();
     		found=false;
-    		if (device.equals("ErrNotPlugged"))
-    			MyLogger.getLogger().error("Please plug you device in flash mode");
-    		else if (device.equals("ErrDriverError"))
+    		MyLogger.getLogger().error("Please plug you device in flash mode");
+    		if (!device.isDriverOk() && device.getStatus().equals("flash"))
     			MyLogger.getLogger().error("Please install or reinstall device drivers from drivers folder");
-    		else
-    			MyLogger.getLogger().error(device);
     	}
     	return found;
     }
