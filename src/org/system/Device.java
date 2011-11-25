@@ -24,6 +24,7 @@ public class Device {
 	}
 
     public static DeviceIdent getConnectedDevice() {
+    	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
@@ -35,6 +36,11 @@ public class Device {
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
 	            String devid = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
+	            if (lastid!=null)
+	            if (lastid.getIds().contains(devid)) {
+	            	notchanged=true;
+	            	break;
+	            }
 	            if (devid.contains("VID_0FCE")) {
 	            	id.addDevId(devid);
 	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
@@ -50,6 +56,7 @@ public class Device {
         idmodlock=true;
         lastid=id;
         idmodlock=false;
+        if (notchanged) return getLastConnected();
         return id;
     }
 
