@@ -10,7 +10,19 @@ import win32lib.SetupApi.HDEVINFO;
 import win32lib.SetupApi.SP_DEVINFO_DATA;
 
 public class Device {	
-    
+
+	static DeviceIdent lastid;
+	static boolean idmodlock=false;
+	static boolean idquerylock=false;
+
+	public static DeviceIdent getLastConnected() {
+		while (idmodlock);
+		idquerylock=true;
+		DeviceIdent id = new DeviceIdent(lastid);
+		idquerylock=false;
+		return id;
+	}
+
     public static DeviceIdent getConnectedDevice() {
     	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
@@ -34,12 +46,16 @@ public class Device {
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
+        while (idquerylock);
+        idmodlock=true;
+        lastid=id;
+        idmodlock=false;
         return id;
     }
 
     public static void CheckAdbDrivers() {
     	MyLogger.getLogger().info("List of connected devices (Device Id) :");
-    	DeviceIdent id=getConnectedDevice();
+    	DeviceIdent id=getLastConnected();
     	String driverstatus;
     	if (id.isDriverOk()) driverstatus = "Installed";
     	else driverstatus = "Not Installed";

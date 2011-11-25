@@ -51,7 +51,7 @@
         <manifest>
             <attribute name="Main-Class" value="gui.FlasherGUI"/>
             <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.4.2.jar x10flasher_lib/jgoodies-common-1.2.1.jar x10flasher_lib/win32-amd64.jar x10flasher_lib/win32-x86.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar x10flasher_lib/x10flasher-res.jar"/>
-        	<attribute name="Implementation-Version" value="${TODAY}"/>
+        	<attribute name="Implementation-Version" value="Version 0.5.4 built on ${TODAY}"/>
         </manifest>
         <fileset dir="./bin" excludes="/gui/ressources/icons/**"/>
     </jar>

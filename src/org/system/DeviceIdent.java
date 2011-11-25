@@ -18,6 +18,17 @@ public class DeviceIdent {
 		vid="";
 		devid=new Properties();
 	}
+	
+	public DeviceIdent(DeviceIdent id) {
+		devid=new Properties();
+		Enumeration e = id.getIds().keys();
+		while (e.hasMoreElements()) {
+			String key = (String)e.nextElement();
+			addDevId(key);
+			devid.setProperty(key, id.getIds().getProperty(key));
+		}
+	}
+	
 	public void addDevId(String device) {
 		String tmpvid=device.substring(device.indexOf("VID_"),device.indexOf("VID_")+12);
 		vid=tmpvid.substring(4,tmpvid.indexOf("&"));
@@ -78,5 +89,9 @@ public class DeviceIdent {
 	    		}
 	    }
     	return status;
+	}
+	
+	public Properties getIds() {
+		return devid;
 	}
 }

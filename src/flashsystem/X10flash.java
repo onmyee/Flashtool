@@ -310,7 +310,7 @@ public class X10flash {
     	my_a = com.sonyericsson.cs.usbflashnative.b.a.a();
     	MyLogger.getLogger().info("Searching Xperia....");
     	try {
-    		device=Device.getConnectedDevice();
+    		device=Device.getLastConnected();
     		if (device.isDriverOk() && device.getStatus().equals("flash")) {
     			MyLogger.getLogger().debug("Trying "+device.getDeviceId());
     			my_ch = my_a.openChannel(device.getDeviceId(), false);

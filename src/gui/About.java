@@ -20,12 +20,12 @@ public class About extends JDialog {
 	 */
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
-	public static final String version = "0.5.3.0";
-	public static final String build = About.class.getPackage().getImplementationVersion();
+	public static String build = About.class.getPackage().getImplementationVersion();
 
 
 	public static String getVersion() {
-		return version + " built on "+build;
+		if (build==null) build="version : run from eclipse";
+		return build;
 	}
 	
 	/**
@@ -51,7 +51,7 @@ public class About extends JDialog {
 			contentPanel.add(lblName);
 		}
 		{
-			JLabel lblVersion = new JLabel("Version "+version+" Built on "+build);
+			JLabel lblVersion = new JLabel(build);
 			lblVersion.setHorizontalAlignment(SwingConstants.CENTER);
 			lblVersion.setBounds(10, 36, 348, 14);
 			contentPanel.add(lblVersion);
