@@ -84,8 +84,9 @@ public class DeviceIdent {
 	    		else {
 	    			if (getPid().startsWith("0") || getPid().startsWith("E")) 
 	    				status="normal";
-	    			else
+	    			else if (getPid().startsWith("5"))
 	    				status="mtp";
+	    			else status = "unknown";
 	    		}
 	    }
     	return status;

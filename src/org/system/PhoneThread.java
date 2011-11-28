@@ -108,6 +108,12 @@ public class PhoneThread extends Thread {
 							MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
 							FlasherGUI.doDisableIdent();
 						}
+						if (status.equals("unknown")) {
+							MyLogger.getLogger().info("Device connected but cannot identify it. Drivers seem to ok OK.");
+							MyLogger.getLogger().info("Nevertheless, I invite you to double check them.");
+							MyLogger.getLogger().info("You can try reinstall Flashtool-drivers package in drivers folder of Flashtool.");
+							FlasherGUI.doDisableIdent();
+						}
 					}
 				}
 				}
