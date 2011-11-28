@@ -1,0 +1,56 @@
+// PROTOCOL FMT
+// ALL DWORDS ARE BIG ENDIAN
+
+[DWORD]  CMD
+[DWORD]  FLAGS ( 1 | 2 | 4 )
+[DWORD]  LEN
+[BYTE]   HDR CHECKSUM
+[BYTE[LEN]]  DATA
+[DWORD]  DATA CHECKSUM (CRC32)
+
+To calculate header checksum:
+
+byte calcHdrSum(byte* hdr)
+{
+byte cksm = 0;
+
+if(header.length < 12) return 0;
+for(int i = 0; i < 12; i++)
+cksm ^= hdr[i];
+
+return (byte)cksm+7;
+}
+
+FLAGS seems to always be either:
+false true false ( 1 | 2 | 0 ) = 3
+or
+false true true ( 1 | 2 | 4 ) = 7
+the 4 indicates whether the command has more data or not.
+if the 4 bit is set to true, it means there is more data,
+otherwise we are done with command.
+
+COMMANDS:
+0x01 - loader info?
+0x04 - 
+0x06 - write SIN
+0x07 - 
+0x09 - 
+0x0A - 
+0x0C - model/kit info?
+0x0D - write TA
+
+Generally, a writeBytes is followed by 2 or 3 readBytes, depending on the length of data in the first readBytes (if LEN = 0 then only 2...)
+
+When calling readBytes, generally we read the header first (CMD, FLAGS, LEN, HDR CKSM), then the next readBytes contains data of length LEN and is the result of the command. Finally, the last readBytes is some strange CRC32 done on the data. I haven't quite figured this out yet.
+
+Example:
+//writeBytes cmd = 0x0000000C, flags = 0x00000003, len = 0x00000004, hdr cksm = 0x12
+//data = 0x000008A2, data cksm = 0xF00148CC
+<< 00, 00, 00, 0C, 00, 00, 00, 03, 00, 00, 00, 04, 12, 00, 00, 08, A2, F0, 01, 48, CC
+
+//readBytes cmd = 0x0000000C, flags = 0x00000001, len = 0x00000005, hdr cksm = 0x0F
+>> [00, 00, 00, 0C, 00, 00, 00, 01, 00, 00, 00, 05, 0F]
+//data = X10a\0
+>> X10a
+//data cksm = 0x1879A4B8
+>> [18, 79, A4, B8]

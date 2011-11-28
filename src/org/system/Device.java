@@ -64,19 +64,29 @@ public class Device {
     	MyLogger.getLogger().info("List of connected devices (Device Id) :");
     	DeviceIdent id=getLastConnected();
     	String driverstatus;
-    	if (id.isDriverOk()) driverstatus = "Installed";
-    	else driverstatus = "Not Installed";
-    	MyLogger.getLogger().info("      - "+id.getDeviceId()+". Driver status : "+driverstatus);
+    	int maxsize = id.getMaxSize();
+    	Enumeration e = id.getIds().keys();
+    	while (e.hasMoreElements()) {
+    		String dev = (String)e.nextElement();
+    		String driver = id.getIds().getProperty(dev);
+    		MyLogger.getLogger().info("      - "+String.format("%1$-" + maxsize + "s", dev)+"\tDriver installed : "+driver);
+    	}
 	    MyLogger.getLogger().info("List of ADB devices :");
-	    Enumeration<String> e = AdbUtility.getDevices();
-	    while (e.hasMoreElements()) {
-	    	MyLogger.getLogger().info("      - "+e.nextElement());
+	    Enumeration<String> e1 = AdbUtility.getDevices();
+	    if (e1.hasMoreElements()) {
+	    while (e1.hasMoreElements()) {
+	    	MyLogger.getLogger().info("      - "+e1.nextElement());
 	    }
+	    }
+	    else MyLogger.getLogger().info("      - none");
 	    MyLogger.getLogger().info("List of fastboot devices :");
 	    Enumeration<String> e2 = FastbootUtility.getDevices();
+	    if (e1.hasMoreElements()) {
 	    while (e2.hasMoreElements()) {
 	    	MyLogger.getLogger().info("      - "+e2.nextElement());
 	    }
+	    }
+	    else MyLogger.getLogger().info("      - none");
     }
 
 }

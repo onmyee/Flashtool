@@ -12,6 +12,7 @@ public class DeviceIdent {
 	private String pid;
 	private String vid;
 	private Properties devid;
+	private int maxsize=0;
 	
 	public DeviceIdent() {
 		pid="";
@@ -30,6 +31,7 @@ public class DeviceIdent {
 	}
 	
 	public void addDevId(String device) {
+		if (device.length()>maxsize) maxsize=device.length();
 		String tmpvid=device.substring(device.indexOf("VID_"),device.indexOf("VID_")+12);
 		vid=tmpvid.substring(4,tmpvid.indexOf("&"));
 		String tmppid=device.substring(device.indexOf("PID_"),device.indexOf("PID_")+12);
@@ -94,5 +96,9 @@ public class DeviceIdent {
 	
 	public Properties getIds() {
 		return devid;
+	}
+	
+	public int getMaxSize() {
+		return maxsize;
 	}
 }
