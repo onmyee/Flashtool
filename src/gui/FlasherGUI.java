@@ -2,12 +2,10 @@ package gui;
 
 import java.awt.Desktop;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -24,7 +22,6 @@ import foxtrot.Worker;
 import javax.swing.JButton;
 import org.adb.APKUtility;
 import org.adb.AdbUtility;
-//import org.apache.commons.io.IOUtils;
 import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
 import org.plugins.PluginActionListenerAbout;
@@ -55,10 +52,10 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
+
+import win32lib.JUSBFlash;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
-import flashsystem.BytesUtil;
-import flashsystem.HexDump;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
 import gui.EncDecGUI.MyFile;
@@ -146,13 +143,8 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		long l = 10000L;
-		System.out.println(HexDump.toHex(BytesUtil.getBytesWord(l, 4)));
-		//System.out.println(com.sonyericsson.cs.generic.c.c.c(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false),false));
-		//System.out.println(BytesUtil.getInt(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false)));
-/*		JUSBFlash usbflash = new JUSBFlash();
-		int ch = usbflash.openChannel("USB\\VID_0FCE&PID_612E\\CB511H3V7U", false);
-		System.out.println(ch);*/
+		JUSBFlash usb = new JUSBFlash();
+		usb.openChannel("USB\\VID_0FCE&PID_612E\\CB511H3V7U", true);
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
