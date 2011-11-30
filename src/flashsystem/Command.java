@@ -6,12 +6,10 @@ import java.io.IOException;
 
 import org.logger.MyLogger;
 
-import com.sonyericsson.cs.generic.c.c;
-
 public class Command {
 
-	private com.sonyericsson.cs.usbflashnative.a.a my_a = null;
-    private int my_ch;
+	private com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeInterface usbflash = null;
+    private int usbchannel;
     private int lastflags;
     private boolean _simulate;
     byte lastReply[];
@@ -39,9 +37,9 @@ public class Command {
 	static final byte[] VAL1 = new byte[] {1};
 	static final byte[] VAL2 = new byte[] {2};
 
-	public Command(com.sonyericsson.cs.usbflashnative.a.a device, int channel, boolean simulate) {
-		my_a      = device;
-		my_ch     = channel;
+	public Command(com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeInterface device, int channel, boolean simulate) {
+		usbflash      = device;
+		usbchannel     = channel;
 		_simulate = simulate;
 	}
 	
@@ -74,15 +72,15 @@ public class Command {
             byte abyte1[] = abyte0;
             byte abyte2[] = new byte[4];
             System.arraycopy(abyte1, 0, abyte2, 0, 4);
-            i = c.c(abyte2, false);
+            i = BytesUtil.getInt(abyte2);
             if((i & 0xfffffff0) == 0)
             {
                 System.arraycopy(abyte1, 4, abyte2, 0, 4);
-                int j = c.c(abyte2, false);
+                int j = BytesUtil.getInt(abyte2);
                 if((j & -8) == 0)
                 {
                     System.arraycopy(abyte1, 8, abyte2, 0, 4);
-                    int k = c.c(abyte2, false);
+                    int k = BytesUtil.getInt(abyte2);
                     if((k & 0xfffe0000) == 0)
                     {
                         byte byte2 = x10bytes.calcSum(abyte1);
@@ -124,12 +122,12 @@ public class Command {
                             int l = -1;
                             int i1 = -1;
                             if(abyte4.length == 4)
-                                l = c.c(abyte4, false);
+                                l = BytesUtil.getInt(abyte4);
                             x10bytes d1 = new x10bytes(i, false, false, false, abyte0);
                             byte abyte6[] = d1.getByteArray();
                             byte abyte7[] = new byte[4];
                             System.arraycopy(abyte6, abyte6.length - 4, abyte7, 0, 4);
-                            i1 = c.c(abyte7, false);
+                            i1 = BytesUtil.getInt(abyte7);
                             if(l != i1)
                                 throw new X10FlashException(new StringBuilder("### read filed : checksum err! ").append(HexDump.toHex(l)).append("!=").append(HexDump.toHex(i1)).toString());
                             return abyte0;
@@ -176,9 +174,9 @@ public class Command {
     	try {
 	    	if (!_simulate) {
 	    		x10bytes d1 = new x10bytes(command, false, true, ongoing, abyte0);
-	    		if (!my_a.writeBytes(my_ch, d1.getByteArray())) {
-	    			my_a=null;
-	    			my_ch=0;
+	    		if (!usbflash.writeBytes(usbchannel, d1.getByteArray())) {
+	    			usbflash=null;
+	    			usbchannel=0;
 	    			throw new X10FlashException("Error writing command");
 	    		}
 	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
@@ -198,7 +196,7 @@ public class Command {
     	try {
 	    	MyLogger.updateProgress();
 	    	if (!_simulate) {
-	    		byte[] ret = my_a.readBytes(my_ch, bufferlen);
+	    		byte[] ret = usbflash.readBytes(usbchannel, bufferlen);
 	    		return ret;
 	    	}
 	    	else return null;

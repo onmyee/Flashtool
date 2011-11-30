@@ -7,8 +7,6 @@
 	<classpathentry kind="lib" path="libs/jna.jar"/>
 	<classpathentry kind="lib" path="libs/platform.jar"/>
 	<classpathentry kind="lib" path="libs/com.sonyericsson.cs_ma3_common_2.10.9.13.jar"/>
-	<classpathentry kind="lib" path="libs/com.sonyericsson.cs.generic_2.10.9.13.jar"/>
-	<classpathentry kind="lib" path="libs/com.sonyericsson.cs.usbflashnative.jar"/>
 	<classpathentry kind="lib" path="libs/jdom-1.1.1.jar"/>
 	<classpathentry kind="lib" path="libs/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/rsyntaxtextarea.jar"/>

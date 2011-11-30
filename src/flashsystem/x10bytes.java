@@ -24,7 +24,7 @@ public class x10bytes
         {
             dataoutputstream.write(createHeader());
             dataoutputstream.write(body);
-            dataoutputstream.write(com.sonyericsson.cs.generic.c.c.a(l, 4, false));
+            dataoutputstream.write(BytesUtil.getBytesWord(l, 4));
         }
         catch(IOException ioexception)
         {
@@ -67,9 +67,9 @@ public class x10bytes
     private byte[] createHeader()
     {
         byte hdr[] = new byte[13];
-        System.arraycopy(com.sonyericsson.cs.generic.c.c.a(cmd, 4, false), 0, hdr, 0, 4);
-        System.arraycopy(com.sonyericsson.cs.generic.c.c.a(g(), 4, false), 0, hdr, 4, 4);
-        System.arraycopy(com.sonyericsson.cs.generic.c.c.a(body.length, 4, false), 0, hdr, 8, 4);
+        System.arraycopy(BytesUtil.getBytesWord(cmd, 4), 0, hdr, 0, 4);
+        System.arraycopy(BytesUtil.getBytesWord(g(), 4), 0, hdr, 4, 4);
+        System.arraycopy(BytesUtil.getBytesWord(body.length, 4), 0, hdr, 8, 4);
         hdr[12] = calcSum(hdr);
         return hdr;
     }

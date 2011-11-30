@@ -52,7 +52,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextPane;
-
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
@@ -147,8 +146,13 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		System.out.println(com.sonyericsson.cs.generic.c.c.c(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false),false));
-		System.out.println(BytesUtil.getInt(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false)));
+		long l = 10000L;
+		System.out.println(HexDump.toHex(BytesUtil.getBytesWord(l, 4)));
+		//System.out.println(com.sonyericsson.cs.generic.c.c.c(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false),false));
+		//System.out.println(BytesUtil.getInt(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false)));
+/*		JUSBFlash usbflash = new JUSBFlash();
+		int ch = usbflash.openChannel("USB\\VID_0FCE&PID_612E\\CB511H3V7U", false);
+		System.out.println(ch);*/
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");

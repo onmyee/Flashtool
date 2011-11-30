@@ -117,9 +117,9 @@ public class HexDump
         for(int x = 0; x < value.length; x++)
         {
             retVal.append(toHex(value[x]));
-            retVal.append(", ");
+            if (x<value.length-1)
+            	retVal.append(", ");
         }
-
         retVal.append(']');
         return retVal.toString();
     }
