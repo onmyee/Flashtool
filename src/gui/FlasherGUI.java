@@ -991,24 +991,24 @@ public class FlasherGUI extends JFrame {
 					apkClean sel = new apkClean();
 					sel.setVisible(true);
 					boolean somethingdone = false;
-						if (TextFile.exists("."+fsep+"custom"+fsep+"clean"+fsep+"listappsadd")) {
-							AdbUtility.push("."+fsep+"custom"+fsep+"clean"+fsep+"listappsadd", GlobalConfig.getProperty("deviceworkdir"));
-							TextFile t = new TextFile("."+fsep+"custom"+fsep+"clean"+fsep+"listappsadd","ASCII");
+						if (TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd")) {
+							AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd", GlobalConfig.getProperty("deviceworkdir"));
+							TextFile t = new TextFile(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd","ASCII");
 							Iterator<String> i = t.getLines().iterator();
 							while (i.hasNext()) {
-								AdbUtility.push("."+fsep+"custom"+fsep+"apps_saved"+fsep+""+i.next(), GlobalConfig.getProperty("deviceworkdir"));
+								AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+""+i.next(), GlobalConfig.getProperty("deviceworkdir"));
 							}
 							t.delete();
 							Shell shell1 = new Shell("sysadd");
 							shell1.runRoot();
 							somethingdone = true;
 						}
-						if (TextFile.exists("."+fsep+"custom"+fsep+"clean"+fsep+"listappsremove")) {
-							AdbUtility.push("."+fsep+"custom"+fsep+"clean"+fsep+"listappsremove", GlobalConfig.getProperty("deviceworkdir"));
-							TextFile t = new TextFile("."+fsep+"custom"+fsep+"clean"+fsep+"listappsremove","ASCII");
+						if (TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsremove")) {
+							AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsremove", GlobalConfig.getProperty("deviceworkdir"));
+							TextFile t = new TextFile(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsremove","ASCII");
 							Iterator<String> i = t.getLines().iterator();
 							while (i.hasNext()) {
-								AdbUtility.pull("/system/app/"+i.next(),"."+fsep+"custom"+fsep+"apps_saved");
+								AdbUtility.pull("/system/app/"+i.next(),OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved");
 							}
 							Shell shell2 = new Shell("sysremove");
 							shell2.runRoot();
