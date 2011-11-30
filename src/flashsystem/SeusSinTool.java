@@ -1,10 +1,6 @@
 package flashsystem;
 
-import com.sonyericsson.cs.ma3.common.security.a;
-import com.sonyericsson.cs.ma3.common.security.b;
-
 import java.io.*;
-
 import org.system.OsRun;
 
 public class SeusSinTool {
@@ -14,7 +10,7 @@ public class SeusSinTool {
 		try {
 			String folder = (new File(sinfile)).getParent();
 			FileInputStream f = new FileInputStream(sinfile);
-	        a in = new a(f);
+			com.sonyericsson.cs.ma3.common.security.a in = new com.sonyericsson.cs.ma3.common.security.a(f);
 	        String basefile = sinfile+"_dek";
 	        OutputStream out = new FileOutputStream(basefile+".tgz");
 	        int len;
@@ -47,7 +43,7 @@ public class SeusSinTool {
 	      try {
 	    	  String outname = tgzfile.replaceAll(".tgz", ".sin");
 	    	  FileInputStream in = new FileInputStream(tgzfile);
-	    	  b out = new b(new FileOutputStream(outname));
+	    	  com.sonyericsson.cs.ma3.common.security.b out = new com.sonyericsson.cs.ma3.common.security.b(new FileOutputStream(outname));
 	    	  int len;
 	    	  while((len = in.read(buf)) >= 0) {
 	    		  if (len > 0)
