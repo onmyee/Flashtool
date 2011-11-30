@@ -143,8 +143,6 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		JUSBFlash usb = new JUSBFlash();
-		usb.openChannel("USB\\VID_0FCE&PID_612E\\CB511H3V7U", true);
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
