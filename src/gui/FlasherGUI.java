@@ -52,8 +52,6 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
-
-import win32lib.JUSBFlash;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
 import flashsystem.SeusSinTool;
