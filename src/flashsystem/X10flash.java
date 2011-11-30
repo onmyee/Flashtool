@@ -1,7 +1,5 @@
 package flashsystem;
 
-import com.sonyericsson.cs.generic.c.c;
-import com.sonyericsson.cs.usbflashnative.a.a;
 import flashsystem.HexDump;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -16,7 +14,7 @@ import java.util.Vector;
 
 public class X10flash {
 
-	private static a my_a = null;
+	private static com.sonyericsson.cs.usbflashnative.a.a my_a = null;
     private static int my_ch;
     private Bundle _bundle;
     private Command cmd;
@@ -87,7 +85,7 @@ public class X10flash {
     	try {
 		    MyLogger.getLogger().info("Start Reading property");
 	        MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
-	        cmd.send(Command.CMD12, c.a(prnumber, 4, false),false);
+	        cmd.send(Command.CMD12, com.sonyericsson.cs.generic.c.c.a(prnumber, 4, false),false);
 	        String reply = cmd.getLastReplyHex();
 	        reply = reply.replace("[", "");
 	        reply = reply.replace("]", "");
@@ -124,7 +122,7 @@ public class X10flash {
 	        for(int i = 0; i < 3000; i++)
 	        {
 	        	MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(i).toString());
-	        	cmd.send(Command.CMD12, c.a(i, 4, false),false);
+	        	cmd.send(Command.CMD12, com.sonyericsson.cs.generic.c.c.a(i, 4, false),false);
 	        	String reply = cmd.getLastReplyHex();
 	        	String replyS = cmd.getLastReplyString();
 	        	reply = reply.replace("[", "");
@@ -160,7 +158,7 @@ public class X10flash {
 			int k;
 			byte abyte1[] = new byte[4];
 			System.arraycopy(abyte0, 2, abyte1, 0, 4);
-			k = c.c(abyte1, false);
+			k = com.sonyericsson.cs.generic.c.c.c(abyte1, false);
 			abyte1 = new byte[k - 6];
 			k = fileinputstream.read(abyte1);
 			if(k != abyte1.length) {

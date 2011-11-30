@@ -3,7 +3,6 @@ package flashsystem;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import com.sonyericsson.cs.usbflashnative.a.a;
 
 import org.logger.MyLogger;
 
@@ -11,7 +10,7 @@ import com.sonyericsson.cs.generic.c.c;
 
 public class Command {
 
-	private a my_a = null;
+	private com.sonyericsson.cs.usbflashnative.a.a my_a = null;
     private int my_ch;
     private int lastflags;
     private boolean _simulate;
@@ -40,7 +39,7 @@ public class Command {
 	static final byte[] VAL1 = new byte[] {1};
 	static final byte[] VAL2 = new byte[] {2};
 
-	public Command(a device, int channel, boolean simulate) {
+	public Command(com.sonyericsson.cs.usbflashnative.a.a device, int channel, boolean simulate) {
 		my_a      = device;
 		my_ch     = channel;
 		_simulate = simulate;
