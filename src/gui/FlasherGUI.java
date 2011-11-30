@@ -58,6 +58,8 @@ import java.awt.event.WindowEvent;
 import org.lang.Language;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
+import flashsystem.BytesUtil;
+import flashsystem.HexDump;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
 import gui.EncDecGUI.MyFile;
@@ -145,6 +147,8 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) throws Exception {
+		System.out.println(com.sonyericsson.cs.generic.c.c.c(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false),false));
+		System.out.println(BytesUtil.getInt(com.sonyericsson.cs.generic.c.c.a(0x0B, 4, false)));
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
