@@ -52,10 +52,17 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
+
+import win32lib.JKernel32;
+import win32lib.JsetupAPi;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
+import flashsystem.Command;
+import flashsystem.HexDump;
+import flashsystem.S1Packet;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
+import flashsystem.x10bytes;
 import gui.EncDecGUI.MyFile;
 import javax.swing.JProgressBar;
 import java.awt.SystemColor;
@@ -142,6 +149,32 @@ public class FlasherGUI extends JFrame {
 	
 	public static void main(String[] args) throws Exception {
 		initLogger();
+		try {
+			System.out.println("Device Opened : "+JKernel32.openDevice());		
+			byte[] b = JKernel32.readBytes();
+			S1Packet p = new S1Packet(b);
+			do {
+				b = JKernel32.readBytes();
+				p.addData(b);
+			} while (p.hasMoreToRead());
+			System.out.println(p);
+			System.out.println("Calculated : "+HexDump.toHex(p.calculatedCRC32()));
+			System.out.println("data lenght : "+p.getDataLength());
+			S1Packet p2 = new S1Packet(1, null, true);
+			JKernel32.writeBytes(p2.getByteArray());
+			b = JKernel32.readBytes();
+			p = new S1Packet(b);
+			do {
+				b = JKernel32.readBytes();
+				p.addData(b);
+			} while (p.hasMoreToRead());
+			System.out.println(p);
+			System.out.println("Device Closed : "+JKernel32.closeDevice());
+		}
+		catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("Device Closed : "+JKernel32.closeDevice());
+		}
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
 		String pathsep = System.getProperty("path.separator");

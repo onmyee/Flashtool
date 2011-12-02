@@ -4,6 +4,8 @@ import java.math.BigInteger;
 
 public class BytesUtil {
 
+	private static long pivot[];
+	
 	public static byte[] getBytesWord(int paramInt1, int paramInt2)
     {
 //      int m = 256;
@@ -84,5 +86,46 @@ public class BytesUtil {
         arrayOfByte = bytesconcat(new byte[4 - i], arrayOfByte);
       return new BigInteger(arrayOfByte).intValue();
     }
+
+	public static long getLong(byte[] paramArrayOfByte)
+    {
+      if (paramArrayOfByte == null)
+        return 0;
+      byte[] arrayOfByte = paramArrayOfByte;
+      int i = arrayOfByte.length;
+      if (i < 4)
+        arrayOfByte = bytesconcat(new byte[4 - i], arrayOfByte);
+      return new BigInteger(arrayOfByte).longValue();
+    }
+
+	public static byte[] getCRC32(byte[] paramArrayOfByte) {
+		long result = 0L;
+		for(int i = 0; i < paramArrayOfByte.length; i++) {
+	        long l = 255L & (long)paramArrayOfByte[i] & 0xffffffffL;
+	        long l1 = (result ^ l) & 0xffffffffL;
+	        result = (result >> 8 & 0xffffffffL ^ pivot[(int)(l1 & 255L)]) & 0xffffffffL;
+		}
+		return getBytesWord(result & 0xffffffffL,4);
+	}
+
+    static 
+    {
+        pivot = new long[256];
+        for(int i = 0; i < 256; i++)
+        {
+            long l1 = i;
+            for(int j = 0; j < 8; j++)
+            {
+                if(l1 % 2L == 0L)
+                    l1 = l1 >> 1 & 0xffffffffL;
+                else
+                    l1 = (l1 >> 1 ^ 0xedb88320L) & 0xffffffffL;
+                pivot[i] = l1;
+            }
+
+        }
+
+    }
+
 
 }

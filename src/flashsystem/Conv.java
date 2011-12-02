@@ -2,13 +2,10 @@ package flashsystem;
 
 public class Conv
 {
+    private long a;
+    private static long b[];
 
     public Conv()
-    {
-        a();
-    }
-
-    public void a()
     {
         a = 0L;
     }
@@ -31,9 +28,6 @@ public class Conv
     {
         return a & 0xffffffffL;
     }
-
-    private long a;
-    private static long b[];
 
     static 
     {

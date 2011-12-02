@@ -42,6 +42,7 @@ public class Device {
 	            	break;
 	            }
 	            if (devid.contains("VID_0FCE")) {
+	            	id.addDevPath(JsetupAPi.getDevicePath(hDevInfo, DeviceInfoData));
 	            	id.addDevId(devid);
 	            	if (!JsetupAPi.isInstalled(hDevInfo, DeviceInfoData))
 	            		id.setDriverOk(devid,false);

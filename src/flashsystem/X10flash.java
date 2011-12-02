@@ -1,6 +1,8 @@
 package flashsystem;
 
 import flashsystem.HexDump;
+import flashsystem.io.USBFlash;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
@@ -13,8 +15,6 @@ import java.util.Vector;
 
 public class X10flash {
 
-	private static com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeInterface usbflash = null;
-    private static int usbchannel;
     private Bundle _bundle;
     private Command cmd;
 
@@ -59,7 +59,7 @@ public class X10flash {
     }
 
     public String getHook() throws IOException, X10FlashException {
-	    cmd = new Command(usbflash,usbchannel,_bundle.simulate());
+	    cmd = new Command(_bundle.simulate());
 		cmd.testPlugged();
 		String hook = cmd.getLastReplyString();
 		cmd.send(Command.CMD01, Command.VALNULL, false);
@@ -70,7 +70,7 @@ public class X10flash {
 
     // added method to retrieved long string returned by loader
     public String getHook2() throws IOException, X10FlashException {
-	    cmd = new Command(usbflash,usbchannel,_bundle.simulate());
+	    cmd = new Command(_bundle.simulate());
 		cmd.testPlugged();
 		cmd.send(Command.CMD01, Command.VALNULL, false);
 		String hook = cmd.getLastReplyString();
@@ -107,7 +107,7 @@ public class X10flash {
     	try {
 		    MyLogger.getLogger().info("Start Dumping properties");
 
-		    cmd = new Command(usbflash,usbchannel,_bundle.simulate());
+		    cmd = new Command(_bundle.simulate());
 	    	
 			cmd.testPlugged();
 			cmd.send(Command.CMD01, Command.VALNULL, false);
@@ -238,7 +238,7 @@ public class X10flash {
     }
 
     private void init() throws X10FlashException,FileNotFoundException, IOException {
-	    cmd = new Command(usbflash,usbchannel,_bundle.simulate());
+	    cmd = new Command(_bundle.simulate());
     	
 		cmd.testPlugged();
 		cmd.send(Command.CMD01, Command.VALNULL, false);
@@ -287,12 +287,9 @@ public class X10flash {
 
     public void closeDevice() {
     	try {
-    		usbflash.close(usbchannel);
-    		usbchannel = 0;
+    		USBFlash.close();
     	}
     	catch (Exception e) {
-    		usbflash = null;
-    		usbchannel = 0;
     	}
     }
     
@@ -304,13 +301,12 @@ public class X10flash {
     	if (simulate) return true;
     	boolean found=false;
     	DeviceIdent device = new DeviceIdent();
-    	usbflash = new com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeImpl();
     	MyLogger.getLogger().info("Searching Xperia....");
     	try {
     		device=Device.getLastConnected();
     		if (device.isDriverOk() && device.getStatus().equals("flash")) {
     			MyLogger.getLogger().debug("Trying "+device.getDeviceId());
-    			usbchannel = usbflash.openChannel(device.getDeviceId(), false);
+    			USBFlash.openChannel(device.getDeviceId());
     			MyLogger.getLogger().info("Found at "+device.getDeviceId());
     			found = true;
     		}

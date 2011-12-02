@@ -112,6 +112,8 @@ public class HexDump
 
     public static String toHex(byte value[])
     {
+    	if (value==null) return "";
+    	if (value.length==0) return "";
         StringBuffer retVal = new StringBuffer();
         retVal.append('[');
         for(int x = 0; x < value.length; x++)

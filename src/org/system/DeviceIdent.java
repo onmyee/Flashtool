@@ -11,12 +11,14 @@ public class DeviceIdent {
 
 	private String pid;
 	private String vid;
+	private String devicepath;
 	private Properties devid;
 	private int maxsize=0;
 	
 	public DeviceIdent() {
 		pid="";
 		vid="";
+		devicepath="";
 		devid=new Properties();
 	}
 	
@@ -28,6 +30,15 @@ public class DeviceIdent {
 			addDevId(key);
 			devid.setProperty(key, id.getIds().getProperty(key));
 		}
+		addDevPath(id.getDevPath());
+	}
+
+	public void addDevPath(String path) {
+		devicepath=path;
+	}
+	
+	public String getDevPath() {
+		return devicepath;
 	}
 	
 	public void addDevId(String device) {

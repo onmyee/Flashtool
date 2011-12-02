@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import org.logger.MyLogger;
 
+import flashsystem.io.USBFlash;
+
 public class Command {
 
-	private com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeInterface usbflash = null;
-    private int usbchannel;
     private int lastflags;
     private boolean _simulate;
     byte lastReply[];
@@ -37,9 +37,7 @@ public class Command {
 	static final byte[] VAL1 = new byte[] {1};
 	static final byte[] VAL2 = new byte[] {2};
 
-	public Command(com.sonyericsson.cs.usbflashnative.impl.USBFlashNativeInterface device, int channel, boolean simulate) {
-		usbflash      = device;
-		usbchannel     = channel;
+	public Command(boolean simulate) {
 		_simulate = simulate;
 	}
 	
@@ -174,9 +172,8 @@ public class Command {
     	try {
 	    	if (!_simulate) {
 	    		x10bytes d1 = new x10bytes(command, false, true, ongoing, abyte0);
-	    		if (!usbflash.writeBytes(usbchannel, d1.getByteArray())) {
-	    			usbflash=null;
-	    			usbchannel=0;
+	    		System.out.println(HexDump.toHex(d1.getByteArray()));
+	    		if (!USBFlash.writeBytes(d1.getByteArray())) {
 	    			throw new X10FlashException("Error writing command");
 	    		}
 	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
@@ -196,7 +193,7 @@ public class Command {
     	try {
 	    	MyLogger.updateProgress();
 	    	if (!_simulate) {
-	    		byte[] ret = usbflash.readBytes(usbchannel, bufferlen);
+	    		byte[] ret = USBFlash.readBytes(bufferlen);
 	    		return ret;
 	    	}
 	    	else return null;
