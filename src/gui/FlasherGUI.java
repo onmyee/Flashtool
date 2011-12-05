@@ -151,8 +151,8 @@ public class FlasherGUI extends JFrame {
 	public static void main(String[] args) throws Exception {
 		//S1Packet p2 = new S1Packet(1, null, true);
 		//System.out.println(HexDump.toHex(p2.getByteArray()));
-		//USBFlashLinux.open();
-		//System.out.println(new String(USBFlashLinux.getLastReply()));
+		USBFlashLinux.open();
+		System.out.println(new String(USBFlashLinux.getLastReply()));
 		S1Packet p = new S1Packet(1,null,false);
 		USBFlashLinux.write(p);
 		System.out.println(new String(USBFlashLinux.getLastReply()));

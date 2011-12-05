@@ -17,13 +17,21 @@ public class S1Packet {
 	int lastdatapos = 0;
 	boolean finalized = false;
 	
-	public S1Packet(byte[] header) {
-		if (header != null) {
-			System.arraycopy(header, 0, cmd, 0, 4);
-			System.arraycopy(header, 4, flags, 0, 4);
-			System.arraycopy(header, 8, datalen, 0, 4);
-			hdr = header[12];
-			data = new byte[getDataLength()];
+	public S1Packet(byte[] pdata) {
+		if (pdata != null) {
+			System.arraycopy(pdata, 0, cmd, 0, 4);
+			System.arraycopy(pdata, 4, flags, 0, 4);
+			System.arraycopy(pdata, 8, datalen, 0, 4);
+			hdr = pdata[12];
+			if (pdata.length>13) {
+				data = new byte[getDataLength()];
+				int totransfer=pdata.length-13;
+				if (totransfer>getDataLength()) totransfer=getDataLength();
+				lastdatapos = totransfer;
+				System.arraycopy(pdata, 13, data, 0, totransfer);
+				if (totransfer==getDataLength())
+					crc32=calculatedCRC32();
+			}
 		}
 		else finalized=true;
 	}
