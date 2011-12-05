@@ -52,16 +52,12 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
-
-import win32lib.JKernel32;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
-import flashsystem.HexDump;
 import flashsystem.S1Packet;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
 import flashsystem.io.USBFlash;
-import flashsystem.io.USBFlashLinux;
 import gui.EncDecGUI.MyFile;
 import javax.swing.JProgressBar;
 import java.awt.SystemColor;
@@ -70,7 +66,6 @@ import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 
-import linuxlib.JUsb;
 
 public class FlasherGUI extends JFrame {
 
@@ -149,14 +144,6 @@ public class FlasherGUI extends JFrame {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		//S1Packet p2 = new S1Packet(1, null, true);
-		//System.out.println(HexDump.toHex(p2.getByteArray()));
-		USBFlashLinux.open();
-		System.out.println(new String(USBFlashLinux.getLastReply()));
-		S1Packet p = new S1Packet(1,null,false);
-		USBFlashLinux.write(p);
-		System.out.println(new String(USBFlashLinux.getLastReply()));
-		System.exit(0);
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");

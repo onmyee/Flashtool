@@ -24,7 +24,7 @@ public class USBFlashLinux {
 		return true;
 	}
 
-    public static  void readReply() throws X10FlashException, IOException
+    private static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p = JUsb.read();
 		System.out.println("Read "+p.getCommand()+" with a data lenght of "+p.getDataLength());

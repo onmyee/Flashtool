@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 import org.logger.MyLogger;
-import org.system.Device;
-import org.system.DeviceIdent;
 import org.system.TextFile;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -52,12 +50,6 @@ public class X10flash {
     	}
     }
 
-    private String testCmd12(int i) throws X10FlashException
-    {
-        
-        return cmd.getLastReplyHex();
-    }
-
     public String getHook() throws IOException, X10FlashException {
 	    cmd = new Command(_bundle.simulate());
 		cmd.testPlugged();
@@ -89,13 +81,11 @@ public class X10flash {
 	        reply = reply.replace("[", "");
 	        reply = reply.replace("]", "");
 	        reply = reply.replace(",", "");
-	        closeDevice();	    
 			MyLogger.getLogger().info("Reading property finished.");
 			MyLogger.initProgress(0);
 			return reply;
 	    }
     	catch (Exception ioe) {
-    		closeDevice();
     		MyLogger.getLogger().error("Error dumping properties. Aborted");
     		MyLogger.initProgress(0);
     		return "";
@@ -135,12 +125,9 @@ public class X10flash {
 	        tazone.close();
 	        tazoneS.close();
             
-	        closeDevice();
-		    
 			MyLogger.getLogger().info("Dumping properties finished.");
 	    }
     	catch (Exception ioe) {
-    		closeDevice();
     		MyLogger.getLogger().error("Error dumping properties. Aborted");
     	}
     }
@@ -278,25 +265,14 @@ public class X10flash {
             
 			cmd.send(Command.CMD04,Command.VAL1,false);
 	
-            closeDevice();
-		    
 			MyLogger.getLogger().info("Flashing finished.");
 		    MyLogger.initProgress(0);
 	    }
     	catch (Exception ioe) {
-    		closeDevice();
     		MyLogger.getLogger().error("Error flashing. Aborted");
     	}
     }
 
-    public void closeDevice() {
-    	try {
-    		USBFlash.close();
-    	}
-    	catch (Exception e) {
-    	}
-    }
-    
     public boolean openDevice() {
     	return openDevice(_bundle.simulate());
     }
@@ -304,25 +280,14 @@ public class X10flash {
     public boolean openDevice(boolean simulate) {
     	if (simulate) return true;
     	boolean found=false;
-    	DeviceIdent device = new DeviceIdent();
     	MyLogger.getLogger().info("Searching Xperia....");
     	try {
-    		device=Device.getLastConnected();
-    		if (device.isDriverOk() && device.getStatus().equals("flash")) {
-    			MyLogger.getLogger().debug("Trying "+device.getDeviceId());
-    			USBFlash.openChannel(device.getDeviceId());
-    			MyLogger.getLogger().info("Found at "+device.getDeviceId());
-    			MyLogger.getLogger().info(new String(USBFlash.getLastReply()));
-    			found = true;
-    		}
-    		else throw new Exception(device.getDeviceId());
+    		USBFlash.open();
+    		found = true;
     	}
     	catch (Exception e){
-    		closeDevice();
     		found=false;
     		MyLogger.getLogger().error("Please plug you device in flash mode");
-    		if (!device.isDriverOk() && device.getStatus().equals("flash"))
-    			MyLogger.getLogger().error("Please install or reinstall device drivers from drivers folder");
     	}
     	return found;
     }

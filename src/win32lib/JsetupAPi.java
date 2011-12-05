@@ -1,19 +1,12 @@
 package win32lib;
 
-import win32lib.Hid.HIDD_ATTRIBUTES;
-
 import org.logger.MyLogger;
 import win32lib.SetupApi.HDEVINFO;
 import win32lib.SetupApi.SP_DEVICE_INTERFACE_DATA;
 import win32lib.SetupApi.SP_DEVICE_INTERFACE_DETAIL_DATA;
 import win32lib.SetupApi.SP_DEVINFO_DATA;
-
-import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinBase;
-import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.platform.win32.Guid.GUID;
 import com.sun.jna.ptr.IntByReference;
-import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.Native;
 import com.sun.jna.win32.W32APIOptions;
 
@@ -137,21 +130,5 @@ public class JsetupAPi {
         } while (true);
         return devpath;
 	}
-
-	private static String getSystemError(int code) {
-        Kernel32 lib = Kernel32.INSTANCE;
-        PointerByReference pref = new PointerByReference();
-        lib.FormatMessage(
-            WinBase.FORMAT_MESSAGE_ALLOCATE_BUFFER | WinBase.FORMAT_MESSAGE_FROM_SYSTEM | WinBase.FORMAT_MESSAGE_IGNORE_INSERTS, 
-            null, 
-            code, 
-            0, 
-            pref, 
-            0, 
-            null);
-        String s = pref.getValue().getString(0, !Boolean.getBoolean("w32.ascii"));
-        lib.LocalFree(pref.getValue());
-        return s;
-    } 
 
 }

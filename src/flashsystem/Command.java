@@ -1,7 +1,5 @@
 package flashsystem;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.logger.MyLogger;
@@ -48,7 +46,6 @@ public class Command {
 	}
 	
 	public void readReply() throws X10FlashException,IOException {
-		USBFlash.readReply();
 		if (getLastReplyString().contains("ERR_SEVERITY"))
 			if (!getLastReplyString().contains("ERR_SEVERITY=\"NONE\""))
 				throw new X10FlashException(getLastReplyString());
@@ -86,7 +83,7 @@ public class Command {
 	    	if (!_simulate) {
 	    		S1Packet p = new S1Packet(command,abyte0,ongoing);
 	    		System.out.println("Wrote "+p.getCommand()+" with a data lenght of "+p.getDataLength());
-	    		if (!USBFlash.writeBytes(p.getByteArray())) {
+	    		if (!USBFlash.write(p)) {
 	    			throw new X10FlashException("Error writing command");
 	    		}
 	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());

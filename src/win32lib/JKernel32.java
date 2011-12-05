@@ -7,7 +7,6 @@ import org.system.Device;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinBase;
-import com.sun.jna.platform.win32.WinBase.OVERLAPPED;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
@@ -18,7 +17,7 @@ public class JKernel32 {
 	public static Kernel32RW kernel32 = (Kernel32RW) Native.loadLibrary("kernel32", Kernel32RW.class, W32APIOptions.UNICODE_OPTIONS);
 	static WinNT.HANDLE HandleToDevice = WinBase.INVALID_HANDLE_VALUE;
 
-	public static boolean openDevice() {
+	public static boolean openDevice() throws IOException {
         /* Kernel32RW.GENERIC_READ | Kernel32RW.GENERIC_WRITE not used in dwDesiredAccess field for system devices such a keyboard or mouse */
         int shareMode = WinNT.FILE_SHARE_READ | WinNT.FILE_SHARE_WRITE;
         int Access = WinNT.GENERIC_WRITE | WinNT.GENERIC_READ;
@@ -30,20 +29,15 @@ public class JKernel32 {
                 WinNT.OPEN_EXISTING, 
                 0,//WinNT.FILE_FLAG_OVERLAPPED, 
                 (WinNT.HANDLE)null);
-		return (HandleToDevice != WinBase.INVALID_HANDLE_VALUE);
+		if (HandleToDevice == WinBase.INVALID_HANDLE_VALUE) throw new IOException(getLastError());
+		return true;
 	}
 	
-	public static byte[] readBytes() throws IOException {
-		System.out.println("Reading file");
-		int bufsize=65536;
+	public static byte[] readBytes(int bufsize) throws IOException {
 		IntByReference nbread = new IntByReference();
 		byte[] b = new byte[bufsize];
 		boolean result = kernel32.ReadFile(HandleToDevice, b, bufsize, nbread, null);
-		if (!result) {
-			System.out.println(getLastError());
-		}
-		//kernel32.CancelIo(HandleToDevice);
-		System.out.println("End Reading file. Read "+nbread.getValue());
+		if (!result) throw new IOException(getLastError());
 		return getReply(b,nbread.getValue());
 	}
 
@@ -59,10 +53,8 @@ public class JKernel32 {
 	public static boolean writeBytes(byte bytes[]) throws IOException {
 		IntByReference nbwritten = new IntByReference();
 		boolean result = kernel32.WriteFile(HandleToDevice, bytes, bytes.length, nbwritten, null);
-		if (!result) {
-			System.out.println(getLastError());
-		}
-		//kernel32.CancelIo(HandleToDevice);
+		if (!result) if (!result) throw new IOException(getLastError());
+		if (nbwritten.getValue()!=bytes.length) throw new IOException("Did not write all data");
 		return result;
 	}
 

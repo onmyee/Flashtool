@@ -23,8 +23,8 @@ public class S1Packet {
 			System.arraycopy(pdata, 4, flags, 0, 4);
 			System.arraycopy(pdata, 8, datalen, 0, 4);
 			hdr = pdata[12];
+			data = new byte[getDataLength()];
 			if (pdata.length>13) {
-				data = new byte[getDataLength()];
 				int totransfer=pdata.length-13;
 				if (totransfer>getDataLength()) totransfer=getDataLength();
 				lastdatapos = totransfer;

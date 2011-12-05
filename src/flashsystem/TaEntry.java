@@ -28,7 +28,7 @@ public class TaEntry {
 	}
 	
 	public Byte[] getPartitionBytes() {
-		return Converter.getBytes(_partition);
+		return BytesUtil.getBytes(_partition);
 	}
 
 	public String getSize() {
@@ -36,7 +36,7 @@ public class TaEntry {
 	}
 
 	public Byte[] getSizeBytes() {
-		return Converter.getBytes(_size);
+		return BytesUtil.getBytes(_size);
 	}
 	
 	public String getData() {
@@ -47,13 +47,13 @@ public class TaEntry {
 		String[] datas = _data.split(" ");
 		Byte[] data = new Byte[datas.length];
 		for (int j=0;j<datas.length;j++) {
-			data[j]=Converter.getBytes(datas[j])[0];
+			data[j]=BytesUtil.getBytes(datas[j])[0];
 		}
 		return data;
 	}
 	
 	public Byte[] getWordByte() {
-		return Converter.concatAll(getPartitionBytes(), getSizeBytes(), getDataBytes());
+		return BytesUtil.concatAll(getPartitionBytes(), getSizeBytes(), getDataBytes());
 	}
 	
 	public byte[] getWordbyte() {
