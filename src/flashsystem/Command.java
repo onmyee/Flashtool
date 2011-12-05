@@ -39,7 +39,7 @@ public class Command {
 	
 	public void testPlugged() throws X10FlashException,IOException {
     	if (!_simulate) {
-	        readReply();
+	        USBFlash.readReply();
 	        MyLogger.getLogger().debug("testPlugged");
 	        MyLogger.getLogger().info(getLastReplyString());
     	}
@@ -82,7 +82,6 @@ public class Command {
     	try {
 	    	if (!_simulate) {
 	    		S1Packet p = new S1Packet(command,abyte0,ongoing);
-	    		System.out.println("Wrote "+p.getCommand()+" with a data lenght of "+p.getDataLength());
 	    		if (!USBFlash.write(p)) {
 	    			throw new X10FlashException("Error writing command");
 	    		}

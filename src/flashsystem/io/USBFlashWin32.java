@@ -27,7 +27,7 @@ public class USBFlashWin32 {
 		return true;
 	}
 
-    private static  void readReply() throws X10FlashException, IOException
+    public static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p=null;
 		boolean finished = false;

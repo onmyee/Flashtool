@@ -142,7 +142,7 @@ public class FlasherGUI extends JFrame {
 	public static void addToolbar(JButton button) {
 		toolBar.add(button);
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());

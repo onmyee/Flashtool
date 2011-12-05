@@ -26,6 +26,15 @@ public class USBFlash {
 		return true;
 	}
 
+	public static void readReply() throws IOException, X10FlashException {
+		if (OS.getName().equals("windows")) {
+			USBFlashWin32.readReply();
+		}
+		else {
+			USBFlashLinux.readReply();
+		}
+	}
+	
    public static int getLastFlags() {
 		if (OS.getName().equals("windows")) {
 			return USBFlashWin32.getLastFlags();
