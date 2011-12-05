@@ -235,7 +235,7 @@ public class X10flash {
 		sendLoader();
 		
 		cmd.testPlugged();
-		cmd.send(Command.CMD01,Command.VALNULL,false);
+		
         cmd.send(Command.CMD09, Command.VAL2,false);    	
     }
     

@@ -7,6 +7,8 @@ import org.system.OS;
 
 public class USBFlash {
 
+	static S1Packet lastreply;
+	
 	public static void open() throws IOException {
 		if (OS.getName().equals("windows")) {
 			USBFlashWin32.open();
@@ -23,6 +25,7 @@ public class USBFlash {
 		else {
 			USBFlashLinux.write(p);
 		}
+		System.out.println("written "+p.getDataLength()+" bytes from command "+p.getCommand());
 		return true;
 	}
 

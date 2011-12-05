@@ -14,7 +14,10 @@ public class USBFlashLinux {
 	public static void open() throws IOException {
 		try {
 			readReply();
+			if (lastreply == null) throw new IOException("Unable to read from device");
+			
 		}catch (Exception e) {
+			if (lastreply == null) throw new IOException("Unable to read from device");
 		}
 	}
 	

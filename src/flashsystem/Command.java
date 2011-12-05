@@ -39,7 +39,7 @@ public class Command {
 	
 	public void testPlugged() throws X10FlashException,IOException {
     	if (!_simulate) {
-	        USBFlash.readReply();
+    		send(Command.CMD01,Command.VALNULL,false);
 	        MyLogger.getLogger().debug("testPlugged");
 	        MyLogger.getLogger().info(getLastReplyString());
     	}

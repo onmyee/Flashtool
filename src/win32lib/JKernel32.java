@@ -1,8 +1,6 @@
 package win32lib;
 
 import java.io.IOException;
-
-import org.logger.MyLogger;
 import org.system.Device;
 import com.sun.jna.Native;
 import com.sun.jna.platform.win32.Kernel32;
@@ -62,7 +60,6 @@ public class JKernel32 {
 		boolean result = true;
 		
 		if (HandleToDevice != WinBase.INVALID_HANDLE_VALUE) {
-			MyLogger.getLogger().info("Closing USB device");
 			result = kernel32.CloseHandle(HandleToDevice);
 		}
 		HandleToDevice = WinBase.INVALID_HANDLE_VALUE;
