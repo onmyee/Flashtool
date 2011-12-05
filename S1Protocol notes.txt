@@ -55,3 +55,10 @@ images are sent by part of 65536 bytes.
 The max lenght of a read / write request is 65536 and because of header and crc32, 17 bytes are
 reserved.
 So to send 65536 bytes of data, you must first send 65536 - 17 then send 17.
+
+Under linux, using libusb, when reading replies, header and data are received in a same read request.
+The last read request is a 4 bytes representing the CRC32 of the data section.
+
+To validate a reply :
+  - calculate the header checksum and compare with the one received.
+  - caclulate the data CRC32 and compare with the one received.
