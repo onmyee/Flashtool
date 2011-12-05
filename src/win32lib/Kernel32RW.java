@@ -31,4 +31,5 @@ public interface Kernel32RW extends Kernel32 {
 
     boolean GetOverlappedResult(WinNT.HANDLE Handle,OVERLAPPED Overlapped,IntByReference NumberOfBytesRead, boolean wait);
 
+    boolean CancelIo(WinNT.HANDLE Handle);
 }

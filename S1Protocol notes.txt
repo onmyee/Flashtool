@@ -33,7 +33,7 @@ COMMANDS:
 0x01 - loader info?
 0x04 - 
 0x06 - write SIN
-0x07 - 
+0x07 - Get last error ?
 0x09 - 
 0x0A - 
 0x0C - model/kit info?
@@ -52,5 +52,5 @@ Example:
 >> [00, 00, 00, 0C, 00, 00, 00, 01, 00, 00, 00, 05, 0F]
 //data = X10a\0
 >> X10a
-//data cksm = 0x1879A4B8
+//data CRC32 = 0x1879A4B8
 >> [18, 79, A4, B8]

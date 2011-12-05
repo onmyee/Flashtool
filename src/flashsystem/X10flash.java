@@ -168,7 +168,7 @@ public class X10flash {
 			System.arraycopy(abyte0, 0, abyte2, 0, 6);
 			System.arraycopy(abyte1, 0, abyte2, 6, abyte2.length - 6);
             cmd.send(Command.CMD05,abyte2,false);
-            if(cmd.getLastFlags() == 0)
+            if (USBFlash.getLastFlags() == 0)
                 cmd.send(Command.CMD07,Command.VALNULL,false);
     	}
     	catch (IOException ioe) {
@@ -240,8 +240,8 @@ public class X10flash {
     private void init() throws X10FlashException,FileNotFoundException, IOException {
 	    cmd = new Command(_bundle.simulate());
     	
-		cmd.testPlugged();
 		cmd.send(Command.CMD01, Command.VALNULL, false);
+		
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
         
@@ -267,12 +267,16 @@ public class X10flash {
         	sendSystemAndUserData();
 
 			cmd.send(Command.CMD07,Command.VALNULL,false);
-            
+			System.out.println(new String(USBFlash.getLastReply()));
+			
 			setFlashState(false);
             
 			cmd.send(Command.CMD07,Command.VALNULL,false);
-            cmd.send(Command.CMD10,Command.VALNULL,false);
-            cmd.send(Command.CMD04,Command.VAL1,false);
+			System.out.println(new String(USBFlash.getLastReply()));
+            
+			cmd.send(Command.CMD10,Command.VALNULL,false);
+            
+			cmd.send(Command.CMD04,Command.VAL1,false);
 	
             closeDevice();
 		    
@@ -308,6 +312,7 @@ public class X10flash {
     			MyLogger.getLogger().debug("Trying "+device.getDeviceId());
     			USBFlash.openChannel(device.getDeviceId());
     			MyLogger.getLogger().info("Found at "+device.getDeviceId());
+    			MyLogger.getLogger().info(new String(USBFlash.getLastReply()));
     			found = true;
     		}
     		else throw new Exception(device.getDeviceId());

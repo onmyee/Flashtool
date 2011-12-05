@@ -17,8 +17,6 @@ public class JKernel32 {
 
 	public static Kernel32RW kernel32 = (Kernel32RW) Native.loadLibrary("kernel32", Kernel32RW.class, W32APIOptions.UNICODE_OPTIONS);
 	static WinNT.HANDLE HandleToDevice = WinBase.INVALID_HANDLE_VALUE;
-	static byte[] buffer = new byte[1];
-	public static final OVERLAPPED overlapped = new OVERLAPPED();
 
 	public static boolean openDevice() {
         /* Kernel32RW.GENERIC_READ | Kernel32RW.GENERIC_WRITE not used in dwDesiredAccess field for system devices such a keyboard or mouse */
@@ -30,32 +28,22 @@ public class JKernel32 {
                 shareMode, 
                 null, 
                 WinNT.OPEN_EXISTING, 
-                WinNT.FILE_FLAG_OVERLAPPED, 
+                0,//WinNT.FILE_FLAG_OVERLAPPED, 
                 (WinNT.HANDLE)null);
 		return (HandleToDevice != WinBase.INVALID_HANDLE_VALUE);
 	}
 	
 	public static byte[] readBytes() throws IOException {
-		int bufsize=0x10000;
+		System.out.println("Reading file");
+		int bufsize=65536;
 		IntByReference nbread = new IntByReference();
-		OVERLAPPED ov = new OVERLAPPED();
-		ov.Offset=0;
-		ov.OffsetHigh=0;
 		byte[] b = new byte[bufsize];
-		boolean result = kernel32.ReadFile(HandleToDevice, b, bufsize, nbread, ov);
+		boolean result = kernel32.ReadFile(HandleToDevice, b, bufsize, nbread, null);
 		if (!result) {
-			int lasterror =getLastErrorCode(); 
-			if (lasterror==Kernel32.ERROR_IO_PENDING) {
-				while (!kernel32.GetOverlappedResult(HandleToDevice, ov, nbread, true)) {
-					System.out.print(getLastError());
-				}
-			}
-			else {
-				String err = getLastError();
-				closeDevice();
-				throw new IOException("readBytes \\ "+err);
-			}
+			System.out.println(getLastError());
 		}
+		//kernel32.CancelIo(HandleToDevice);
+		System.out.println("End Reading file. Read "+nbread.getValue());
 		return getReply(b,nbread.getValue());
 	}
 
@@ -70,31 +58,21 @@ public class JKernel32 {
 	
 	public static boolean writeBytes(byte bytes[]) throws IOException {
 		IntByReference nbwritten = new IntByReference();
-		OVERLAPPED ov = new OVERLAPPED();
-		ov.Offset=0;
-		ov.OffsetHigh=0;
-		boolean result = kernel32.WriteFile(HandleToDevice, bytes, bytes.length, nbwritten, ov);
+		boolean result = kernel32.WriteFile(HandleToDevice, bytes, bytes.length, nbwritten, null);
 		if (!result) {
-			int lasterror =getLastErrorCode(); 
-			if (lasterror==Kernel32.ERROR_IO_PENDING) {
-				while (!kernel32.GetOverlappedResult(HandleToDevice, ov, nbwritten, true)) {
-				}
-				result = nbwritten.getValue()==bytes.length;
-			}
-			else {
-				String err = getLastError();
-				closeDevice();
-				throw new IOException("writeBytes \\ "+err);
-			}
+			System.out.println(getLastError());
 		}
+		//kernel32.CancelIo(HandleToDevice);
 		return result;
 	}
 
 	public static boolean closeDevice() {
 		boolean result = true;
-		MyLogger.getLogger().info("Closing USB device");
-		if (HandleToDevice != WinBase.INVALID_HANDLE_VALUE)
+		
+		if (HandleToDevice != WinBase.INVALID_HANDLE_VALUE) {
+			MyLogger.getLogger().info("Closing USB device");
 			result = kernel32.CloseHandle(HandleToDevice);
+		}
 		HandleToDevice = WinBase.INVALID_HANDLE_VALUE;
 		return result;
 	}
@@ -107,6 +85,10 @@ public class JKernel32 {
 		int code = Kernel32.INSTANCE.GetLastError();
 	    Kernel32 lib = Kernel32.INSTANCE;
 	    PointerByReference pref = new PointerByReference();
+	    /*OVERLAPPED ov = new OVERLAPPED();
+	    ov.Offset=0;
+	    ov.OffsetHigh=0;
+	    kernel32.CreateEvent(null, arg1, arg2, arg3)*/
 	    lib.FormatMessage(
 	        WinBase.FORMAT_MESSAGE_ALLOCATE_BUFFER | WinBase.FORMAT_MESSAGE_FROM_SYSTEM | WinBase.FORMAT_MESSAGE_IGNORE_INSERTS, 
 	        null, 

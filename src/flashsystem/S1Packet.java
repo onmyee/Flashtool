@@ -65,6 +65,10 @@ public class S1Packet {
         return (((byte)(flag ? 1 : 0))) | byte0 | byte1;
     }
 
+	public int getFlags() {
+		return BytesUtil.getInt(flags);
+	}
+	
 	public int getCommand() {
 		return BytesUtil.getInt(cmd);
 	}
@@ -73,7 +77,11 @@ public class S1Packet {
 		return BytesUtil.getInt(datalen);
 	}
 	
-	public void addData(byte[] datachunk) throws Exception {
+	public byte[] getDataArray() {
+		return data;
+	}
+	
+	public void addData(byte[] datachunk) throws X10FlashException {
 		if (lastdatapos<data.length) {
 			System.arraycopy(datachunk, 0, data, lastdatapos, datachunk.length);
 			lastdatapos+=datachunk.length;
@@ -82,9 +90,9 @@ public class S1Packet {
 			System.arraycopy(datachunk, 0, crc32, 0, datachunk.length);
 			finalized = true;
 			if (BytesUtil.getLong(calculatedCRC32())!=BytesUtil.getLong(crc32))
-				throw new Exception("S1 CRC32 Error");
+				throw new X10FlashException("S1 Data CRC32 Error");
 			if (calculateHeaderCkSum()!=hdr)
-				throw new Exception("S1 Header checksum Error");
+				throw new X10FlashException("S1 Header checksum Error");
 		}
 	}
 
