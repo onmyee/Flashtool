@@ -15,6 +15,7 @@
 	<classpathentry kind="lib" path="libs/jgoodies-common-1.2.1.jar"/>
 	<classpathentry kind="lib" path="libs/com.sonyericsson.cs_ma3_common_2.10.9.13.jar"/>
 	<classpathentry kind="lib" path="libs/libusb.jar"/>
+	<classpathentry kind="lib" path="libs/jgoodies-looks-2.4.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

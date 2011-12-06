@@ -118,7 +118,7 @@ public class FlasherGUI extends JFrame {
 	
 	private static void setSystemLookAndFeel() {
 		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel(new com.jgoodies.looks.windows.WindowsLookAndFeel());
 		}
 		catch (Exception e) {}
 	}
