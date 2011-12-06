@@ -30,9 +30,13 @@ public class USBFlashLinux {
     public static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p = JUsb.read();
-		System.out.println("Read "+p.getCommand()+" with a data lenght of "+p.getDataLength());
-		lastreply = p.getDataArray();
-		lastflags = p.getFlags();
+    	if (p!=null) {
+    		lastreply = p.getDataArray();
+    		lastflags = p.getFlags();
+    	}
+    	else {
+    		lastreply = null;
+    	}
     }
 
     public static int getLastFlags() {

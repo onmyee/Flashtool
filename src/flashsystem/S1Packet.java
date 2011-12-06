@@ -18,22 +18,22 @@ public class S1Packet {
 	boolean finalized = false;
 	
 	public S1Packet(byte[] pdata) {
-		if (pdata != null) {
+		try {
 			System.arraycopy(pdata, 0, cmd, 0, 4);
 			System.arraycopy(pdata, 4, flags, 0, 4);
 			System.arraycopy(pdata, 8, datalen, 0, 4);
 			hdr = pdata[12];
 			data = new byte[getDataLength()];
-			if (pdata.length>13) {
-				int totransfer=pdata.length-13;
-				if (totransfer>getDataLength()) totransfer=getDataLength();
-				lastdatapos = totransfer;
-				System.arraycopy(pdata, 13, data, 0, totransfer);
-				if (totransfer==getDataLength())
-					crc32=calculatedCRC32();
+			int totransfer=pdata.length-13;
+			if (totransfer>getDataLength()) totransfer=getDataLength();
+			lastdatapos = totransfer;
+			System.arraycopy(pdata, 13, data, 0, totransfer);
+			if (pdata.length>13+totransfer) {
+				System.arraycopy(pdata, 13+totransfer, crc32, 0, 4);
+				finalized=true;
 			}
 		}
-		else finalized=true;
+		catch (Exception e) {}
 	}
 
 	public byte[] getByteArray() {

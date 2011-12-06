@@ -203,17 +203,17 @@ public class firmSelect extends JDialog {
 		setName("firmSelect");
 		setTitle("Firmware Selection");
 		setModal(true);
-		setBounds(100, 100, 647, 353);
+		setBounds(100, 100, 772, 353);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new FormLayout(new ColumnSpec[] {
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(206dlu;default):grow"),
+				ColumnSpec.decode("max(148dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("left:max(113dlu;default)"),
+				ColumnSpec.decode("left:max(78dlu;default)"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("left:max(87dlu;default)"),},
+				ColumnSpec.decode("left:max(81dlu;default)"),},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				RowSpec.decode("29dlu"),
