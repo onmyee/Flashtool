@@ -15,6 +15,7 @@ import org.adb.AdbUtility;
 import org.logger.MyLogger;
 import org.system.Device;
 import org.system.DeviceIdent;
+import org.system.OS;
 
 public class DeviceCHangedListener implements MessageListener {
 
@@ -22,9 +23,11 @@ public class DeviceCHangedListener implements MessageListener {
 	String pid = "";
 	
 	public DeviceCHangedListener(JDialog root) {
-		HWND hWnd = new HWND();
-	    hWnd.setPointer(Native.getWindowPointer(root));
-	    User32RW.MYINSTANCE.SetWindowLong(hWnd, User32RW.GWLP_WNDPROC, this);
+		if (OS.getName()=="windows") {
+			HWND hWnd = new HWND();
+	    	hWnd.setPointer(Native.getWindowPointer(root));
+	    	User32RW.MYINSTANCE.SetWindowLong(hWnd, User32RW.GWLP_WNDPROC, this);
+		}
 	}
 	
 	public int callback(HWND hWnd, int uMsg, WPARAM uParam, LPARAM lParam)
