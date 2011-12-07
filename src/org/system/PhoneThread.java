@@ -38,7 +38,6 @@ public class PhoneThread extends Thread {
 				      sc = new Scanner(processInput);
 			    	  while (sc.hasNextLine()) {
 			    		  String line = sc.nextLine();
-			    		  System.out.println(line);
 			    		  if (OS.getName().equals("linux")) {
 			    			  if (line.contains("State: device")) {
 			    				  if (!AdbUtility.isConnected()) { 
