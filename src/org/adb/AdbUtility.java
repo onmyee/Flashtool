@@ -239,7 +239,11 @@ public class AdbUtility  {
 
 	public static void killServer() throws Exception {
 		MyLogger.getLogger().info("Killing adb service");
-		OsRun command = new OsRun(adbpath+" kill-server");
+		OsRun command = null;
+		if (OS.getName().equals("windows"))
+			command = new OsRun(adbpath+" kill-server");
+		else
+			command = new OsRun("killall adb");
 		command.run();
 	}
 

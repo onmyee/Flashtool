@@ -34,6 +34,27 @@ public class JUsb {
     	}
 	}
 
+	public static String getConnectedPID() {
+		String pid = "";
+		try {
+			UsbSystem us = new LibUsbSystem(false, 0);;
+	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
+	    	while (i.hasNext()) {
+	    		UsbDevice d = i.next();
+	    		String vendor = HexDump.toHex(d.getIdVendor());
+	    		String product = HexDump.toHex(d.getIdProduct());
+	    		if (vendor.equals("0FCE") && product.equals("ADDE")) {
+	    			pid = product;
+	    	  	  	break;
+	    	    }
+	    	}
+	    	us.cleanup();
+		}
+    	catch (Exception e) {
+    	}
+		return pid;
+	}
+	
 	public static void write(S1Packet p) {
 		try {
 			UsbSystem us = new LibUsbSystem(false, 0);;
