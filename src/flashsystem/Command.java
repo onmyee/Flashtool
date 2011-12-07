@@ -37,14 +37,6 @@ public class Command {
 		_simulate = simulate;
 	}
 	
-	public void testPlugged() throws X10FlashException,IOException {
-    	if (!_simulate) {
-    		send(Command.CMD01,Command.VALNULL,false);
-	        MyLogger.getLogger().debug("testPlugged");
-	        MyLogger.getLogger().info(getLastReplyString());
-    	}
-	}
-	
 	public void readReply() throws X10FlashException,IOException {
 		if (getLastReplyString().contains("ERR_SEVERITY"))
 			if (!getLastReplyString().contains("ERR_SEVERITY=\"NONE\""))

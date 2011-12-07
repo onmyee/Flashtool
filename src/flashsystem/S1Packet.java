@@ -17,8 +17,16 @@ public class S1Packet {
 	int lastdatapos = 0;
 	boolean finalized = false;
 	
-	public S1Packet(byte[] pdata) {
+	public S1Packet(byte[] pdata) throws X10FlashException {
 		try {
+			if (pdata==null) {
+				validate();
+				return;
+			}
+			if (pdata.length==0) {
+				validate();
+				return;
+			}
 			System.arraycopy(pdata, 0, cmd, 0, 4);
 			System.arraycopy(pdata, 4, flags, 0, 4);
 			System.arraycopy(pdata, 8, datalen, 0, 4);
@@ -31,11 +39,29 @@ public class S1Packet {
 			if (pdata.length>13+totransfer) {
 				System.arraycopy(pdata, 13+totransfer, crc32, 0, 4);
 				finalized=true;
+				if (BytesUtil.getLong(calculatedCRC32())!=BytesUtil.getLong(crc32))
+					throw new X10FlashException("S1 Data CRC32 Error");
+				if (calculateHeaderCkSum()!=hdr)
+					throw new X10FlashException("S1 Header checksum Error");
 			}
 		}
-		catch (Exception e) {}
+		catch (Exception e) {
+			throw new X10FlashException(e.getMessage());
+		}
 	}
 
+	public void validate() throws X10FlashException {
+		try {
+			if (BytesUtil.getLong(calculatedCRC32())!=BytesUtil.getLong(crc32))
+				throw new X10FlashException("S1 Data CRC32 Error");
+			if (calculateHeaderCkSum()!=hdr)
+				throw new X10FlashException("S1 Header checksum Error");
+		}
+		catch (Exception e) {
+			throw new X10FlashException(e.getMessage());
+		}
+	}
+	
 	public byte[] getByteArray() {
 		byte[] array = new byte[17+data.length];
 		System.arraycopy(cmd, 0, array, 0, 4);
@@ -49,7 +75,7 @@ public class S1Packet {
 
 	public S1Packet(int pcommand, byte[] pdata, boolean ongoing) {
 		cmd = BytesUtil.getBytesWord(pcommand, 4);
-		flags = BytesUtil.getBytesWord(getFlag(false,true,ongoing), 4);
+		setFlags(false,true,ongoing);
 		if (pdata==null) data = new byte[0]; else data=pdata;
 		datalen = BytesUtil.getBytesWord(data.length, 4);
 		hdr = calculateHeaderCkSum();
@@ -58,13 +84,17 @@ public class S1Packet {
 
 	public S1Packet(int pcommand, byte pdata, boolean ongoing) {
 		cmd = BytesUtil.getBytesWord(pcommand, 4);
-		flags = BytesUtil.getBytesWord(getFlag(false,true,ongoing), 4);
+		setFlags(false,true,ongoing);
 		data = new byte[] {pdata};
 		datalen = BytesUtil.getBytesWord(data.length, 4);
 		hdr = calculateHeaderCkSum();
 		crc32=calculatedCRC32();		
 	}
 
+	public void setFlags(boolean flag1, boolean flag2, boolean ongoing) {
+		flags = BytesUtil.getBytesWord(getFlag(flag1,flag2,ongoing), 4);
+	}
+	
 	private int getFlag(boolean flag1, boolean flag2, boolean ongoing)
     {
         boolean flag = !flag1;
@@ -75,6 +105,17 @@ public class S1Packet {
 
 	public int getFlags() {
 		return BytesUtil.getInt(flags);
+	}
+	
+	public String getFlagsAsString() {
+		String result = "";
+		int flag1 = getFlags()&1;
+		int flag2 = getFlags()&2;
+		int flag3 = getFlags()&4;
+		if (flag1==0) result = "true"; else result="false";
+		if (flag2==0) result += ",false"; else result+=",true";
+		if (flag3==0) result += ",false"; else result+=",true";
+		return result;
 	}
 	
 	public int getCommand() {
@@ -88,7 +129,11 @@ public class S1Packet {
 	public byte[] getDataArray() {
 		return data;
 	}
-	
+
+	public String getDataString() {
+		return new String(data);
+	}
+
 	public void addData(byte[] datachunk) throws X10FlashException {
 		if (lastdatapos<data.length) {
 			System.arraycopy(datachunk, 0, data, lastdatapos, datachunk.length);

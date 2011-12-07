@@ -51,9 +51,8 @@ public class X10flash {
 
     public String getHook() throws IOException, X10FlashException {
 	    cmd = new Command(_bundle.simulate());
-		cmd.testPlugged();
-		String hook = cmd.getLastReplyString();
-		cmd.send(Command.CMD01, Command.VALNULL, false);
+	    String hook = cmd.getLastReplyString();
+	    cmd.send(Command.CMD01,Command.VALNULL,false);
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
         return hook;
@@ -62,8 +61,7 @@ public class X10flash {
     // added method to retrieved long string returned by loader
     public String getHook2() throws IOException, X10FlashException {
 	    cmd = new Command(_bundle.simulate());
-		cmd.testPlugged();
-		cmd.send(Command.CMD01, Command.VALNULL, false);
+	    cmd.send(Command.CMD01,Command.VALNULL,false);
 		String hook = cmd.getLastReplyString();
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
@@ -97,8 +95,6 @@ public class X10flash {
 		    MyLogger.getLogger().info("Start Dumping properties");
 
 		    cmd = new Command(_bundle.simulate());
-	    	
-			cmd.testPlugged();
 			cmd.send(Command.CMD01, Command.VALNULL, false);
 			cmd.send(Command.CMD09, Command.VAL2, false);
 	        cmd.send(Command.CMD10, Command.VALNULL, false);
@@ -233,7 +229,8 @@ public class X10flash {
         
 		sendLoader();
 		
-		cmd.testPlugged();
+		cmd.send(Command.CMD01, Command.VALNULL, false);
+		MyLogger.getLogger().info(cmd.getLastReplyString());
 		
         cmd.send(Command.CMD09, Command.VAL2,false);    	
     }
@@ -253,12 +250,10 @@ public class X10flash {
         	sendSystemAndUserData();
 
 			cmd.send(Command.CMD07,Command.VALNULL,false);
-			System.out.println(new String(USBFlash.getLastReply()));
 			
 			setFlashState(false);
             
 			cmd.send(Command.CMD07,Command.VALNULL,false);
-			System.out.println(new String(USBFlash.getLastReply()));
             
 			cmd.send(Command.CMD10,Command.VALNULL,false);
             

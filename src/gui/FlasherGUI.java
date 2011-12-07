@@ -56,6 +56,7 @@ import org.lang.Language;
 import win32lib.DeviceCHangedListener;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
+import flashsystem.HexDump;
 import flashsystem.S1Packet;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
