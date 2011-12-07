@@ -52,6 +52,8 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
+
+import win32lib.DeviceCHangedListener;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
 import flashsystem.S1Packet;
@@ -72,6 +74,7 @@ public class FlasherGUI extends JFrame {
 	/**
 	 * 
 	 */
+	private static WindowsMessages messages = new WindowsMessages();
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
 	private static boolean isidentrun = false;
@@ -157,6 +160,17 @@ public class FlasherGUI extends JFrame {
 					FlasherGUI frame = new FlasherGUI();
 					runAdb();
 					frame.setVisible(true);
+					Worker.post(new Job() {
+						public Object run() {
+							try {
+								Device.identDevice();
+							}
+							catch (Exception e) {
+								MyLogger.getLogger().error(e.getMessage());}
+							return null;
+						}
+					});
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -165,12 +179,15 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public FlasherGUI() {
+		messages.setVisible(true);
+		messages.setVisible(false);
+		DeviceCHangedListener l = new DeviceCHangedListener(messages);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FlasherGUI.class.getResource("/gui/ressources/icons/flash_32.png")));
 		_root=this;
 		setName("FlasherGUI");
 		setTitle("SonyEricsson X10 Flasher by Bin4ry & Androxyde");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 832, 480);
+		setBounds(100, 100, 845, 480);
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -538,25 +555,10 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_COLSPEC,
 				FormFactory.DEFAULT_COLSPEC,
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
+				ColumnSpec.decode("max(50dlu;default):grow"),
 				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				FormFactory.DEFAULT_COLSPEC,
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(290dlu;default)"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(33dlu;default):grow"),
-				FormFactory.RELATED_GAP_COLSPEC,
-				ColumnSpec.decode("max(75dlu;default)"),},
+				ColumnSpec.decode("max(78dlu;default)"),
+				FormFactory.RELATED_GAP_COLSPEC,},
 			new RowSpec[] {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
@@ -569,11 +571,12 @@ public class FlasherGUI extends JFrame {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,
 				FormFactory.RELATED_GAP_ROWSPEC,
-				FormFactory.DEFAULT_ROWSPEC,}));						
+				FormFactory.DEFAULT_ROWSPEC,
+				FormFactory.RELATED_GAP_ROWSPEC,}));						
 		
 		toolBar = new JToolBar();
 		toolBar.setFloatable(false);
-		contentPane.add(toolBar, "2, 2, 17, 1");
+		contentPane.add(toolBar, "2, 2, left, fill");
 
 		flashBtn = new JButton("");
 		flashBtn.setToolTipText("Flash");
@@ -659,7 +662,7 @@ public class FlasherGUI extends JFrame {
 		
 		JToolBar toolBar_1 = new JToolBar();
 		toolBar_1.setFloatable(false);
-		contentPane.add(toolBar_1, "22, 2");
+		contentPane.add(toolBar_1, "6, 2, right, center");
 		
 		JButton btnDonate = new JButton("");
 		toolBar_1.add(btnDonate);
@@ -673,7 +676,7 @@ public class FlasherGUI extends JFrame {
 		});
 		
 		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, "2, 8, 21, 1, fill, fill");
+		contentPane.add(scrollPane, "2, 8, 5, 1, fill, fill");
 		
 		scrollPane.setViewportView(textArea);
 		
@@ -684,11 +687,11 @@ public class FlasherGUI extends JFrame {
 				MyLogger.writeFile();
 			}
 		});
-		contentPane.add(btnSaveLog, "22, 10, right, default");
+		contentPane.add(btnSaveLog, "6, 10, right, center");
 		
 		JProgressBar progressBar = new JProgressBar();
 		MyLogger.registerProgressBar(progressBar);
-		contentPane.add(progressBar, "2, 12, 21, 1");
+		contentPane.add(progressBar, "2, 12, 5, 1");
 		setLanguage();
 		mntmInstallBusybox.setEnabled(false);
 		mntmBuildpropEditor.setEnabled(false);

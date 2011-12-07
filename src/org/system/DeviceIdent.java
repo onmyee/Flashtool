@@ -3,7 +3,6 @@ package org.system;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Properties;
-
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
 
@@ -88,7 +87,15 @@ public class DeviceIdent {
     	String status = "none";
 	    if (!device.equals("none")) {
 	    	if (getPid().equals("ADDE")) status="flash";
-	    	else
+	    	else {
+	    		int counter = 0;
+	    		while (!AdbUtility.getDevices().hasMoreElements() && counter<201) {
+	    			try {
+	    				Thread.sleep(10);
+	    				counter+=1;
+	    			}
+	    			catch (Exception e) {}
+	    		}
 	    		if (AdbUtility.getDevices().hasMoreElements())
 	    			status="adb";
 	    		else
@@ -101,6 +108,7 @@ public class DeviceIdent {
 	    				status="mtp";
 	    			else status = "unknown";
 	    		}
+	    	}
 	    }
     	return status;
 	}
