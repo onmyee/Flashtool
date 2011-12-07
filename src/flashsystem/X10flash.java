@@ -18,7 +18,6 @@ public class X10flash {
 
     public X10flash(Bundle bundle) {
     	_bundle=bundle;
-    	if (!bundle.simulate()) System.loadLibrary("USBFlash");
     }
 
     private void setFlashState(boolean ongoing) throws IOException,X10FlashException

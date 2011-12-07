@@ -2,6 +2,7 @@ package linuxlib;
 
 import java.util.Iterator;
 
+import flashsystem.HexDump;
 import flashsystem.S1Packet;
 
 import se.marell.libusb.LibUsbSystem;
@@ -17,7 +18,10 @@ public class JUsb {
 	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
 	    	while (i.hasNext()) {
 	    		UsbDevice d = i.next();
-	    	    if (d.getIdVendor()==0x0fce) {
+	    		String vendor = HexDump.toHex(d.getIdVendor());
+	    		String product = HexDump.toHex(d.getIdProduct());
+	    	    if (vendor.equals("0FCE") && product.equals("ADDE")) {
+	    	    	System.out.println("reading");
 	    	    	p = readDevice(d);
 	    	  	  	break;
 	    	    }
@@ -36,7 +40,9 @@ public class JUsb {
 	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
 	    	while (i.hasNext()) {
 	    		UsbDevice d = i.next();
-	    	    if (d.getIdVendor()==0x0fce) {
+	    		String vendor = HexDump.toHex(d.getIdVendor());
+	    		String product = HexDump.toHex(d.getIdProduct());
+	    		if (vendor.equals("0FCE") && product.equals("ADDE")) {
 	    	    	writeDevice(d,p);
 	    	  	  	break;
 	    	    }
@@ -57,12 +63,14 @@ public class JUsb {
 			  while (!finished) {
 				  byte[] data1 = new byte[65536];
 				  int read1 = device.bulk_read(0x81, data1, 0);
+				  System.out.println("Number of read bytes : "+read1);
 				  if (read1 == 4) {
 					  p.addData(getReply(data1,read1));
 					  finished=!p.hasMoreToRead();
 				  }
 				  else {
 					  p = new S1Packet(getReply(data1,read1));
+					  finished=!p.hasMoreToRead();
 				  }
 			  }
 			  device.release_interface(0);
@@ -70,9 +78,6 @@ public class JUsb {
 			  return p;
 		  }
 		  catch (Exception e) {
-			  e.printStackTrace();
-			  System.out.println(e.getMessage());
-			  System.out.println("Error reading packet");
 			  return null;
 		  }
 	  }
