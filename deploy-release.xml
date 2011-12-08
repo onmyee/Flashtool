@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="all" name="Deploy Flashtool">
 
-	<target name="all" depends="core release,E10 Device,E15 Device,U20 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device,JRE"/>
+	<target name="all" depends="clean, core release,E10 Device,E15 Device,U20 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device,JRE"/>
 
-	<target name="7z" >
-	  <taskdef name="sevenzip" classname="org.apache.tools.ant.SevenZip"/>
-	  <delete file="../Deploy/Flashtool.exe"/>
-	  <sevenzip input="../Deploy/Flashtool" output="../Deploy/Flashtool.exe"/>
-	</target>
-
-	<target name="Rar" >
-	  <taskdef name="rar" classname="org.apache.tools.ant.Rar"/>
-	  <rar input="C:\Users\Manu\git\Deploy\Flashtool" output="C:\Deploy\FlashtoolRar.exe"/>
-	</target>
+	<target name="devices" depends="E10 Device,E15 Device,U20 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device"/>
 
 	<target name="JRE" depends="32bits JRE on 64bits Systems,32bits JRE on 32bits Systems"/>
 	
@@ -43,7 +34,13 @@
     	<delete dir="../Deploy/FlashTool"/>
 	</target>
 
-	<target name="main_lib">
+	<target name="ressources">
+        <jar destfile="../Deploy/FlashTool/x10flasher_lib/x10flasher-res.jar">
+            <fileset dir="./bin" includes="/gui/ressources/icons/**"/>
+        </jar>
+    </target>
+	
+	<target name="main_lib" depends="ressources">
         <tstamp>
              <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
         </tstamp>
@@ -55,9 +52,12 @@
             </manifest>
         	<fileset dir="./bin" excludes="/gui/ressources/icons/**"/>
         </jar>
+        <jar destfile="../Deploy/FlashTool/x10flasher_lib/x10flasher-res.jar">
+            <fileset dir="./bin" includes="/gui/ressources/icons/**"/>
+        </jar>
 	</target>
 	
-	<target name="core release">
+	<target name="core release" depends="clean, main_lib">
     	<mkdir dir="../Deploy"/>
     	<delete dir="../Deploy/FlashTool"/>
         <mkdir dir ="../Deploy/FlashTool"/>
@@ -73,16 +73,6 @@
         <mkdir dir="../Deploy/FlashTool/x10flasher_lib"/>
         <mkdir dir="../Deploy/FlashTool/x10flasher_lib/langs"/>
         <mkdir dir="../Deploy/FlashTool/drivers"/>
-    	<jar destfile="../Deploy/FlashTool/x10flasher.jar">
-            <manifest>
-                <attribute name="Main-Class" value="gui.FlasherGUI"/>
-                <attribute name="Class-Path" value=". x10flasher_lib/AXMLPrinter2.jar x10flasher_lib/com.sonyericsson.cs.usbflashnative.jar x10flasher_lib/jna.jar x10flasher_lib/commons-io-2.0.1.jar x10flasher_lib/forms-1.4.2.jar x10flasher_lib/jgoodies-common-1.2.1.jar x10flasher_lib/win32-amd64.jar x10flasher_lib/win32-x86.jar x10flasher_lib/log4j-1.2.16.jar x10flasher_lib/com.sonyericsson.cs.generic_2.10.9.13.jar x10flasher_lib/foxtrot-core-3.0.jar x10flasher_lib/platform.jar x10flasher_lib/com.sonyericsson.cs_ma3_common_2.10.9.13.jar x10flasher_lib/jdom-1.1.1.jar x10flasher_lib/rsyntaxtextarea.jar x10flasher_lib/x10flasher-res.jar"/>
-            </manifest>
-            <fileset dir="./bin" excludes="/gui/ressources/icons/**"/>
-        </jar>
-        	<jar destfile="../Deploy/FlashTool/x10flasher_lib/x10flasher-res.jar">
-                <fileset dir="./bin" includes="/gui/ressources/icons/**"/>
-            </jar>
     	<copy todir="../Deploy/FlashTool/custom/shells">
     		<fileset dir="./shells"
 				excludes="**/.svn"/>

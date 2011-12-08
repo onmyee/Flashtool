@@ -21,9 +21,9 @@ public class USBFlashLinux {
 	}
 	
 	public static boolean write(S1Packet p) throws IOException,X10FlashException {
-		sleep(30);
+		sleep(20);
 		JUsb.write(p);
-		sleep(30);
+		sleep(20);
 		readReply();
 		return true;
 	}
@@ -35,7 +35,7 @@ public class USBFlashLinux {
 		catch (Exception e) {}
 	}
 	
-    public static  void readReply() throws X10FlashException, IOException
+    private static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p = JUsb.read();
     	if (p!=null) {

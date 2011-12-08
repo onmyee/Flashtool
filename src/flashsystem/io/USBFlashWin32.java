@@ -19,20 +19,25 @@ public class USBFlashWin32 {
 			if (lastreply == null) throw new IOException("Unable to read from device");
 		}
 	}
-	
-	public static boolean write(S1Packet p) throws IOException,X10FlashException {
-		JKernel32.openDevice();
-		JKernel32.writeBytes(p.getByteArray());
+
+	private static void sleep(int len) {
 		try {
-			Thread.sleep(500);
+			Thread.sleep(len);
 		}
 		catch (Exception e) {}
+	}
+
+	public static boolean write(S1Packet p) throws IOException,X10FlashException {
+		sleep(20);
+		JKernel32.openDevice();
+		JKernel32.writeBytes(p.getByteArray());
+		sleep(20);
 		readReply();
 		JKernel32.closeDevice();
 		return true;
 	}
 
-    public static  void readReply() throws X10FlashException, IOException
+    private static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p=null;
 		boolean finished = false;
