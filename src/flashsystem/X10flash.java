@@ -215,11 +215,11 @@ public class X10flash {
 	    while (e.hasMoreElements()) {
 	    	BundleEntry entry = e.nextElement();
 	    	if (entry.getName().contains("loader"))
-	    		totalsize = totalsize + entry.getSize()/0x1000*3+5;
+	    		totalsize = totalsize + entry.getSize()/0x1000+1;
 	    	else 
-	    		totalsize = totalsize + entry.getSize()/0x10000*6+6;
+	    		totalsize = totalsize + (entry.getSize()/0x10000)*2;
 	    }
-	    return totalsize+100;
+	    return totalsize+10;
     }
 
     private void init() throws X10FlashException,FileNotFoundException, IOException {

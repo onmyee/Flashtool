@@ -26,7 +26,6 @@ public class DeviceIdent {
 		Enumeration e = id.getIds().keys();
 		while (e.hasMoreElements()) {
 			String key = (String)e.nextElement();
-			System.out.println(key);
 			addDevId(key);
 			devid.setProperty(key, id.getIds().getProperty(key));
 		}

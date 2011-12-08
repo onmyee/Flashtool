@@ -25,7 +25,6 @@ public class USBFlash {
 		else {
 			USBFlashLinux.write(p);
 		}
-		System.out.println("written "+p.getDataLength()+" bytes from command "+p.getCommand());
 		return true;
 	}
 

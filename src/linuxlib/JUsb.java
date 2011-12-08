@@ -1,5 +1,6 @@
 package linuxlib;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashSet;
@@ -13,8 +14,9 @@ import se.marell.libusb.UsbSystem;
 
 public class JUsb {
 
-	public static S1Packet read() {
+	public static S1Packet read() throws IOException {
 		S1Packet p = null;
+		boolean found = false;
 		try {
 			UsbSystem us = new LibUsbSystem(false, 0);;
 	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
@@ -23,16 +25,18 @@ public class JUsb {
 	    		String vendor = HexDump.toHex(d.getIdVendor());
 	    		String product = HexDump.toHex(d.getIdProduct());
 	    	    if (vendor.equals("0FCE") && product.equals("ADDE")) {
-	    	    	System.out.println("reading");
 	    	    	p = readDevice(d);
+	    	    	found = true;
 	    	  	  	break;
 	    	    }
 	    	}
 	    	us.cleanup();
+	    	if (!found) throw new IOException("device not connected");
+	    	p.validate();
 	    	return p;
 		}
     	catch (Exception e) {
-    		return p;
+    		throw new IOException(e.getMessage());
     	}
 	}
 
@@ -77,8 +81,9 @@ public class JUsb {
 		return pid;
 	}
 	
-	public static void write(S1Packet p) {
+	public static void write(S1Packet p) throws IOException {
 		try {
+			boolean found = false;
 			UsbSystem us = new LibUsbSystem(false, 0);;
 	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
 	    	while (i.hasNext()) {
@@ -87,16 +92,19 @@ public class JUsb {
 	    		String product = HexDump.toHex(d.getIdProduct());
 	    		if (vendor.equals("0FCE") && product.equals("ADDE")) {
 	    	    	writeDevice(d,p);
+	    	    	found = true;
 	    	  	  	break;
 	    	    }
 	    	}
 	    	us.cleanup();
+	    	if (!found) throw new IOException("device not connected");
 		}
     	catch (Exception e) {
+    		throw new IOException(e.getMessage());
     	}
 	}
 
-	  public static S1Packet readDevice(UsbDevice device) {
+	  public static S1Packet readDevice(UsbDevice device) throws IOException {
 		  try {
 			  device.open();
 			  S1Packet p=null;
@@ -106,7 +114,6 @@ public class JUsb {
 			  while (!finished) {
 				  byte[] data1 = new byte[65536];
 				  int read1 = device.bulk_read(0x81, data1, 0);
-				  System.out.println("Number of read bytes : "+read1);
 				  if (read1 == 4) {
 					  p.addData(getReply(data1,read1));
 					  finished=!p.hasMoreToRead();
@@ -121,7 +128,7 @@ public class JUsb {
 			  return p;
 		  }
 		  catch (Exception e) {
-			  return null;
+			  throw new IOException(e.getMessage());
 		  }
 	  }
 
@@ -134,7 +141,7 @@ public class JUsb {
 			return newreply;
 	  }
 
-	  public static void writeDevice(UsbDevice device, S1Packet p) {
+	  public static void writeDevice(UsbDevice device, S1Packet p) throws IOException {
 		  try {
 			  device.open();
 			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
@@ -144,8 +151,7 @@ public class JUsb {
 			  device.close();
 		  }
 		  catch (Exception e) {
-			  System.out.println("Error writing packet");
-			  System.out.println(e.getMessage());
+			  throw new IOException(e.getMessage());
 		  }
 	  }
 
