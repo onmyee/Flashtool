@@ -23,6 +23,7 @@ public class WindowsPhoneThread extends Thread {
 						sleep(10);
 						count++;
 					}
+					count = 0;
 				} catch (Exception e) {}
 			}
 		}
