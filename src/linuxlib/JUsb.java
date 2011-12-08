@@ -1,6 +1,8 @@
 package linuxlib;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.HashSet;
 
 import flashsystem.HexDump;
 import flashsystem.S1Packet;
@@ -34,6 +36,26 @@ public class JUsb {
     	}
 	}
 
+	public static HashSet<LinuxUsbDevice> getConnectedDevices() {
+		HashSet<LinuxUsbDevice> result = new HashSet<LinuxUsbDevice>();
+		try {
+			UsbSystem us = new LibUsbSystem(false, 0);;
+	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
+	    	while (i.hasNext()) {
+	    		UsbDevice d = i.next();
+	    		String vendor = HexDump.toHex(d.getIdVendor());
+	    		String product = HexDump.toHex(d.getIdProduct());
+	    		if (vendor.equals("0FCE")) {
+	    			result.add(new LinuxUsbDevice(vendor,product));
+	    	    }
+	    	}
+	    	us.cleanup();
+		}
+    	catch (Exception e) {
+    	}
+		return result;
+	}
+	
 	public static String getConnectedPID() {
 		String pid = "";
 		try {

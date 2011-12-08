@@ -144,7 +144,7 @@ public class AdbUtility  {
 	public static boolean hasSU() {
 		boolean result = true;
 		try {
-		OsRun command = new OsRun(adbpath+" shell \"type su\"");
+		OsRun command = new OsRun(adbpath+" shell type su");
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {

@@ -38,23 +38,6 @@ public class PhoneThread extends Thread {
 				      sc = new Scanner(processInput);
 			    	  while (sc.hasNextLine()) {
 			    		  String line = sc.nextLine();
-			    		  if (OS.getName().equals("linux")) {
-			    			  if (line.contains("State: device")) {
-			    				  if (!AdbUtility.isConnected()) { 
-			    					  while (!AdbUtility.isConnected()) {
-			    						  try {
-			    							  sleep(1000);
-			    						  }
-			    						  catch (Exception e) {
-			    						  }
-			    					  }
-			    				  }
-			    				  MyLogger.getLogger().debug("Device connected, continuing with identification");
-			    				  FlasherGUI.doIdent();
-			    			  }
-			    			  else
-			    				  if (line.contains("State: unknown")) FlasherGUI.doDisableIdent();
-			    		  }
 			    	  }    		  
 		    	  }
 		    };

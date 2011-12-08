@@ -11,6 +11,8 @@ import gui.FlasherGUI;
 
 import javax.swing.JDialog;
 
+import linuxlib.LinuxPhoneThread;
+
 import org.adb.AdbUtility;
 import org.logger.MyLogger;
 import org.system.Device;
@@ -21,6 +23,7 @@ public class DeviceCHangedListener implements MessageListener {
 
 	public static final int WM_DEVICECHANGE = 0x0219;
 	String pid = "";
+	public static LinuxPhoneThread usbwatch;
 	
 	public DeviceCHangedListener(JDialog root) {
 		if (OS.getName()=="windows") {
@@ -28,8 +31,12 @@ public class DeviceCHangedListener implements MessageListener {
 	    	hWnd.setPointer(Native.getWindowPointer(root));
 	    	User32RW.MYINSTANCE.SetWindowLong(hWnd, User32RW.GWLP_WNDPROC, this);
 		}
+		else {
+			usbwatch = new LinuxPhoneThread();
+			usbwatch.start();
+		}
 	}
-	
+
 	public int callback(HWND hWnd, int uMsg, WPARAM uParam, LPARAM lParam)
     {
         if (uMsg == WM_DEVICECHANGE)

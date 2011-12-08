@@ -20,7 +20,7 @@ public class JKernel32 {
         int shareMode = WinNT.FILE_SHARE_READ | WinNT.FILE_SHARE_WRITE;
         int Access = WinNT.GENERIC_WRITE | WinNT.GENERIC_READ;
 		HandleToDevice = Kernel32.INSTANCE.CreateFile(
-                Device.getConnectedDevice().getDevPath(), 
+                Device.getConnectedDeviceWin32().getDevPath(), 
                 Access, 
                 shareMode, 
                 null, 

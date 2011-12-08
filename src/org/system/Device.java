@@ -3,6 +3,11 @@ package org.system;
 import gui.FlasherGUI;
 
 import java.util.Enumeration;
+import java.util.Iterator;
+
+import linuxlib.JUsb;
+import linuxlib.LinuxUsbDevice;
+
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
 import org.logger.MyLogger;
@@ -24,7 +29,7 @@ public class Device {
 		return id;
 	}
 
-    public static DeviceIdent getConnectedDevice() {
+    public static DeviceIdent getConnectedDeviceWin32() {
     	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
@@ -53,6 +58,26 @@ public class Device {
 	            index++;
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
+        }
+        synchronized (lastid) {
+        	lastid=id;
+        }
+        if (notchanged) return getLastConnected();
+        return id;
+    }
+
+    public static DeviceIdent getConnectedDeviceLinux() {
+    	boolean notchanged=false;
+    	DeviceIdent id = new DeviceIdent();
+    	Iterator<LinuxUsbDevice> i = JUsb.getConnectedDevices().iterator();
+    	while (i.hasNext()) {
+    		LinuxUsbDevice d = i.next();
+    		id.addDevId(d.getIdVendor(),d.getIdProduct());
+            if (lastid!=null)
+            if (lastid.getIds().contains(d.getIdProduct())) {
+            	notchanged=true;
+            	break;
+            }
         }
         synchronized (lastid) {
         	lastid=id;
@@ -90,7 +115,11 @@ public class Device {
 	    else MyLogger.getLogger().info("      - none");
     }
 	public static void identDevice() {
-		DeviceIdent id=Device.getConnectedDevice();
+		DeviceIdent id = null;
+		if (OS.getName().equals("windows"))
+			id=Device.getConnectedDeviceWin32();
+		else
+			id=Device.getConnectedDeviceLinux();
 		String currentPid=id.getPid();
 		if (!pid.equals(currentPid)) {
 			pid = currentPid;

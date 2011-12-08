@@ -26,6 +26,7 @@ public class DeviceIdent {
 		Enumeration e = id.getIds().keys();
 		while (e.hasMoreElements()) {
 			String key = (String)e.nextElement();
+			System.out.println(key);
 			addDevId(key);
 			devid.setProperty(key, id.getIds().getProperty(key));
 		}
@@ -44,13 +45,19 @@ public class DeviceIdent {
 		if (device.length()>maxsize) maxsize=device.length();
 		String tmpvid=device.substring(device.indexOf("VID_"),device.indexOf("VID_")+12);
 		vid=tmpvid.substring(4,tmpvid.indexOf("&"));
-		String tmppid=device.substring(device.indexOf("PID_"),device.indexOf("PID_")+12);
+		String tmppid=device.substring(device.indexOf("PID_"),device.indexOf("PID_")+9);
 		int endindex = tmppid.indexOf("\\");
 		if (endindex == -1) endindex = tmppid.indexOf("&");
 		pid=tmppid.substring(4,endindex);
 		devid.setProperty(device, Boolean.toString(true));
 	}
 
+	public void addDevId(String vendor, String product) {
+		vid = vendor;
+		pid = product;
+		devid.setProperty("VID_"+vendor+"&"+"PID_"+product+"\\", "true");
+	}
+	
 	public void setDriverOk(String device,boolean status) {
 		devid.setProperty(device, Boolean.toString(status));
 	}

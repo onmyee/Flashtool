@@ -34,7 +34,7 @@ public class Shell {
 	}
 	
 	public void save() throws Exception {
-		_runfile=new File(_file.getPath()+"_work");
+		_runfile=new File(_file.getAbsoluteFile()+"_work");
 		FileOutputStream fout = new FileOutputStream(_runfile);
 		IOUtils.write(content, fout, "ISO-8859-1");
 		fout.flush();
@@ -51,8 +51,8 @@ public class Shell {
 	
 	public String getPath() {
 		if (_runfile!=null)
-			return _runfile.getPath();
-		return _file.getPath();
+			return _runfile.getAbsolutePath();
+		return _file.getAbsolutePath();
 	}
 	
 	public void clean() {

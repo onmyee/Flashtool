@@ -180,8 +180,8 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public FlasherGUI() {
-		messages.setVisible(true);
-		messages.setVisible(false);
+		//messages.setVisible(true);
+		//messages.setVisible(false);
 		DeviceCHangedListener l = new DeviceCHangedListener(messages);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(FlasherGUI.class.getResource("/gui/ressources/icons/flash_32.png")));
 		_root=this;

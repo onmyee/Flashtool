@@ -44,6 +44,8 @@ public class OsRun {
 
 	
 	public void run() throws Exception {
+		if (!OS.getName().equals("windows"))
+			command = command.replaceAll("\"", "");
 		MyLogger.getLogger().debug("Running "+command);
 		stdout="";stderr="";
 		if (OS.getName().equals("windows"))
