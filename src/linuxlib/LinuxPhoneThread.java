@@ -4,7 +4,7 @@ import org.system.Device;
 import org.system.DeviceIdent;
 
 public class LinuxPhoneThread extends Thread {
-	
+
 	boolean done = false;
 	boolean paused = false;
 	String pid = "";
@@ -19,16 +19,21 @@ public class LinuxPhoneThread extends Thread {
 					Device.identDevice();
 				}
 				try {
-					sleep(2000);
-				}
-				catch (Exception e) {
-				}
+					while ((count<200) && (!done)) {
+						sleep(10);
+						count++;
+					}
+				} catch (Exception e) {}
 			}
 		}
 	}
-	
+
 	public void pause(boolean ppaused) {
 		paused = ppaused;
+	}
+
+	public void end() {
+		done = true;
 	}
 
 }

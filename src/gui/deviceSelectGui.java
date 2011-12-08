@@ -169,14 +169,19 @@ public class deviceSelectGui extends JDialog {
 		return ((result.length()>0) || _bundle.hasLoader());
 	}
 
-	public String getDevice() {
+/*	public String getDevice() {
 		fillTable();
 		setVisible(true);
 		return result;
-	}
+	}*/
 
 	public String getDevice(Properties list) {
-		fillTable(list);
+		if (list.size()>1) {
+			fillTable(list);
+			MyLogger.getLogger().warn("Your device has been matched with more than one device");
+		}
+		else
+			fillTable();
 		setVisible(true);
 		return result;
 	}

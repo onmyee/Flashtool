@@ -7,9 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 import org.logger.MyLogger;
+import org.system.DeviceChangedListener;
 import org.system.TextFile;
-
-import win32lib.DeviceCHangedListener;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -264,7 +263,7 @@ public class X10flash {
 	
 			MyLogger.getLogger().info("Flashing finished.");
 		    MyLogger.initProgress(0);
-		    DeviceCHangedListener.usbwatch.pause(false);
+		    DeviceChangedListener.pause(false);
     	}
     	catch (Exception ioe) {
     		MyLogger.getLogger().error("Error flashing. Aborted");

@@ -19,7 +19,6 @@ public class OS {
 		  } else if (System.getProperty("os.name").toLowerCase().indexOf("mac") > -1) {
 		    os = "mac";
 		  }
-		 
 		  return os;
 	}
 	

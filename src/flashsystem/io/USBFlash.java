@@ -3,13 +3,15 @@ package flashsystem.io;
 import flashsystem.S1Packet;
 import flashsystem.X10FlashException;
 import java.io.IOException;
+import org.system.Device;
+import org.system.DeviceChangedListener;
 import org.system.OS;
 
 public class USBFlash {
 
-	static S1Packet lastreply;
-	
 	public static void open() throws IOException {
+		if (Device.getLastConnected().getPid().equals("ADDE"))
+			DeviceChangedListener.pause(true);
 		if (OS.getName().equals("windows")) {
 			USBFlashWin32.open();
 		}
@@ -28,15 +30,6 @@ public class USBFlash {
 		return true;
 	}
 
-	public static void readReply() throws IOException, X10FlashException {
-		if (OS.getName().equals("windows")) {
-			USBFlashWin32.readReply();
-		}
-		else {
-			USBFlashLinux.readReply();
-		}
-	}
-	
    public static int getLastFlags() {
 		if (OS.getName().equals("windows")) {
 			return USBFlashWin32.getLastFlags();

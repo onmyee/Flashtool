@@ -3,11 +3,6 @@ package flashsystem.io;
 import flashsystem.S1Packet;
 import flashsystem.X10FlashException;
 import java.io.IOException;
-
-import org.system.Device;
-
-import win32lib.DeviceCHangedListener;
-
 import linuxlib.JUsb;
 
 public class USBFlashLinux {
@@ -17,8 +12,6 @@ public class USBFlashLinux {
 	
 	public static void open() throws IOException {
 		try {
-			if (Device.getLastConnected().getPid().equals("ADDE"))
-				DeviceCHangedListener.usbwatch.pause(true);
 			readReply();
 			if (lastreply == null) throw new IOException("Unable to read from device");
 			
@@ -28,9 +21,9 @@ public class USBFlashLinux {
 	}
 	
 	public static boolean write(S1Packet p) throws IOException,X10FlashException {
-		sleep(60);
+		sleep(30);
 		JUsb.write(p);
-		sleep(60);
+		sleep(30);
 		readReply();
 		return true;
 	}
