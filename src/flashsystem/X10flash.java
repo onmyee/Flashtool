@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.IOException;
 import org.logger.MyLogger;
+import org.system.Device;
 import org.system.DeviceChangedListener;
 import org.system.TextFile;
 
@@ -274,17 +275,31 @@ public class X10flash {
     	return openDevice(_bundle.simulate());
     }
     
+    public boolean deviceFound() {
+    	boolean found = false;
+    	try {
+			Thread.sleep(500);
+			found = Device.getLastConnected().getPid().equals("ADDE");
+	    	MyLogger.getLogger().info("Searching Xperia in flashmode ...");
+	    	MyLogger.getLogger().error("Please plug you device in flash mode");
+		}
+		catch (Exception e) {
+	    	MyLogger.getLogger().info("Searching Xperia in flashmode ...");
+	    	MyLogger.getLogger().error("Please plug you device in flash mode");
+	    	found = false;
+		}
+    	return found;
+    }
+    
     public boolean openDevice(boolean simulate) {
     	if (simulate) return true;
     	boolean found=false;
-    	MyLogger.getLogger().info("Searching Xperia....");
     	try {
     		USBFlash.open();
     		found = true;
     	}
     	catch (Exception e){
-    		found=false;
-    		MyLogger.getLogger().error("Please plug you device in flash mode");
+    		found=false;    		
     	}
     	return found;
     }

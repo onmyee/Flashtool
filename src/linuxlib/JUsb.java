@@ -13,7 +13,9 @@ import se.marell.libusb.UsbDevice;
 import se.marell.libusb.UsbSystem;
 
 public class JUsb {
-
+	
+	static final byte[] data1 = new byte[65536];
+	
 	public static S1Packet read() throws IOException {
 		S1Packet p = null;
 		boolean found = false;
@@ -111,16 +113,19 @@ public class JUsb {
 			  boolean finished = false;
 			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
 			  device.claim_interface(0);
-			  while (!finished) {
-				  byte[] data1 = new byte[65536];
-				  int read1 = device.bulk_read(0x81, data1, 0);
-				  if (read1 == 4) {
-					  p.addData(getReply(data1,read1));
-					  finished=!p.hasMoreToRead();
+			  int read1 = device.bulk_read(0x81, data1, 100);
+			  if (read1>0) {
+				  p = new S1Packet(getReply(data1,read1));
+				  finished=!p.hasMoreToRead();
+				  try {
+					  while (true) {
+						  read1 = device.bulk_read(0x81, data1, 100);
+						  if (read1 > 0) {
+							  p.addData(getReply(data1,read1));
+						  }
+					  }
 				  }
-				  else {
-					  p = new S1Packet(getReply(data1,read1));
-					  finished=!p.hasMoreToRead();
+				  catch (Exception e) {
 				  }
 			  }
 			  device.release_interface(0);
@@ -146,7 +151,9 @@ public class JUsb {
 			  device.open();
 			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
 			  device.claim_interface(0);
-			  device.bulk_write(0x01, p.getByteArray(), 500);
+			  byte[] towrite = p.getByteArray();
+			  device.bulk_write(0x01, towrite, 500);
+			  towrite=null;
 			  device.release_interface(0);
 			  device.close();
 		  }

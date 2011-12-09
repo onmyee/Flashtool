@@ -45,6 +45,7 @@ public class USBFlashLinux {
     	else {
     		lastreply = null;
     	}
+    	p.release();
     }
 
     public static int getLastFlags() {

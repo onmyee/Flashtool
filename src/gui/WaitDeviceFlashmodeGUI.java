@@ -137,11 +137,8 @@ public class WaitDeviceFlashmodeGUI extends JDialog {
 		setLocationRelativeTo(parent);
 		setVisible(true);
 				while (true) {
-					try {
-						Thread.sleep(1000);
-					}
-					catch (Exception e) {}
-					if (_flash.openDevice()) {
+					if (_flash.deviceFound()) {
+						_flash.openDevice();
 						result=true;
 						break;
 					}

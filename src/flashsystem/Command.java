@@ -77,6 +77,7 @@ public class Command {
 	    		if (!USBFlash.write(p)) {
 	    			throw new X10FlashException("Error writing command");
 	    		}
+	    		p.release();
 	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
 	    		
 	    	}

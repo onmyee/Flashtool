@@ -1,5 +1,8 @@
 package flashsystem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class S1Packet {
 
 	//[DWORD]  CMD
@@ -31,6 +34,9 @@ public class S1Packet {
 			System.arraycopy(pdata, 4, flags, 0, 4);
 			System.arraycopy(pdata, 8, datalen, 0, 4);
 			hdr = pdata[12];
+			System.out.println("Data len : "+getDataLength());
+			System.out.println("Data content : ");
+			System.out.println(HexDump.toHex(pdata));
 			data = new byte[getDataLength()];
 			int totransfer=pdata.length-13;
 			if (totransfer>getDataLength()) totransfer=getDataLength();
@@ -73,6 +79,14 @@ public class S1Packet {
 		return array;
 	}
 
+	public void release() {
+		cmd = null;
+		flags = null;
+		datalen = null;
+		data = null;
+		crc32 = null;
+	}
+	
 	public S1Packet(int pcommand, byte[] pdata, boolean ongoing) {
 		cmd = BytesUtil.getBytesWord(pcommand, 4);
 		setFlags(false,true,ongoing);
@@ -169,7 +183,9 @@ public class S1Packet {
         System.arraycopy(cmd, 0, header, 0, 4);
         System.arraycopy(flags, 0, header, 4, 4);
         System.arraycopy(datalen, 0, header, 8, 4);
-        return calcSum(header);
+        byte result = calcSum(header);
+        header = null;
+        return result;
     }
 
 	private byte calcSum(byte paramArray[])

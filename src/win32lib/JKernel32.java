@@ -53,6 +53,7 @@ public class JKernel32 {
 		boolean result = kernel32.WriteFile(HandleToDevice, bytes, bytes.length, nbwritten, null);
 		if (!result) if (!result) throw new IOException(getLastError());
 		if (nbwritten.getValue()!=bytes.length) throw new IOException("Did not write all data");
+		bytes = null;
 		return result;
 	}
 
