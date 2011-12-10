@@ -78,6 +78,7 @@ public class FlasherGUI extends JFrame {
 	/**
 	 * 
 	 */
+	public static boolean guimode=true;
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
 	private static boolean isidentrun = false;
@@ -1244,6 +1245,7 @@ public class FlasherGUI extends JFrame {
 	}
 
     public static void doDisableIdent() {
+    	if (guimode) {
 		btnCleanroot.setEnabled(false);
 		mntmInstallBusybox.setEnabled(false);
 		mntmClearCache.setEnabled(false);
@@ -1265,9 +1267,11 @@ public class FlasherGUI extends JFrame {
 		custBtn.setEnabled(false);
 		//mntmCleanUninstalled.setEnabled(false);
     		mntmBackupSystemApps.setEnabled(false);
+    	}
         }
  
         public static void doIdent() {
+        	if (guimode) {
         	if (!isidentrun) {
         		isidentrun=true;
         		Enumeration e = Devices.listDevices(true);
@@ -1363,6 +1367,7 @@ public class FlasherGUI extends JFrame {
         			MyLogger.getLogger().debug("End of identification");
         		}
         		isidentrun=false;
+        	}
         	}
         }
 

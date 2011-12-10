@@ -70,9 +70,6 @@ public class AdbUtility  {
 	public static void forward(String type,String local, String remote) throws Exception {
 		OsRun command = new OsRun(adbpath+" forward "+type.toUpperCase()+":"+local+" "+type.toUpperCase()+":"+remote);
 		command.run();
-		System.out.println(command.getCommand());
-		System.out.println(command.getStdOut());
-		System.out.println(command.getStdErr());
 	}
 	
 	public static HashSet<String> listSysApps() throws Exception {

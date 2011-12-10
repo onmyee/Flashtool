@@ -267,6 +267,7 @@ public class X10flash {
 		    DeviceChangedListener.pause(false);
     	}
     	catch (Exception ioe) {
+    		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error flashing. Aborted");
     	}
     }
@@ -280,12 +281,8 @@ public class X10flash {
     	try {
 			Thread.sleep(500);
 			found = Device.getLastConnected().getPid().equals("ADDE");
-	    	MyLogger.getLogger().info("Searching Xperia in flashmode ...");
-	    	MyLogger.getLogger().error("Please plug you device in flash mode");
 		}
 		catch (Exception e) {
-	    	MyLogger.getLogger().info("Searching Xperia in flashmode ...");
-	    	MyLogger.getLogger().error("Please plug you device in flash mode");
 	    	found = false;
 		}
     	return found;

@@ -27,10 +27,7 @@ public class PhoneThread extends Thread {
 	public void run() {
 		String pid = "none";
 		try {
-			if (OS.getName().equals("linux"))
-				builder = new ProcessBuilder(new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"adb").getAbsolutePath(), "status-window");
-			else
-				builder = new ProcessBuilder(new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"adb.exe").getAbsolutePath(), "status-window");
+			builder = new ProcessBuilder(OS.getAdbPath(), "status-window");
 			adb = builder.start();
 		    Thread t = new Thread() {
 		    	  public void run() {

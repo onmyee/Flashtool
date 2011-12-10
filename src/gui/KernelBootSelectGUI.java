@@ -134,7 +134,6 @@ public class KernelBootSelectGUI extends JDialog {
 		
 		while (i.hasNext()) {
 			String kernel = i.next();
-			System.out.println("k:"+kernel);
 			hasElements=true;
 			modelVersion.addRow(new String[]{kernel});
 			MyLogger.getLogger().debug("Adding "+kernel+" to list of kernel versions");			

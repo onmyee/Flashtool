@@ -1,0 +1,97 @@
+
+show_help() {
+	echo Usage : FlashToolConsole [OPTIONS]
+        echo
+	echo MANDATORY :
+        echo '     --file=/path/to/file.ftf'
+	echo
+	echo
+	echo OPTIONAL :
+	echo '    --wipedata=yes|no'
+	echo '    --wipecache=yes|no'
+	echo '    --baseband=yes|no'
+	echo '    --system=yes|no'
+	echo '    --kernel=yes|no'
+	exit 0
+}
+
+if test $# -eq 0
+then
+   show_help;
+fi
+
+while test $# != 0
+do
+  case $1 in
+  --*=*)
+    ac_option=`expr "X$1" : 'X\([^=]*\)='`
+    ac_optarg=`expr "X$1" : 'X[^=]*=\(.*\)'`
+    ac_shift=:
+    ;;
+  *)
+    ac_option=$1
+    ac_optarg=$2
+    ac_shift=shift
+    ;;
+  esac
+
+  case $ac_option in
+  -f | --file)
+     export p_file=$ac_optarg;;
+  --wipedata)
+     export p_data=$ac_optarg;;
+  --wipecache)
+     export p_cache=$ac_optarg;;
+  --baseband)
+     export p_baseband=$ac_optarg;;
+  --system)
+     export p_system=$ac_optarg;;
+  --kernel)
+     export p_kernel=$ac_optarg;;
+  -h | --help)
+     show_help;;
+  *) 
+     show_help;;
+  esac
+  shift
+done
+
+
+if [ -e $p_file ]
+then
+     if test -z $p_data
+     then
+        p_data=$(echo yes)
+     fi
+
+     if test -z $p_cache
+     then
+        p_cache=$(echo yes)
+     fi
+
+     if test -z $p_system
+     then
+        p_system=$(echo yes)
+     fi
+
+     if test -z $p_kernel
+     then
+        p_kernel=$(echo yes)
+     fi
+
+     if test -z $p_baseband
+     then
+        p_baseband=$(echo yes)
+     fi
+
+   export BASEDIR=$(dirname $0)
+   export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+   for i in $(ls ${BASEDIR}/x10flasher_lib/*jar)
+   do
+	CLASSPATH=$CLASSPATH$(echo $BASEDIR/$i:)
+   done
+   $JAVA_HOME/bin/java -Xms50m -Xmx512m -cp ${CLASSPATH}${BASEDIR}/x10flasher.jar flashsystem.FlasherConsole $p_file $p_data $p_cache $p_baseband $p_system $p_kernel
+else
+   echo $p_file does not exist.
+fi
+

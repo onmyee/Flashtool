@@ -113,15 +113,20 @@ public class JUsb {
 			  boolean finished = false;
 			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
 			  device.claim_interface(0);
-			  int read1 = device.bulk_read(0x81, data1, 100);
+			  int read1 = device.bulk_read(0x81, data1, 0);
 			  if (read1>0) {
 				  p = new S1Packet(getReply(data1,read1));
 				  finished=!p.hasMoreToRead();
 				  try {
 					  while (true) {
-						  read1 = device.bulk_read(0x81, data1, 100);
-						  if (read1 > 0) {
-							  p.addData(getReply(data1,read1));
+						  if (finished)
+							  read1 = device.bulk_read(0x81, data1, 20);
+						  else {
+							  read1 = device.bulk_read(0x81, data1, 0);
+							  if (read1 > 0) {
+								  p.addData(getReply(data1,read1));
+								  finished=!p.hasMoreToRead();
+							  }
 						  }
 					  }
 				  }

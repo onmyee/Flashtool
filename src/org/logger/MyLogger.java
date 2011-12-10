@@ -1,5 +1,7 @@
 package org.logger;
 
+import gui.FlasherGUI;
+
 import java.io.InputStream;
 import java.util.Properties;
 import org.apache.log4j.Logger;
@@ -13,6 +15,7 @@ public class MyLogger {
 	static Logger logger = Logger.getLogger(MyLogger.class);
 	static boolean isinit = false;
 	static JProgressBar _bar = null;
+	static boolean hasTextArea = true;
 
 	public static void registerProgressBar(JProgressBar bar) {
 		_bar = bar;
@@ -27,19 +30,25 @@ public class MyLogger {
 	}
 	
 	public static void initProgress(long max) {
-		_bar.setValue(0);
-		_bar.setMaximum((int)max);
+		if (FlasherGUI.guimode) {
+			_bar.setValue(0);
+			_bar.setMaximum((int)max);
+		}
 	}
 
 	public static void initProgress(int max) {
-		_bar.setValue(0);
-		_bar.setMaximum(max);
+		if (FlasherGUI.guimode) {
+			_bar.setValue(0);
+			_bar.setMaximum(max);
+		}
 	}
 
 	public static void updateProgress() {
-		_bar.setValue(_bar.getValue()+1);
+		if (FlasherGUI.guimode) {
+			_bar.setValue(_bar.getValue()+1);
+		}
 	}
-	
+
 	public static void setLevel(String level) {
 		try {
 			isinit = true;
@@ -49,7 +58,10 @@ public class MyLogger {
 			{
 				Properties pl = new Properties();
                 pl.load(in);
+                if (!hasTextArea) 
+                	pl.setProperty("log4j.rootLogger",level+", console");
                 PropertyConfigurator.configure(pl);
+                
 			}
 			else {
                 System.err.println("Error loading log4j properties file");
@@ -73,6 +85,10 @@ public class MyLogger {
 		org.logger.TextAreaAppender.setTextArea(textArea);
 	}
 
+	public static void disableTextArea() {
+		hasTextArea = false;
+	}
+	
 	public static void info (Object obj) {
 		if (isinit)
 			logger.info(obj);
