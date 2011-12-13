@@ -840,6 +840,7 @@ public class FlasherGUI extends JFrame {
 				    		bundle.open();
 					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
 							X10flash flash = new X10flash(bundle);
+							MyLogger.getLogger().info("Please connect your device into flashmode.");
 							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
 								flash.flashDevice();
 								MyLogger.getLogger().info("Now unplug the device and power it on");

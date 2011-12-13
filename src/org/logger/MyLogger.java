@@ -60,6 +60,8 @@ public class MyLogger {
                 pl.load(in);
                 if (!hasTextArea) 
                 	pl.setProperty("log4j.rootLogger",level+", console");
+                else
+                	pl.setProperty("log4j.rootLogger",level+", textarea");
                 PropertyConfigurator.configure(pl);
                 
 			}
