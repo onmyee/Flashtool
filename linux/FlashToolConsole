@@ -86,6 +86,7 @@ then
 
    export BASEDIR=$(dirname $0)
    export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+
    for i in $(ls ${BASEDIR}/x10flasher_lib/*jar)
    do
 	CLASSPATH=$CLASSPATH$(echo $BASEDIR/$i:)

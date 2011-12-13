@@ -87,9 +87,11 @@
     	<copy file="./romupdates/zergrush.tar" todir="../Deploy/FlashTool/custom/root"/>
     	<copy file="./src/flashsystem/ressources/bundletranslate.properties" todir="../Deploy/FlashTool/x10flasher_lib"/>
         <copy file="./ProgramExe/FlashTool.exe" todir="../Deploy/FlashTool"/>
-        <copy file="./linux/X10FlashTool" todir="../Deploy/FlashTool"/>
+        <copy file="./linux/FlashTool" todir="../Deploy/FlashTool"/>
+		<copy file="./linux/FlashToolConsole" todir="../Deploy/FlashTool"/>
     	<chmod file="../Deploy/FlashTool/XperiaFlashTool" perm="755"/>
         <copy file="./linux/adb" todir="../Deploy/FlashTool/x10flasher_lib"/>
+		<copy file="./linux/fastboot" todir="../Deploy/FlashTool/x10flasher_lib"/>
     	<copy todir="../Deploy/FlashTool/x10flasher_lib">
     		<fileset dir="./libs"
 				excludes="**/.svn"/>

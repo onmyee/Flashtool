@@ -1,2 +1,3 @@
-export JAVA_HOME=./x10flasher_lib/jre
-$JAVA_HOME/bin/java -Xms50m -Xmx512m -jar x10flasher.jar > result.txt
+export BASEDIR=$(dirname $0)
+export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+$JAVA_HOME/bin/java -Xms50m -Xmx512m -jar x10flasher.jar
