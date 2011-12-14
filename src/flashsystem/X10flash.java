@@ -217,9 +217,9 @@ public class X10flash {
 	    	if (entry.getName().contains("loader"))
 	    		totalsize = totalsize + entry.getSize()/0x1000+1;
 	    	else 
-	    		totalsize = totalsize + (entry.getSize()/0x10000)*2;
+	    		totalsize = totalsize + (entry.getSize()/0x10000)*2+3;
 	    }
-	    return totalsize+10;
+	    return totalsize+13;
     }
 
     private void init() throws X10FlashException,FileNotFoundException, IOException {
@@ -229,7 +229,6 @@ public class X10flash {
 		
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
-        
 		sendLoader();
 		
 		cmd.send(Command.CMD01, Command.VALNULL, false);
@@ -269,13 +268,15 @@ public class X10flash {
     	catch (Exception ioe) {
     		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error flashing. Aborted");
+    		MyLogger.initProgress(0);
+    		DeviceChangedListener.pause(false);
     	}
     }
 
     public boolean openDevice() {
     	return openDevice(_bundle.simulate());
     }
-    
+
     public boolean deviceFound() {
     	boolean found = false;
     	try {
@@ -287,7 +288,7 @@ public class X10flash {
 		}
     	return found;
     }
-    
+
     public boolean openDevice(boolean simulate) {
     	if (simulate) return true;
     	boolean found=false;

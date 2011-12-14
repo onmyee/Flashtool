@@ -31,6 +31,10 @@ public class MyLogger {
 	
 	public static void initProgress(long max) {
 		if (FlasherGUI.guimode) {
+			if (max > 0) 
+				_bar.setStringPainted(true);
+			else 
+				_bar.setStringPainted(false);
 			_bar.setValue(0);
 			_bar.setMaximum((int)max);
 		}
@@ -38,6 +42,10 @@ public class MyLogger {
 
 	public static void initProgress(int max) {
 		if (FlasherGUI.guimode) {
+			if (max > 0) 
+				_bar.setStringPainted(true);
+			else 
+				_bar.setStringPainted(false);
 			_bar.setValue(0);
 			_bar.setMaximum(max);
 		}
@@ -46,7 +54,6 @@ public class MyLogger {
 	public static void updateProgress() {
 		if (FlasherGUI.guimode) {
 			_bar.setValue(_bar.getValue()+1);
-			System.out.println(_bar.getValue()+" of " + _bar.getMaximum());
 		}
 	}
 
