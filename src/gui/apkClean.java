@@ -18,21 +18,14 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-
-import foxtrot.Job;
-import foxtrot.Worker;
-
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import javax.swing.JLabel;
-
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import org.adb.AdbUtility;
 import org.lang.Language;
 import org.logger.MyLogger;
 import org.system.OS;
@@ -164,7 +157,7 @@ public class apkClean extends JDialog {
 								mntmExport.setEnabled(false);
 								mntmExport.addActionListener(new ActionListener() {
 									public void actionPerformed(ActionEvent arg0) {
-										Profile p = new Profile(apps);
+										Profile.save(apps);
 									}
 								});
 								mnProfiles.add(mntmExport);
@@ -213,7 +206,7 @@ public class apkClean extends JDialog {
 														InputStream in = j.getInputStream(entry);
 														Properties p = new Properties();
 														p.load(in);
-														Iterator i = p.keySet().iterator();
+														Iterator<Object> i = p.keySet().iterator();
 														while (i.hasNext()) {
 															String apk = (String)i.next();
 															String desc = p.getProperty(apk);

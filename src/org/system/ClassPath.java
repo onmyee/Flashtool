@@ -9,7 +9,7 @@ import java.util.Vector;
 
 public class ClassPath {
 
-	private static final Class[] parameters = new Class[] { URL.class };
+	private static final Class<?>[] parameters = new Class<?>[] { URL.class };
 	private static final Vector<URL> added = new Vector<URL>();
 
 	public static void addFile(String s) throws IOException {
@@ -25,7 +25,7 @@ public class ClassPath {
 		if (added.contains(u)) return;
 		added.add(u);
 		URLClassLoader sysloader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		Class sysclass = URLClassLoader.class;
+		Class<?> sysclass = URLClassLoader.class;
 		try {
 			Method method = sysclass.getDeclaredMethod("addURL", parameters);
 			method.setAccessible(true);

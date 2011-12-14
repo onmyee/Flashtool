@@ -94,7 +94,7 @@ public final class Bundle {
 
 	public void setExcludeBB(boolean excludeBB) {
 		if (excludeBB) {
-			Enumeration keys = bundleList.keys();
+			Enumeration<Object> keys = bundleList.keys();
 			while (keys.hasMoreElements()) {
 				String key = (String)keys.nextElement();
 			    if (!key.toUpperCase().startsWith("KERNEL") &&
@@ -264,7 +264,6 @@ public final class Bundle {
 				out.write(buffer, 0, len);
 			in.close();
 			out.close();
-			File fout = new File(outname);
 			bundleList.put(entry.getName(), new BundleEntry(new File(outname),entry.getName()));
 		}
 	}

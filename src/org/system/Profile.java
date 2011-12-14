@@ -5,19 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
-import org.logger.MyLogger;
 import gui.X10Apps;
 
 public class Profile {
 	
-	public Profile(X10Apps apps) {
+	public static void save(X10Apps apps) {
 		try {
 			File ftp = new File("./custom/clean/"+apps.getCurrentProfile()+".ftp");
 			byte buffer[] = new byte[10240];
@@ -49,9 +45,9 @@ public class Profile {
 	          out.write(buffer, 0, nRead);
 	        }
 	        in.close();
-	        Iterator i = apps.getCurrent().iterator();
+	        Iterator<String> i = apps.getCurrent().iterator();
 	        while (i.hasNext()) {
-	        	String key = (String)i.next();
+	        	String key = i.next();
 	        	if (apps.customList().containsKey(key)) {
 	        		jarAdd = new JarEntry(key);
 	        		out.putNextEntry(jarAdd);
@@ -71,25 +67,5 @@ public class Profile {
 		catch (Exception e) {			
 		}
 	}
-	
-/*	public void createFTF() throws Exception {
-		Enumeration<BundleEntry> e = allEntries();
-		while (e.hasMoreElements()) {
-			BundleEntry entry = e.nextElement();
-			MyLogger.info("Adding "+entry.getName()+" to the bundle");
-		    JarEntry jarAdd = new JarEntry(BundleTrans.getInternal(entry.getName()));
-	        out.putNextEntry(jarAdd);
-	        InputStream in = entry.getInputStream();
-	        while (true) {
-	          int nRead = in.read(buffer, 0, buffer.length);
-	          if (nRead <= 0)
-	            break;
-	          out.write(buffer, 0, nRead);
-	        }
-	        in.close();
-		}
-		out.close();
-	    stream.close();
-	}*/
 
 }

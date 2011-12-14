@@ -26,13 +26,6 @@ public class USBFlashLinux {
 		return true;
 	}
 
-	private static void sleep(int len) {
-		try {
-			Thread.sleep(len);
-		}
-		catch (Exception e) {}
-	}
-	
     private static  void readReply() throws X10FlashException, IOException
     {
     	S1Packet p = JUsb.read();

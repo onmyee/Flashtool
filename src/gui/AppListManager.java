@@ -33,6 +33,10 @@ import java.io.File;
 
 public class AppListManager extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTable tableX10;
 	private JTable tableCustom;
@@ -77,7 +81,12 @@ public class AppListManager extends JDialog {
 					panel.add(scrollPane, "2, 2, 1, 3, fill, fill");
 					{
 						tableX10 = new JTable() {
-						    public boolean isCellEditable(int rowIndex, int vColIndex) {
+						    /**
+							 * 
+							 */
+							private static final long serialVersionUID = 1L;
+
+							public boolean isCellEditable(int rowIndex, int vColIndex) {
 						        return false;
 						    }
 						};
@@ -127,7 +136,12 @@ public class AppListManager extends JDialog {
 							//popupMenu.add(mntmRemove);
 					{
 						tableCustom = new JTable() {
-						    public boolean isCellEditable(int rowIndex, int vColIndex) {
+						    /**
+							 * 
+							 */
+							private static final long serialVersionUID = 1L;
+
+							public boolean isCellEditable(int rowIndex, int vColIndex) {
 						        return false;
 						    }
 						};
@@ -175,7 +189,7 @@ public class AppListManager extends JDialog {
 		tableX10.setModel(modelX10);
 		modelX10.addColumn("APK Name");
 		modelX10.addColumn("Presentation Name");
-		Iterator i = _apps.deviceList().keySet().iterator();
+		Iterator<Object> i = _apps.deviceList().keySet().iterator();
 		while (i.hasNext()) {
 			String apk = (String)i.next();
 			String row[] = {apk,_apps.getRealName(apk)};
@@ -187,7 +201,7 @@ public class AppListManager extends JDialog {
 		tableCustom.setModel(modelCustom);
 		modelCustom.addColumn("APK Name");
 		modelCustom.addColumn("Presentation Name");
-		Iterator i1 = _apps.customList().keySet().iterator();
+		Iterator<Object> i1 = _apps.customList().keySet().iterator();
 		while (i1.hasNext()) {
 			String apk = (String)i1.next();
 			String row[] = {apk,_apps.getRealName(apk)};
@@ -216,13 +230,13 @@ public class AppListManager extends JDialog {
 	}
 	
 	public void sortAllRowsBy(DefaultTableModel model, int colIndex, boolean ascending) {
-	    Vector data = model.getDataVector();
+	    Vector<?> data = model.getDataVector();
 	    Collections.sort(data, new ColumnSorter(colIndex, ascending));
 	    model.fireTableStructureChanged();
 	}
 
 	// This comparator is used to sort vectors of data
-	public class ColumnSorter implements Comparator {
+	public class ColumnSorter implements Comparator<Object> {
 	    int colIndex;
 	    boolean ascending;
 	    ColumnSorter(int colIndex, boolean ascending) {
@@ -230,8 +244,8 @@ public class AppListManager extends JDialog {
 	        this.ascending = ascending;
 	    }
 	    public int compare(Object a, Object b) {
-	        Vector v1 = (Vector)a;
-	        Vector v2 = (Vector)b;
+	        Vector<?> v1 = (Vector<?>)a;
+	        Vector<?> v2 = (Vector<?>)b;
 	        Object o1 = v1.get(colIndex);
 	        Object o2 = v2.get(colIndex);
 
@@ -253,9 +267,9 @@ public class AppListManager extends JDialog {
 	            return -1;
 	        } else if (o1 instanceof Comparable) {
 	            if (ascending) {
-	                return ((Comparable)o1).compareTo(o2);
+	                return ((Comparable<Object>)o1).compareTo(o2);
 	            } else {
-	                return ((Comparable)o2).compareTo(o1);
+	                return ((Comparable<Object>)o2).compareTo(o1);
 	            }
 	        } else {
 	            if (ascending) {

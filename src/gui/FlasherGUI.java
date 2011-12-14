@@ -54,15 +54,10 @@ import javax.swing.JTextPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import org.lang.Language;
-
-import win32lib.DeviceChangedListenerWin32;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
-import flashsystem.HexDump;
-import flashsystem.S1Packet;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
-import flashsystem.io.USBFlash;
 import gui.EncDecGUI.MyFile;
 import javax.swing.JProgressBar;
 import java.awt.SystemColor;
@@ -70,8 +65,6 @@ import java.lang.reflect.Constructor;
 import javax.swing.JToolBar;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
-
-import linuxlib.DeviceChangedListenerLinux;
 
 
 public class FlasherGUI extends JFrame {
@@ -1279,7 +1272,7 @@ private static void setSystemLookAndFeel() {
         	if (guimode) {
         	if (!isidentrun) {
         		isidentrun=true;
-        		Enumeration e = Devices.listDevices(true);
+        		Enumeration<Object> e = Devices.listDevices(true);
         		if (!e.hasMoreElements()) {
         			MyLogger.getLogger().error("No device is registered in Flashtool.");
         			MyLogger.getLogger().error("You can only flash devices.");
@@ -1557,8 +1550,8 @@ private static void setSystemLookAndFeel() {
     public static void registerPlugin(String type, String classname, String workdir) {
 	    try {
 
-	    	Class pluginClass = Class.forName(classname);
-            Constructor constr = pluginClass.getConstructor();
+	    	Class<?> pluginClass = Class.forName(classname);
+            Constructor<?> constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             pluginObject.setWorkdir(workdir);
 

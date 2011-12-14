@@ -21,6 +21,10 @@ import java.io.File;
 
 public class ApkAdd extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField apkpath;
 	private JTextField apkdesc;

@@ -3,9 +3,6 @@ package org.system;
 import gui.FlasherGUI;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Properties;
 import java.util.Enumeration;
 
@@ -27,7 +24,7 @@ public class Devices  {
 		return FastbootUtility.getDevices().hasMoreElements();
 	}
 
-	public static Enumeration listDevices(boolean reload) {
+	public static Enumeration<Object> listDevices(boolean reload) {
 		if (reload || props==null) load();
 		return props.keys();
 	}

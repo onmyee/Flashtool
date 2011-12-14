@@ -21,9 +21,12 @@ import javax.swing.event.ListDataListener;
  */
 public class SortedNameListModel extends AbstractListModel {
     
-    private SortedNameListModel() {}
-    
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Create a SortedListModel from an existing model
      * using a default text comparator for the default Locale. Sort
      * in ascending order.
@@ -54,7 +57,7 @@ public class SortedNameListModel extends AbstractListModel {
      *@param comp
      *
      */
-    public SortedNameListModel(ListModel model, SortOrder sortOrder, Comparator comp) {
+    public SortedNameListModel(ListModel model, SortOrder sortOrder, Comparator<Object> comp) {
         unsortedModel = model;
         unsortedModel.addListDataListener(new ListDataListener() {
             public void intervalAdded(ListDataEvent e) {
@@ -187,7 +190,7 @@ public class SortedNameListModel extends AbstractListModel {
         }
     }
     
-    public void setComparator(Comparator comp) {
+    public void setComparator(Comparator<Object> comp) {
         if (comp == null) {
             sortOrder = SortOrder.UNORDERED;
             comparator = Collator.getInstance();
@@ -313,7 +316,7 @@ public class SortedNameListModel extends AbstractListModel {
     
     private List<SortedListEntry> sortedModel;
     private ListModel unsortedModel;
-    private Comparator comparator;
+    private Comparator<Object> comparator;
     private SortOrder sortOrder;
     
     public enum SortOrder {
@@ -322,12 +325,9 @@ public class SortedNameListModel extends AbstractListModel {
         DESCENDING;
     }
     
-    class SortedListEntry  implements Comparable {
-        private SortedListEntry() {
-            
-        }
-        
-        public SortedListEntry(int index) {
+    class SortedListEntry  implements Comparable<Object> {
+
+    	public SortedListEntry(int index) {
             this.index = index;
         }
         

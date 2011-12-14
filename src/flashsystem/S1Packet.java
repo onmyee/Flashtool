@@ -1,7 +1,5 @@
 package flashsystem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class S1Packet {
 
