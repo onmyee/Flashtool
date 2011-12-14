@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -123,7 +124,7 @@ public class FlasherGUI extends JFrame {
 	 * Launch the application.
 	 */
 	
-	private static void setSystemLookAndFeel() {
+private static void setSystemLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(new com.jgoodies.looks.plastic.Plastic3DLookAndFeel());
 		}
@@ -682,7 +683,10 @@ public class FlasherGUI extends JFrame {
 			}
 		});
 		contentPane.add(btnSaveLog, "6, 10, right, center");
-		
+		UIManager.put("ProgressBar.background", Color.WHITE); //colour of the background
+	    UIManager.put("ProgressBar.foreground", Color.LIGHT_GRAY);  //colour of progress bar
+	    UIManager.put("ProgressBar.selectionBackground",Color.BLACK);  //colour of percentage counter on black background
+	    UIManager.put("ProgressBar.selectionForeground",Color.BLACK);  //colour of precentage counter on red background
 		JProgressBar progressBar = new JProgressBar();
 		MyLogger.registerProgressBar(progressBar);
 		contentPane.add(progressBar, "2, 12, 5, 1");

@@ -46,6 +46,7 @@ public class MyLogger {
 	public static void updateProgress() {
 		if (FlasherGUI.guimode) {
 			_bar.setValue(_bar.getValue()+1);
+			System.out.println(_bar.getValue()+" of " + _bar.getMaximum());
 		}
 	}
 
