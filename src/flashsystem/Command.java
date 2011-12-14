@@ -84,15 +84,12 @@ public class Command {
 	    	MyLogger.updateProgress();
     	}
     	catch (NullPointerException ne) {
-    		ne.printStackTrace();
     		throw new X10FlashException("Error writing command");
     	}
     	catch (RuntimeException rte) {
-    		rte.printStackTrace();
     		throw new X10FlashException("Error writing command");
     	}
     	catch (Exception e) {
-    		e.printStackTrace();
     		throw new X10FlashException("Error writing command");
     	}
     }

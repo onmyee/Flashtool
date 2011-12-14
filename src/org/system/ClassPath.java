@@ -31,7 +31,6 @@ public class ClassPath {
 			method.setAccessible(true);
 			method.invoke(sysloader, new Object[] { u });
 		} catch (Throwable t) {
-			t.printStackTrace();
 			throw new IOException("Error, could not add URL to system classloader");
 		}
 	}

@@ -162,9 +162,7 @@ private static void setSystemLookAndFeel() {
 					FlasherGUI frame = new FlasherGUI();
 					runAdb();
 					frame.setVisible(true);					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				} catch (Exception e) {}
 			}
 		});
 	}
@@ -768,20 +766,6 @@ private static void setSystemLookAndFeel() {
 		});
 	}
 
-/*	public void doTestFlash() {
-			Worker.post(new Job() {
-				public Object run() {
-					try {
-						X10flash flash = new X10flash();
-						if (flash.openDevice(false))
-							MyLogger.getLogger().info("Phone successfully turned to flash mode");
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return null;
-				}
-			});
-	}*/
 
 	public void doDumpProperties() throws Exception {
 		
@@ -800,7 +784,6 @@ private static void setSystemLookAndFeel() {
 							}
 						}
 						catch (Exception e) {
-							e.printStackTrace();
 							MyLogger.getLogger().error(e.getMessage());
 						}
 						bundle.close();
@@ -850,7 +833,6 @@ private static void setSystemLookAndFeel() {
 							MyLogger.getLogger().error("Error preparing files");
 						}
 						catch (Exception e) {
-							e.printStackTrace();
 							MyLogger.getLogger().error(e.getMessage());
 						}
 						bundle.close();
@@ -885,7 +867,6 @@ private static void setSystemLookAndFeel() {
 					MyLogger.getLogger().info("Root should be available after reboot!");		
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -911,7 +892,6 @@ private static void setSystemLookAndFeel() {
 					MyLogger.getLogger().info("Root should be available after reboot!");		
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -1064,7 +1044,6 @@ private static void setSystemLookAndFeel() {
 					}
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());
 				}
 				return null;
@@ -1148,7 +1127,6 @@ private static void setSystemLookAndFeel() {
 						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());
 				}
 				return null;
@@ -1207,7 +1185,6 @@ private static void setSystemLookAndFeel() {
 	        		}
 		        }
 	        	catch (Exception e) {
-	        		e.printStackTrace();
 	        		MyLogger.getLogger().error(e.getMessage());
 	        	}
 	 			return null;
@@ -1419,7 +1396,6 @@ private static void setSystemLookAndFeel() {
 					}
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -1443,7 +1419,6 @@ private static void setSystemLookAndFeel() {
 					MyLogger.getLogger().info("Backup Finished");
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -1465,7 +1440,6 @@ private static void setSystemLookAndFeel() {
 						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -1495,7 +1469,6 @@ private static void setSystemLookAndFeel() {
 						else MyLogger.getLogger().error("Error mounting /system rw");
 					}
 				catch (Exception e) {
-					e.printStackTrace();
 					MyLogger.getLogger().error(e.getMessage());}
 				return null;
 			}
@@ -1611,7 +1584,6 @@ private static void setSystemLookAndFeel() {
             		mnPlugins.add(pluginmenu);
 	    }
 	    catch (Exception e) {
-	    	e.printStackTrace();
 	    	MyLogger.getLogger().error(e.getMessage());
 	    }    	
     }
