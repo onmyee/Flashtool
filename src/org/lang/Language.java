@@ -5,10 +5,8 @@ import gui.XMLFile;
 import java.awt.Component;
 import java.awt.Container;
 import java.io.File;
-import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
-
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -16,9 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-
-import org.jdom.JDOMException;
-import org.system.OS;
 import org.system.PropertiesFile;
 
 public final class Language {

@@ -2,10 +2,8 @@ package gui;
 
 import foxtrot.Job;
 import foxtrot.Worker;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -17,21 +15,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
 import org.lang.Language;
 import org.logger.MyLogger;
-import org.system.Device;
 import org.system.Devices;
 import org.system.RunOutputs;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JDesktopPane;
-import javax.swing.JTextPane;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.factories.FormFactory;

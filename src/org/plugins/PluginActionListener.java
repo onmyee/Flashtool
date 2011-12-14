@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 import org.logger.MyLogger;
 
-import foxtrot.Job;
-import foxtrot.Worker;
 
 public class PluginActionListener implements ActionListener {
 

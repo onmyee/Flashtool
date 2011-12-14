@@ -1,7 +1,6 @@
 package org.system;
 
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Properties;
 import org.adb.AdbUtility;
 import org.adb.FastbootUtility;
@@ -23,7 +22,7 @@ public class DeviceIdent {
 	
 	public DeviceIdent(DeviceIdent id) {
 		devid=new Properties();
-		Enumeration e = id.getIds().keys();
+		Enumeration<Object> e = id.getIds().keys();
 		while (e.hasMoreElements()) {
 			String key = (String)e.nextElement();
 			addDevId(key);

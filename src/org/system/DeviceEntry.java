@@ -2,11 +2,7 @@ package org.system;
 
 import gui.BusyBoxSelectGUI;
 import gui.RecoveryBootSelectGUI;
-
-import java.io.File;
 import java.util.HashSet;
-import java.util.Properties;
-
 import org.adb.AdbUtility;
 import org.logger.MyLogger;
 

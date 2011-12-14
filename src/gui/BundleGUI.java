@@ -17,14 +17,11 @@ import flashsystem.Bundle;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Enumeration;
 import org.lang.Language;
-import org.logger.MyLogger;
 import org.system.DeviceEntry;
 import org.system.Devices;
 import org.system.OS;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;

@@ -2,17 +2,12 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import flashsystem.X10flash;
-import foxtrot.Job;
-import foxtrot.Worker;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.jgoodies.forms.layout.FormLayout;
@@ -20,17 +15,16 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
-
 import org.adb.FastbootUtility;
 import org.lang.Language;
 import org.logger.MyLogger;
-import org.system.Device;
-
-import javax.swing.JSpinner;
-import javax.swing.ImageIcon;
 
 public class WaitDeviceFastbootGUI extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	X10flash _flash;
 	boolean cancel;

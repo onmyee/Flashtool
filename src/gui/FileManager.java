@@ -1,10 +1,7 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.util.HashSet;
 import java.util.Iterator;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,7 +12,6 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
-
 import org.adb.AdbUtility;
 import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
@@ -27,6 +23,10 @@ import java.awt.event.ActionEvent;
 
 public class FileManager extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	DefaultListModel listFilesModel = new DefaultListModel();
 	JList list=null;

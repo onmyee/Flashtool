@@ -4,14 +4,10 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.Document;
 import org.jdom.JDOMException;
 import org.jdom.Element;
-import org.jdom.output.XMLOutputter;
-import org.jdom.output.Format;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
 
 public class XMLRebrand {

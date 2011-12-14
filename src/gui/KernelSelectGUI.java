@@ -9,20 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.Dialog.ModalityType;
 import java.io.File;
-import java.util.jar.JarFile;
-
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-
 import org.logger.MyLogger;
-import org.system.PropertiesFile;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -31,6 +25,10 @@ import java.awt.event.WindowEvent;
 
 public class KernelSelectGUI extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private String result = "";

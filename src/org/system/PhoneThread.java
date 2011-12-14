@@ -1,13 +1,8 @@
 package org.system;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Scanner;
-
-import gui.FlasherGUI;
-
 import org.adb.AdbUtility;
-import org.logger.MyLogger;
 
 public class PhoneThread extends Thread {
 	
@@ -16,7 +11,6 @@ public class PhoneThread extends Thread {
 
 	private ProcessBuilder builder;
 	private Process adb;
-	private static String fsep = OS.getFileSeparator();
 	private InputStream processInput;
 	private Scanner sc;
 
@@ -25,7 +19,6 @@ public class PhoneThread extends Thread {
 	}
 	
 	public void run() {
-		String pid = "none";
 		try {
 			builder = new ProcessBuilder(OS.getAdbPath(), "status-window");
 			adb = builder.start();
@@ -34,7 +27,7 @@ public class PhoneThread extends Thread {
 				      processInput = adb.getInputStream();
 				      sc = new Scanner(processInput);
 			    	  while (sc.hasNextLine()) {
-			    		  String line = sc.nextLine();
+			    		  sc.nextLine();
 			    	  }    		  
 		    	  }
 		    };

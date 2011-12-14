@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -12,10 +11,8 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-
 import flashsystem.Bundle;
 import flashsystem.BundleEntry;
-
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -23,7 +20,6 @@ import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javax.swing.ListSelectionModel;

@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -13,28 +12,23 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-
 import org.system.Devices;
 import org.system.OS;
-import org.system.PropertiesFile;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.Dialog.ModalExclusionType;
-import java.awt.Dialog.ModalityType;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.io.File;
 
 public class rebrandGUI extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private static String fsep = OS.getFileSeparator();
 	private String result="";

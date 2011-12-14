@@ -3,8 +3,6 @@ package org.plugins;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import foxtrot.Job;
-import foxtrot.Worker;
 
 public class PluginActionListenerAbout implements ActionListener {
 
