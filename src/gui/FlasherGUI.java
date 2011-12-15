@@ -146,8 +146,8 @@ private static void setSystemLookAndFeel() {
 
 	public static void main(String[] args) throws Exception {
 		setSystemLookAndFeel();
-		if (!System.getProperty("java.version").contains("1.6") && !System.getProperty("java.version").contains("1.7")) {
-			AskBox.getReplyOf("Your java version must be >= 1.6");
+		if (!System.getProperty("java.version").contains("1.6")) {
+			AskBox.showOKbox("Your java version must be 1.6");
 			System.exit(1);
 		}
 		initLogger();
