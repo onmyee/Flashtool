@@ -20,14 +20,13 @@ public class USBFlash {
 		}
 	}
 
-	public static boolean write(S1Packet p) throws IOException,X10FlashException {
+	public static void write(S1Packet p) throws IOException,X10FlashException {
 		if (OS.getName().equals("windows")) {
 			USBFlashWin32.write(p);
 		}
 		else {
 			USBFlashLinux.write(p);
 		}
-		return true;
 	}
 
    public static int getLastFlags() {

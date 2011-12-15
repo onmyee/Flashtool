@@ -70,28 +70,23 @@ public class Command {
     	}
     }
 
-    private void writeCommand(int command, byte abyte0[], boolean ongoing) throws X10FlashException {
-    	try {
+    private void writeCommand(int command, byte abyte0[], boolean ongoing) throws X10FlashException, IOException {
 	    	if (!_simulate) {
 	    		S1Packet p = new S1Packet(command,abyte0,ongoing);
-	    		if (!USBFlash.write(p)) {
-	    			throw new X10FlashException("Error writing command");
+	    		try {
+	    			USBFlash.write(p);
+	    			p.release();
 	    		}
-	    		p.release();
-	    		MyLogger.getLogger().debug((new StringBuilder("write(cmd=")).append(command).append(") (").append(ongoing? "continue)":"finish)").toString());
-	    		
+	    		catch (X10FlashException xe) {
+	    			p.release();
+	    			throw new X10FlashException(xe.getMessage());
+	    		}
+	    		catch (IOException ioe) {
+	    			p.release();
+	    			throw new IOException(ioe.getMessage());
+	    		}
 	    	}
 	    	MyLogger.updateProgress();
-    	}
-    	catch (NullPointerException ne) {
-    		throw new X10FlashException("Error writing command");
-    	}
-    	catch (RuntimeException rte) {
-    		throw new X10FlashException("Error writing command");
-    	}
-    	catch (Exception e) {
-    		throw new X10FlashException("Error writing command");
-    	}
     }
 
     public void send(int cmd, byte abyte0[], boolean ongoing) throws X10FlashException, IOException

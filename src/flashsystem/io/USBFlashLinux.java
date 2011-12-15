@@ -20,10 +20,9 @@ public class USBFlashLinux {
 		}
 	}
 	
-	public static boolean write(S1Packet p) throws IOException,X10FlashException {
+	public static void write(S1Packet p) throws IOException,X10FlashException {
 		JUsb.write(p);
 		readReply();
-		return true;
 	}
 
     private static  void readReply() throws X10FlashException, IOException

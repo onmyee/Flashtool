@@ -3,8 +3,15 @@ package linuxlib;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.HashSet;
+
+import org.logger.MyLogger;
+
 import flashsystem.HexDump;
 import flashsystem.S1Packet;
+import flashsystem.X10FlashException;
+import se.marell.libusb.LibUsbNoDeviceException;
+import se.marell.libusb.LibUsbOtherException;
+import se.marell.libusb.LibUsbPermissionException;
 import se.marell.libusb.LibUsbSystem;
 import se.marell.libusb.UsbDevice;
 import se.marell.libusb.UsbSystem;
@@ -13,30 +20,34 @@ public class JUsb {
 	
 	static final byte[] data1 = new byte[65536];
 	
-	public static S1Packet read() throws IOException {
+	public static Iterator<UsbDevice> getDeviceList(UsbSystem us) throws IOException {
+		try {
+			Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
+			return i;
+		}
+		catch (Exception e) {
+			throw new IOException("Cannot get list of USB devices");
+		}
+	}
+
+	public static S1Packet read() throws X10FlashException, IOException {
 		S1Packet p = null;
 		boolean found = false;
-		try {
-			UsbSystem us = new LibUsbSystem(false, 0);;
-	    	Iterator<UsbDevice> i = us.visitUsbDevices(new ListDevices()).iterator();
-	    	while (i.hasNext()) {
-	    		UsbDevice d = i.next();
-	    		String vendor = HexDump.toHex(d.getIdVendor());
-	    		String product = HexDump.toHex(d.getIdProduct());
-	    	    if (vendor.equals("0FCE") && product.equals("ADDE")) {
-	    	    	p = readDevice(d);
-	    	    	found = true;
-	    	  	  	break;
-	    	    }
-	    	}
-	    	us.cleanup();
-	    	if (!found) throw new IOException("device not connected");
-	    	p.validate();
-	    	return p;
-		}
-    	catch (Exception e) {
-    		throw new IOException(e.getMessage());
+		UsbSystem us = new LibUsbSystem(false, 0);
+    	Iterator<UsbDevice> i = getDeviceList(us);
+    	while (i.hasNext()) {
+    		UsbDevice d = i.next();
+    		String vendor = HexDump.toHex(d.getIdVendor());
+    		String product = HexDump.toHex(d.getIdProduct());
+    	    if (vendor.equals("0FCE") && product.equals("ADDE")) {
+    	    	p = readDevice(d);
+    	    	found = true;
+    	  	  	break;
+    	    }
     	}
+    	us.cleanup();
+    	if (!found) throw new IOException("Device not connected");
+		return p;
 	}
 
 	public static HashSet<LinuxUsbDevice> getConnectedDevices() {
@@ -103,14 +114,38 @@ public class JUsb {
     	}
 	}
 
-	  public static S1Packet readDevice(UsbDevice device) throws IOException {
-		  try {
-			  device.open();
-			  S1Packet p=null;
+	public static boolean openDevice(UsbDevice device) {
+		try {
+			device.open();
+			if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
+			device.claim_interface(0);
+		  	return true;
+		}
+		catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public static void closeDevice(UsbDevice device) {
+		try {
+			device.release_interface(0);
+			device.close();
+		}
+		catch (Exception e) {
+		}
+	}
+	
+	  public static S1Packet readDevice(UsbDevice device) throws IOException,X10FlashException {
+		  S1Packet p=null;
+		  if (!openDevice(device)) throw new IOException("readReply : Cannot open device");
 			  boolean finished = false;
-			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
-			  device.claim_interface(0);
-			  int read1 = device.bulk_read(0x81, data1, 0);
+			  int read1=0;
+			  try {
+				  read1 = device.bulk_read(0x81, data1, 0);
+			  }
+			  catch (Exception e) {
+				  throw new IOException("readReply : First data read request failed");
+			  }
 			  if (read1>0) {
 				  p = new S1Packet(getReply(data1,read1));
 				  finished=!p.hasMoreToRead();
@@ -130,13 +165,9 @@ public class JUsb {
 				  catch (Exception e) {
 				  }
 			  }
-			  device.release_interface(0);
-			  device.close();
-			  return p;
-		  }
-		  catch (Exception e) {
-			  throw new IOException(e.getMessage());
-		  }
+		  closeDevice(device);
+		  p.validate();
+		  return p;
 	  }
 
 	  private static byte[] getReply(byte[] reply, int nbread) {
@@ -150,14 +181,9 @@ public class JUsb {
 
 	  public static void writeDevice(UsbDevice device, S1Packet p) throws IOException {
 		  try {
-			  device.open();
-			  if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
-			  device.claim_interface(0);
-			  byte[] towrite = p.getByteArray();
-			  device.bulk_write(0x01, towrite, 500);
-			  towrite=null;
-			  device.release_interface(0);
-			  device.close();
+			  if (!openDevice(device)) throw new IOException("Cannot open device");
+			  device.bulk_write(0x01, p.getByteArray(), 500);
+			  closeDevice(device);
 		  }
 		  catch (Exception e) {
 			  throw new IOException(e.getMessage());
