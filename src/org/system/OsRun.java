@@ -49,9 +49,9 @@ public class OsRun {
 		MyLogger.getLogger().debug("Running "+command);
 		stdout="";stderr="";
 		if (OS.getName().equals("windows"))
-			process = Runtime.getRuntime().exec("cmd /c \""+command+"\"");
+			process = new ProcessBuilder("cmd", "/c", "\""+command+"\"").start();
 		else
-			process = Runtime.getRuntime().exec(command);
+			process = new ProcessBuilder(command).start();
         Scanner sc_stdout = new Scanner(process.getInputStream());    		
 		while (sc_stdout.hasNext()) {
 			String line = sc_stdout.nextLine();
