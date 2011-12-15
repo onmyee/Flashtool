@@ -131,7 +131,7 @@ private static void setSystemLookAndFeel() {
 
 	static public void runAdb() throws Exception {
 		if (OS.getName().equals("linux")) {
-			OsRun giveRights = new OsRun("chmod 755 ./x10flasher_lib/adb");
+			OsRun giveRights = new OsRun(new String[] {"chmod", "755", "./x10flasher_lib/adb"});
 			giveRights.run();
 		}
 		killAdbandFastboot();
@@ -709,7 +709,7 @@ private static void setSystemLookAndFeel() {
 
 	public static void killAdbLinux() {
 		try {
-			OsRun cmd = new OsRun("/usr/bin/killall adb");
+			OsRun cmd = new OsRun(new String[] {"/usr/bin/killall", "adb"});
 			cmd.run();				
 		}
 		catch (Exception e) {
@@ -718,7 +718,7 @@ private static void setSystemLookAndFeel() {
 	
 	public static void killAdbWindows() {
 		try {
-			OsRun adb = new OsRun("taskkill /F /T /IM adb*");
+			OsRun adb = new OsRun(new String[] {"taskkill", "/F", "/T", "/IM", "adb*"});
 			adb.run();
 		}
 		catch (Exception e) {
@@ -855,7 +855,7 @@ private static void setSystemLookAndFeel() {
 					AdbUtility.push(Devices.getCurrent().getBusybox(false), GlobalConfig.getProperty("deviceworkdir")+"/busybox");
 					Shell shell = new Shell("busyhelper");
 					shell.run(true);
-					AdbUtility.push("."+fsep+"custom"+fsep+"root"+fsep+"zergrush.tar",GlobalConfig.getProperty("deviceworkdir"));
+					AdbUtility.push(new File("."+fsep+"custom"+fsep+"root"+fsep+"zergrush.tar").getAbsolutePath(),GlobalConfig.getProperty("deviceworkdir"));
 					shell = new Shell("rootit");
 					MyLogger.getLogger().info("Running part1 of Root Exploit, please wait");
 					shell.run(true);

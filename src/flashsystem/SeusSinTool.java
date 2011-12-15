@@ -24,9 +24,9 @@ public class SeusSinTool {
 	        try {
 		        File fxml = new File(folder+"\\update.xml");
 		        if (fxml.isFile()) fxml.renameTo(new File(folder+"\\update1.xml"));
-	        	OsRun run = new OsRun(".\\x10flasher_lib\\7z.exe e -y \""+basefile+".tgz\" -o\"" + folder+"\"");
+	        	OsRun run = new OsRun(new String[] {new File("./x10flasher_lib/7z.exe").getAbsolutePath(),"e", "-y", basefile+".tgz", "-o", folder});
 		        run.run();
-		        OsRun run1 = new OsRun(".\\x10flasher_lib\\7z.exe e -y \""+basefile+".tar\" -o\"" + folder+"\"");
+		        OsRun run1 = new OsRun(new String[] {new File("./x10flasher_lib/7z.exe").getAbsolutePath(), "e", "-y", basefile+".tar", "-o", folder});
 		        run1.run();
 		        File fdek = new File(basefile+".tgz");
 		        fdek.delete();

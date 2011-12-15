@@ -8,20 +8,26 @@ public class OsRun {
 
 	String stdout;
 	String stderr;
-	String command;
+	String[] command;
 	int returnCode;
 	Process process;
 
-	public OsRun(String pcommand) {
+	public OsRun(String[] pcommand) {
 		command = pcommand;
 		RunStack.addToStack(this);
 	}
+
+	/*public OsRun(String pcommand) {
+		pcommand = pcommand.replaceAll("\"", "");
+		command = pcommand.split(" ");
+		RunStack.addToStack(this);
+	}*/
 
 	public int getReturnCode() {
 		return returnCode;
 	}
 
-	public String getCommand() {
+	public String[] getCommand() {
 		return command;
 	}
 	
@@ -44,14 +50,9 @@ public class OsRun {
 
 	
 	public void run() throws Exception {
-		if (!OS.getName().equals("windows"))
-			command = command.replaceAll("\"", "");
 		MyLogger.getLogger().debug("Running "+command);
 		stdout="";stderr="";
-		if (OS.getName().equals("windows"))
-			process = new ProcessBuilder("cmd", "/c", "\""+command+"\"").start();
-		else
-			process = new ProcessBuilder(command).start();
+		process = new ProcessBuilder(command).start();
         Scanner sc_stdout = new Scanner(process.getInputStream());    		
 		while (sc_stdout.hasNext()) {
 			String line = sc_stdout.nextLine();

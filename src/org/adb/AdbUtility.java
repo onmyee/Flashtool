@@ -37,10 +37,10 @@ public class AdbUtility  {
 	public static String getShPath(boolean force) {
 		if (shpath==null || force) {
 			try {
-				OsRun command = new OsRun(adbpath+" shell type /system/xbin/sh");
+				OsRun command = new OsRun(new String[] {adbpath,"shell", "type /system/xbin/sh"});
 				command.run();
 				if (command.getStdOut().contains("not found")) {
-					OsRun command1 = new OsRun(adbpath+" shell 'echo $0'");
+					OsRun command1 = new OsRun(new String[] {adbpath,"shell", "'echo $0'"});
 					command.run();
 					shpath = command.getStdOut().trim();
 				}
@@ -58,7 +58,7 @@ public class AdbUtility  {
 	public static boolean hasRootNative() {
 		try {
 			if (rootnative) return true;
-			OsRun command = new OsRun(adbpath+" shell id");
+			OsRun command = new OsRun(new String[] {adbpath,"shell","id"});
 			command.run();
 			rootnative=command.getStdOut().contains("uid=0");
 		}
@@ -68,12 +68,12 @@ public class AdbUtility  {
 	}
 	
 	public static void forward(String type,String local, String remote) throws Exception {
-		OsRun command = new OsRun(adbpath+" forward "+type.toUpperCase()+":"+local+" "+type.toUpperCase()+":"+remote);
+		OsRun command = new OsRun(new String[] {adbpath,"forward "+type.toUpperCase()+":"+local+" "+type.toUpperCase()+":"+remote});
 		command.run();
 	}
 	
 	public static HashSet<String> listSysApps() throws Exception {
-		OsRun command = new OsRun(adbpath+" shell ls /system/app/*");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "ls /system/app/*"});
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -84,7 +84,7 @@ public class AdbUtility  {
 	}
 	
 	public static HashSet<String> listKernels() throws Exception {
-		OsRun command = new OsRun(adbpath+" shell find /system/kernel -name 'kernel.desc' -type f");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "find /system/kernel -name 'kernel.desc' -type f"});
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -98,7 +98,7 @@ public class AdbUtility  {
 	}
 
 	public static HashSet<String> listRecoveries() throws Exception {
-		OsRun command = new OsRun(adbpath+" shell find /system/recovery -name 'recovery.desc' -type f");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "find /system/recovery -name 'recovery.desc' -type f"});
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -126,7 +126,7 @@ public class AdbUtility  {
 	
 	public static boolean isMounted(String mountpoint) throws Exception {
 		boolean result = false;
-		OsRun command = new OsRun(adbpath+" shell \"mount\"");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "mount"});
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
@@ -141,7 +141,7 @@ public class AdbUtility  {
 	public static boolean hasSU() {
 		boolean result = true;
 		try {
-		OsRun command = new OsRun(adbpath+" shell type su");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "type su"});
 		command.run();
 		Scanner sc = new Scanner(command.getStdOut());
 		while (sc.hasNextLine()) {
@@ -162,7 +162,7 @@ public class AdbUtility  {
 			boolean systemmounted = isMounted("/system");
 			String result = "";
 			if (!systemmounted) mount("/system","ro","yaffs2");
-			OsRun command = new OsRun(adbpath+" shell getprop "+key);
+			OsRun command = new OsRun(new String[] {adbpath,"shell", "getprop "+key});
 			command.run();
 			result = command.getStdOut().replaceAll("\n","");
 			if (!systemmounted) umount("/system");
@@ -175,7 +175,7 @@ public class AdbUtility  {
 	
 	public static String getFilePerms(String file) {
 		try {
-			OsRun command = new OsRun(adbpath+" shell stat "+file);
+			OsRun command = new OsRun(new String[] {adbpath,"shell", "stat "+file});
 			command.run();
 			Scanner sc = new Scanner(command.getStdOut());
 			while (sc.hasNextLine()) {
@@ -192,7 +192,7 @@ public class AdbUtility  {
 	}
 	
 	public static ByteArrayInputStream getBuildProp() throws Exception {
-		OsRun command = new OsRun(adbpath+" shell cat /system/build.prop");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "cat /system/build.prop"});
 		command.run();
 		return new ByteArrayInputStream(command.getStdOut().getBytes());
 	}
@@ -216,7 +216,7 @@ public class AdbUtility  {
 	}
 
 	public static HashSet<String> ls(String basedir,String type) throws Exception {
-		OsRun command = new OsRun(adbpath+" shell find "+basedir+" -maxdepth 1 -type "+type);
+		OsRun command = new OsRun(new String[] {adbpath+"shell", "find "+basedir+" -maxdepth 1 -type "+type});
 		command.run();
 		String[] result = command.getStdOut().split("\n");
 		HashSet<String> set = new HashSet<String>();
@@ -230,7 +230,7 @@ public class AdbUtility  {
 	public static void uninstall(String apk, boolean silent) throws Exception {
 		if (!silent)
 			MyLogger.getLogger().info("Uninstalling "+apk);
-		OsRun command = new OsRun(adbpath+" uninstall "+apk);
+		OsRun command = new OsRun(new String[] {adbpath,"uninstall",apk});
 		command.run();
 	}
 
@@ -238,15 +238,15 @@ public class AdbUtility  {
 		MyLogger.getLogger().info("Killing adb service");
 		OsRun command = null;
 		if (OS.getName().equals("windows"))
-			command = new OsRun(adbpath+" kill-server");
+			command = new OsRun(new String[] {adbpath,"kill-server"});
 		else
-			command = new OsRun("killall adb");
+			command = new OsRun(new String[] {"killall","adb"});
 		command.run();
 	}
 
 	public static void startServer() throws Exception {
 			MyLogger.getLogger().info("Starting adb service");
-			OsRun command = new OsRun(adbpath+" start-server");
+			OsRun command = new OsRun(new String[] {adbpath,"start-server"});
 			command.run();
 	}
 
@@ -259,7 +259,7 @@ public class AdbUtility  {
 		if (!f.exists()) throw new AdbException(source+" : Not found");
 		if (log) MyLogger.getLogger().info("Pushing "+f.getAbsolutePath()+" to "+destination);
 		else MyLogger.getLogger().debug("Pushing "+f.getAbsolutePath()+" to "+destination);
-		OsRun command = new OsRun(adbpath+" push "+"\""+f.getAbsolutePath()+"\" "+destination);
+		OsRun command = new OsRun(new String[] {adbpath,"push",f.getAbsolutePath(),destination});
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
@@ -271,10 +271,10 @@ public class AdbUtility  {
 		try {
 			OsRun command;
 			if (isMounted("/system")) {
-				command = new OsRun(adbpath+" shell "+path+"/busybox");
+				command = new OsRun(new String[] {adbpath,"shell",path+"/busybox"});
 			}
 			else {
-				command = new OsRun(adbpath+" shell /sbin/busybox");				
+				command = new OsRun(new String[] {adbpath,"shell","/sbin/busybox"});
 			}
 			command.run();
 			Scanner sc = new Scanner(command.getStdOut());
@@ -291,21 +291,21 @@ public class AdbUtility  {
 	
 	public static void mount(String mountpoint,String options, String type) throws Exception {
 		if (hasRootNative()) {
-			OsRun command = new OsRun(adbpath+" shell mount -o "+options+" -t "+type+" "+mountpoint);
+			OsRun command = new OsRun(new String[] {adbpath,"shell","mount -o "+options+" -t "+type+" "+mountpoint});
 			command.run();			
 		}
 	}
 	
 	public static void umount(String mountpoint) throws Exception {
 		if (hasRootNative()) {
-			OsRun command = new OsRun(adbpath+" shell umount "+mountpoint);
+			OsRun command = new OsRun(new String[] {adbpath,"shell", "umount "+mountpoint});
 			command.run();
 		}		
 	}
 	
 	public static void pull(String source, String destination) throws Exception {
 		MyLogger.getLogger().info("Pulling "+source+" to "+destination);
-		OsRun command = new OsRun(adbpath+" pull "+source+" "+"\""+destination+"\"");
+		OsRun command = new OsRun(new String[] {adbpath,"pull",source, destination});
 		command.run();
 		if (command.getReturnCode()!=0) {
 			throw new AdbException(command.getStdOut()+ " " + command.getStdErr());
@@ -335,7 +335,7 @@ public class AdbUtility  {
 			MyLogger.getLogger().debug("Running "+shell.getName());
 		else
 			MyLogger.getLogger().info("Running "+shell.getName());
-		OsRun command = new OsRun(adbpath+" shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/"+shell.getName()+";exit $?");
+		OsRun command = new OsRun(new String[] {adbpath,"shell", "sh "+GlobalConfig.getProperty("deviceworkdir")+"/"+shell.getName()+";exit $?"});
 		command.run();
 		if (command.getStdOut().contains("FTError")) throw new Exception(command.getStdErr()+" "+command.getStdOut());
 		return command.getStdOut();
@@ -346,7 +346,7 @@ public class AdbUtility  {
 			MyLogger.getLogger().debug("Running "+ com + " command");
 		else
 			MyLogger.getLogger().info("Running "+ com + " command");
-		OsRun command = new OsRun(adbpath+" shell "+com);
+		OsRun command = new OsRun(new String[] {adbpath,"shell",com});
 		command.run();
 		return command.getStdOut().trim();
 	}
@@ -371,9 +371,9 @@ public class AdbUtility  {
 			MyLogger.getLogger().debug("Running "+shell.getName()+"  as root thru sysrun");
 		OsRun command;
 		if (rootnative)
-			command=new OsRun(adbpath+" shell sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun");
+			command=new OsRun(new String[] {adbpath,"shell", "sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun"});
 		else
-			command=new OsRun(adbpath+" shell su -c 'sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun'");
+			command=new OsRun(new String[] {adbpath,"shell", "su -c 'sh "+GlobalConfig.getProperty("deviceworkdir")+"/sysrun'"});
 		command.run();
 		return command.getStdOut();
 	}
@@ -392,11 +392,11 @@ public class AdbUtility  {
 
 	public static void install(String apk) throws Exception {
 		MyLogger.getLogger().info("Installing "+apk);
-		OsRun command = new OsRun(adbpath+" install \""+apk+"\"");
+		OsRun command = new OsRun(new String[] {adbpath,"install", "\""+apk+"\""});
 		command.run();
 		if (command.getStdOut().contains("Failure")) {
 			uninstall(APKUtility.getPackageName(apk),true);
-			command = new OsRun(adbpath+" install \""+apk+"\"");
+			command = new OsRun(new String[] {adbpath,"install","\""+apk+"\""});
 			command.run();
 			if (command.getStdOut().contains("Failure")) {
 				Scanner sc = new Scanner(command.getStdOut());
@@ -407,7 +407,7 @@ public class AdbUtility  {
 	}
 
 	public static void scanStatus() throws Exception {
-		OsRun command = new OsRun(adbpath+" status-window");
+		OsRun command = new OsRun(new String[] {adbpath,"status-window"});
 		command.run();
 	}
 
@@ -453,7 +453,7 @@ public class AdbUtility  {
 	public static Enumeration<String> getDevices() {
 		Vector<String> v = new Vector<String>();
 		try {
-			OsRun command = new OsRun(adbpath+" devices");
+			OsRun command = new OsRun(new String[] {adbpath,"devices"});
 			command.run();
 			Scanner sc = new Scanner(command.getStdOut());
 			while (sc.hasNextLine()) {
