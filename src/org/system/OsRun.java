@@ -50,7 +50,12 @@ public class OsRun {
 
 	
 	public void run() throws Exception {
-		MyLogger.getLogger().debug("Running "+command);
+		String longcommand = "";
+		try {
+		for (int i=0;i<command.length;i++)
+			longcommand = longcommand + command[i]+" ";
+		} catch (Exception e) {}
+		MyLogger.getLogger().debug("Running "+longcommand.trim());
 		stdout="";stderr="";
 		process = new ProcessBuilder(command).start();
         Scanner sc_stdout = new Scanner(process.getInputStream());    		

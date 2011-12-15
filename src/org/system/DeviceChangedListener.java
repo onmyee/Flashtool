@@ -27,14 +27,19 @@ public class DeviceChangedListener {
 	}
 	
 	public static void stop() {
-		if (OS.getName().equals("windows")) {
-			if (lwin32!=null)
-				lwin32.usbwatch.end();
+		try {
+			if (OS.getName().equals("windows")) {
+				if (lwin32!=null)
+					DeviceChangedListenerWin32.usbwatch.end();
+					DeviceChangedListenerWin32.usbwatch.join();
+			}
+			else {
+				if (llinux!=null)
+					DeviceChangedListenerLinux.usbwatch.end();
+					DeviceChangedListenerLinux.usbwatch.join();
+			}
 		}
-		else {
-			if (llinux!=null)
-				llinux.usbwatch.end();
-		}
+		catch (Exception e) {}
 	}
 	
 	public static void pause(boolean paused) {
