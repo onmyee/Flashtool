@@ -68,10 +68,17 @@
 		<tr><th>Installation of Flashtool</th></tr>
 		<tr><td>
 To install the Flashtool, follow the steps below:
-<ol>
+<ol> Windows version :
 	<li>Install the full install Flashtool 0.5.0.0 package<br>
 	<li>Apply the latest update (each update is cumulative)<br>
 	Updates will not install if full 0.5.0.0 is not installed<br>
+</ol>
+<ol> Linux version :
+    <li>Unpack the tar.7z package<br>
+    <li>Check that libusb-1.0 is installed. On 64bits system, both 64bit and 32bit should be installed.<br>
+    <li>Add these rules to /etc/udev : <br>
+        SUBSYSTEM=="usb", ACTION=="add", SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="adde", MODE="0777"<br>
+        SUBSYSTEM=="usb", ACTION=="add", SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="0dde", MODE="0777"<br>
 </ol>
 		</td></tr>
 		</table>
