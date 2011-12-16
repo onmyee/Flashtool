@@ -54,25 +54,6 @@ public class X10flash {
     	}
     }
 
-    public String getHook() throws IOException, X10FlashException {
-	    cmd = new Command(_bundle.simulate());
-	    String hook = cmd.getLastReplyString();
-	    cmd.send(Command.CMD01,Command.VALNULL,false);
-		cmd.send(Command.CMD09, Command.VAL2, false);
-        cmd.send(Command.CMD10, Command.VALNULL, false);
-        return hook;
-    }
-
-    // added method to retrieved long string returned by loader
-    public String getHook2() throws IOException, X10FlashException {
-	    cmd = new Command(_bundle.simulate());
-	    cmd.send(Command.CMD01,Command.VALNULL,false);
-		String hook = cmd.getLastReplyString();
-		cmd.send(Command.CMD09, Command.VAL2, false);
-        cmd.send(Command.CMD10, Command.VALNULL, false);
-        return hook;
-    }
-    
     public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
     	try {
@@ -98,12 +79,7 @@ public class X10flash {
     {
     	try {
 		    MyLogger.getLogger().info("Start Dumping properties");
-
-		    cmd = new Command(_bundle.simulate());
-			cmd.send(Command.CMD01, Command.VALNULL, false);
-			cmd.send(Command.CMD09, Command.VAL2, false);
-	        cmd.send(Command.CMD10, Command.VALNULL, false);
-
+		    MyLogger.initProgress(3000);
 	        TextFile tazone = new TextFile("./tazone.ta","ISO8859-1");
 	        tazone.open(false);
 	        TextFile tazoneS = new TextFile("./tazoneString.ta","ISO8859-1");
@@ -122,13 +98,17 @@ public class X10flash {
 	        		tazoneS.writeln(HexDump.toHex(i) + " " + HexDump.toHex(cmd.getLastReplyLength()) + " " + replyS.trim());
 	        	}
 	        }
+	        MyLogger.initProgress(0);
 	        tazone.close();
 	        tazoneS.close();
-            
 			MyLogger.getLogger().info("Dumping properties finished.");
+			DeviceChangedListener.pause(false);
 	    }
     	catch (Exception ioe) {
+    		MyLogger.initProgress(0);
+    		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error dumping properties. Aborted");
+    		DeviceChangedListener.pause(false);
     	}
     }
 
@@ -210,7 +190,7 @@ public class X10flash {
         		MyLogger.getLogger().debug("Flashing "+entry.getName()+" finished");
         	}
     }
-    
+
     public long getNumberPasses() {
 	    Enumeration<BundleEntry> e = _bundle.allEntries();
 	    long totalsize = 0;
@@ -227,16 +207,21 @@ public class X10flash {
     public String getPhoneIdent() {
     	return phoneident;
     }
-    
+
+    public String getLoaderIdent() {
+    	return loaderident;
+    }
+
     private void init() throws X10FlashException,FileNotFoundException, IOException {
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
 		sendLoader();		
 		cmd.send(Command.CMD01, Command.VALNULL, false);
-		MyLogger.getLogger().info(cmd.getLastReplyString());
+		loaderident = cmd.getLastReplyString();
+		MyLogger.getLogger().info(loaderident);
         cmd.send(Command.CMD09, Command.VAL2,false);    	
     }
-    
+
     public void flashDevice() {
     	try {
 		    MyLogger.getLogger().info("Start Flashing");

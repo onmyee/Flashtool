@@ -18,14 +18,14 @@ public class WindowsPhoneThread extends Thread {
 					pid = id.getPid();
 					Device.identDevice();
 				}
-				try {
-					while ((count<200) && (!done)) {
-						sleep(10);
-						count++;
-					}
-					count = 0;
-				} catch (Exception e) {}
 			}
+			try {
+				while ((count<200) && (!done)) {
+					sleep(10);
+					count++;
+				}
+				count = 0;
+			} catch (Exception e) {}
 		}
 	}
 

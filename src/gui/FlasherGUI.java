@@ -777,8 +777,8 @@ private static void setSystemLookAndFeel() {
 					public Object run() {
 						try {
 					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
-							if (!OS.getName().equals("windows")) bundle.setSimulate(true);
 							X10flash flash = new X10flash(bundle);
+							MyLogger.getLogger().info("Please connect your device into flashmode.");
 							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
 								flash.dumpProperties();
 							}

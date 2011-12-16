@@ -16,6 +16,7 @@ public class S1Packet {
 	byte[] data;
 	byte[] crc32 = new byte[4];
 	int lastdatapos = 0;
+	int lastcrcpos = 0;
 	boolean finalized = false;
 	
 	public S1Packet(byte[] pdata) throws X10FlashException {
@@ -146,13 +147,26 @@ public class S1Packet {
 	}
 
 	public void addData(byte[] datachunk) throws X10FlashException {
-		if (lastdatapos<data.length) {
-			System.arraycopy(datachunk, 0, data, lastdatapos, datachunk.length);
-			lastdatapos+=datachunk.length;
+		if (lastdatapos < data.length) {
+			int totransfer=data.length-lastdatapos;
+			if (datachunk.length<=totransfer) totransfer=datachunk.length;
+			System.arraycopy(datachunk, 0, data, lastdatapos, totransfer);
+			lastdatapos+=totransfer;
+			if (datachunk.length>totransfer) {
+				int lasttransfer=datachunk.length-totransfer;
+				System.arraycopy(datachunk, totransfer, crc32, lastcrcpos, lasttransfer);
+				lastcrcpos+=lasttransfer;
+				finalized = (lastcrcpos==4);
+			}
 		}
 		else {
-			System.arraycopy(datachunk, 0, crc32, 0, datachunk.length);
-			finalized = true;
+			int lasttransfer=4-lastcrcpos;
+			if (datachunk.length<lasttransfer) lasttransfer=datachunk.length;
+			System.arraycopy(datachunk, 0, crc32, lastcrcpos, lasttransfer);
+			lastcrcpos+=lasttransfer;
+			finalized = (lastcrcpos==4);
+		}
+		if (finalized) {
 			if (BytesUtil.getLong(calculatedCRC32())!=BytesUtil.getLong(crc32))
 				throw new X10FlashException("S1 Data CRC32 Error");
 			if (calculateHeaderCkSum()!=hdr)

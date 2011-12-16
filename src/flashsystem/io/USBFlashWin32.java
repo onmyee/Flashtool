@@ -28,10 +28,10 @@ public class USBFlashWin32 {
 	}
 
 	public static boolean write(S1Packet p) throws IOException,X10FlashException {
-		sleep(20);
+		sleep(10);
 		JKernel32.openDevice();
 		JKernel32.writeBytes(p.getByteArray());
-		sleep(20);
+		sleep(10);
 		readReply();
 		JKernel32.closeDevice();
 		return true;
@@ -51,6 +51,7 @@ public class USBFlashWin32 {
 			}
 			finished=!p.hasMoreToRead();
 		}
+		p.validate();
 		lastreply = p.getDataArray();
 		lastflags = p.getFlags();
     }

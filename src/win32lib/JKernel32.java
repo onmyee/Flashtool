@@ -35,7 +35,7 @@ public class JKernel32 {
 		IntByReference nbread = new IntByReference();
 		byte[] b = new byte[bufsize];
 		boolean result = kernel32.ReadFile(HandleToDevice, b, bufsize, nbread, null);
-		if (!result) throw new IOException(getLastError());
+		if (!result) throw new IOException("Read error :"+getLastError());
 		return getReply(b,nbread.getValue());
 	}
 
