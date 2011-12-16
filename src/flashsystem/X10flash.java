@@ -18,6 +18,8 @@ public class X10flash {
 
     private Bundle _bundle;
     private Command cmd;
+    private String phoneident = "";
+    private String loaderident = "";
 
     public X10flash(Bundle bundle) {
     	_bundle=bundle;
@@ -222,18 +224,16 @@ public class X10flash {
 	    return totalsize+13;
     }
 
+    public String getPhoneIdent() {
+    	return phoneident;
+    }
+    
     private void init() throws X10FlashException,FileNotFoundException, IOException {
-	    cmd = new Command(_bundle.simulate());
-    	
-		cmd.send(Command.CMD01, Command.VALNULL, false);
-		
 		cmd.send(Command.CMD09, Command.VAL2, false);
         cmd.send(Command.CMD10, Command.VALNULL, false);
-		sendLoader();
-		
+		sendLoader();		
 		cmd.send(Command.CMD01, Command.VALNULL, false);
 		MyLogger.getLogger().info(cmd.getLastReplyString());
-		
         cmd.send(Command.CMD09, Command.VAL2,false);    	
     }
     
@@ -294,6 +294,10 @@ public class X10flash {
     	boolean found=false;
     	try {
     		USBFlash.open();
+    		phoneident = new String (USBFlash.getLastReply());
+    	    cmd = new Command(_bundle.simulate());	
+    		cmd.send(Command.CMD01, Command.VALNULL, false);
+    		loaderident = new String (USBFlash.getLastReply());
     		found = true;
     	}
     	catch (Exception e){
