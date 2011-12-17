@@ -69,6 +69,7 @@ public class Device {
     public static DeviceIdent getConnectedDeviceLinux() {
     	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
+    	try {
     	Iterator<LinuxUsbDevice> i = JUsb.getConnectedDevices().iterator();
     	while (i.hasNext()) {
     		LinuxUsbDevice d = i.next();
@@ -83,7 +84,14 @@ public class Device {
         	lastid=id;
         }
         if (notchanged) return getLastConnected();
-        return id;
+    	}
+    	catch (UnsatisfiedLinkError e) {
+    		MyLogger.getLogger().error("libusb-1.0 is not installed");
+    		MyLogger.getLogger().error(e.getMessage());
+    	}
+    	catch (NoClassDefFoundError e1) {
+    	}
+    	return id;
     }
 
     public static void CheckAdbDrivers() {
@@ -114,7 +122,8 @@ public class Device {
 	    }
 	    else MyLogger.getLogger().info("      - none");
     }
-	public static void identDevice() {
+	
+    public static void identDevice() {
 		DeviceIdent id = null;
 		if (OS.getName().equals("windows"))
 			id=Device.getConnectedDeviceWin32();

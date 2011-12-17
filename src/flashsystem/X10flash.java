@@ -57,7 +57,8 @@ public class X10flash {
     public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
     	try {
-		    MyLogger.getLogger().info("Start Reading property");
+    		MyLogger.initProgress(1);
+    		MyLogger.getLogger().info("Start Reading property");
 	        MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
 	        cmd.send(Command.CMD12, BytesUtil.getBytesWord(prnumber, 4),false);
 	        String reply = cmd.getLastReplyHex();
@@ -66,24 +67,26 @@ public class X10flash {
 	        reply = reply.replace(",", "");
 			MyLogger.getLogger().info("Reading property finished.");
 			MyLogger.initProgress(0);
+			DeviceChangedListener.pause(false);
 			return reply;
 	    }
     	catch (Exception ioe) {
     		MyLogger.getLogger().error("Error dumping properties. Aborted");
     		MyLogger.initProgress(0);
+    		DeviceChangedListener.pause(false);
     		return "";
     	}    	
     }
 
     public void dumpProperties() throws IOException, X10FlashException
     {
+        TextFile tazone = new TextFile("./tazone.ta","ISO8859-1");
+        tazone.open(false);
+        TextFile tazoneS = new TextFile("./tazoneString.ta","ISO8859-1");
+        tazoneS.open(false);
     	try {
 		    MyLogger.getLogger().info("Start Dumping properties");
 		    MyLogger.initProgress(3000);
-	        TextFile tazone = new TextFile("./tazone.ta","ISO8859-1");
-	        tazone.open(false);
-	        TextFile tazoneS = new TextFile("./tazoneString.ta","ISO8859-1");
-	        tazoneS.open(false);
 	        for(int i = 0; i < 3000; i++)
 	        {
 	        	MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(i).toString());
@@ -105,6 +108,8 @@ public class X10flash {
 			DeviceChangedListener.pause(false);
 	    }
     	catch (Exception ioe) {
+	        tazone.close();
+	        tazoneS.close();
     		MyLogger.initProgress(0);
     		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error dumping properties. Aborted");

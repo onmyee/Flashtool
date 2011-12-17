@@ -121,6 +121,11 @@ public class JUsb {
 			device.claim_interface(0);
 		  	return true;
 		}
+		catch (LibUsbPermissionException pe) {
+			MyLogger.getLogger().error("Missing permissions on USB device");
+			MyLogger.getLogger().error("Set this udev rule : SUBSYSTEM==\"usb\", ACTION==\"add\", SYSFS{idVendor}==\"0fce\", SYSFS{idProduct}==\"adde\", MODE=\"0777\"");
+			return false;
+		}
 		catch (Exception e) {
 			return false;
 		}

@@ -2,6 +2,7 @@ package linuxlib;
 
 import org.system.Device;
 import org.system.DeviceIdent;
+import org.system.Devices;
 
 public class LinuxPhoneThread extends Thread {
 
@@ -16,7 +17,8 @@ public class LinuxPhoneThread extends Thread {
 				DeviceIdent id = Device.getConnectedDeviceLinux();
 				if (!pid.equals(id.getPid())) {
 					pid = id.getPid();
-					Device.identDevice();
+					if (!Devices.isWaitingForReboot())
+						Device.identDevice();
 				}
 			}
 			try {

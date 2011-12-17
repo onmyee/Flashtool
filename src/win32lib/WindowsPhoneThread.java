@@ -2,6 +2,7 @@ package win32lib;
 
 import org.system.Device;
 import org.system.DeviceIdent;
+import org.system.Devices;
 
 public class WindowsPhoneThread extends Thread {
 
@@ -16,7 +17,8 @@ public class WindowsPhoneThread extends Thread {
 				DeviceIdent id = Device.getConnectedDeviceWin32();
 				if (!pid.equals(id.getPid())) {
 					pid = id.getPid();
-					Device.identDevice();
+					if (!Devices.isWaitingForReboot())
+						Device.identDevice();
 				}
 			}
 			try {
