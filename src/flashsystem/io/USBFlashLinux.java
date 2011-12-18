@@ -22,7 +22,26 @@ public class USBFlashLinux {
 	
 	public static void write(S1Packet p) throws IOException,X10FlashException {
 		JUsb.write(p);
-		readReply();
+		int count = 0;
+		while (true) {
+			try {
+				readReply();
+				break;
+			}
+			catch (IOException e) {
+				try {
+					Thread.sleep(1000);
+				}
+				catch (Exception s) {}
+				count++;
+				if (count==3) {
+					throw e;
+				}
+			}
+			catch (X10FlashException e) {
+				throw e;
+			}
+		}
 	}
 
     private static  void readReply() throws X10FlashException, IOException
