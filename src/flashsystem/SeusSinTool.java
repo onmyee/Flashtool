@@ -38,10 +38,10 @@ public class SeusSinTool {
 		        	OsRun run1 = new OsRun(new String[] {"unzip", "-o", basefile+".zip","-d",folder});
 		        	run1.run();
 		        }
-		        //File fdek = new File(basefile+".tgz");
-		        //fdek.delete();
-		        //File ftar = new File(basefile+".tar");
-		        //ftar.delete();
+		        File fdek = new File(basefile+".zip.gz");
+		        fdek.delete();
+		        File ftar = new File(basefile+".zip");
+		        ftar.delete();
 	        }
 	        catch (Exception e) {}
 	      } catch(IOException e) {
