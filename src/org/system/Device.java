@@ -19,7 +19,7 @@ import win32lib.SetupApi.SP_DEVINFO_DATA;
 public class Device {	
 
 	static DeviceIdent lastid = new DeviceIdent();
-	static String pid = "";
+	static String laststatus = "";
 
 	public static DeviceIdent getLastConnected() {
 		DeviceIdent id = null;
@@ -124,47 +124,42 @@ public class Device {
     }
 	
     public static void identDevice() {
-		DeviceIdent id = null;
-		if (OS.getName().equals("windows"))
-			id=Device.getConnectedDeviceWin32();
-		else
-			id=Device.getConnectedDeviceLinux();
-		String currentPid=id.getPid();
-		if (!pid.equals(currentPid)) {
-			pid = currentPid;
-			String status = id.getStatus();
+		DeviceIdent id = getLastConnected();
+		String currentStatus=id.getStatus();
+		if (!laststatus.equals(currentStatus)) {
+			laststatus = currentStatus;
 			boolean driverok = id.isDriverOk();
 			if (!driverok) {
 				MyLogger.getLogger().error("Drivers need to be installed for connected device.");
 				MyLogger.getLogger().error("You can find them in the drivers folder of Flashtool.");
 			}
 			else {
-				if (status.equals("adb")) {
+				if (currentStatus.equals("adb")) {
 					MyLogger.getLogger().info("Device connected with USB debugging on");
 					MyLogger.getLogger().debug("Device connected, continuing with identification");
 					FlasherGUI.doIdent();
 				}
-				if (status.equals("none")) {
+				if (currentStatus.equals("none")) {
 					MyLogger.getLogger().info("Device disconnected");
 					FlasherGUI.doDisableIdent();
 				}
-				if (status.equals("flash")) {
+				if (currentStatus.equals("flash")) {
 					MyLogger.getLogger().info("Device connected in flash mode");
 					FlasherGUI.doDisableIdent();
 				}
-				if (status.equals("fastboot")) {
+				if (currentStatus.equals("fastboot")) {
 					MyLogger.getLogger().info("Device connected in fastboot mode");
 					FlasherGUI.doDisableIdent();
 				}
-				if (status.equals("normal")) {
+				if (currentStatus.equals("normal")) {
 					MyLogger.getLogger().info("Device connected with USB debugging off");
 					FlasherGUI.doDisableIdent();
 				}
-				if (status.equals("mtp")) {
+				if (currentStatus.equals("mtp")) {
 					MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
 					FlasherGUI.doDisableIdent();
 				}
-				if (status.equals("unknown")) {
+				if (currentStatus.equals("unknown")) {
 					MyLogger.getLogger().info("Device connected but cannot identify it. Drivers seem to ok OK.");
 					MyLogger.getLogger().info("Nevertheless, I invite you to double check them.");
 					MyLogger.getLogger().info("You can try reinstall Flashtool-drivers package in drivers folder of Flashtool.");

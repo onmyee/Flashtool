@@ -19,7 +19,7 @@ public class USBFlashLinux {
 			if (lastreply == null) throw new IOException("Unable to read from device");
 		}
 	}
-	
+
 	public static void write(S1Packet p) throws IOException,X10FlashException {
 		JUsb.write(p);
 		int count = 0;
