@@ -84,15 +84,22 @@ then
         p_baseband=$(echo yes)
      fi
 
-   export BASEDIR=$(dirname $0)
-   export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+	if test -z ${JAVA_HOME}
+	then
+		export BASEDIR=$(dirname $0)
+		export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+	fi
 
-   for i in $(ls ${BASEDIR}/x10flasher_lib/*jar)
-   do
-	CLASSPATH=$CLASSPATH$(echo $BASEDIR/$i:)
-   done
-   $JAVA_HOME/bin/java -Xms50m -Xmx512m -cp ${CLASSPATH}${BASEDIR}/x10flasher.jar flashsystem.FlasherConsole $p_file $p_data $p_cache $p_baseband $p_system $p_kernel
+	if test -e ${JAVA_HOME}/bin/java
+	then
+	   for i in $(ls ${BASEDIR}/x10flasher_lib/*jar)
+	   do
+		CLASSPATH=$CLASSPATH$(echo $BASEDIR/$i:)
+	   done
+	   $JAVA_HOME/bin/java -Xms50m -Xmx512m -cp ${CLASSPATH}${BASEDIR}/x10flasher.jar flashsystem.FlasherConsole $p_file $p_data $p_cache $p_baseband $p_system $p_kernel
+	else
+		echo "No Java in specified path : ${JAVA_HOME}"
+	fi
 else
    echo $p_file does not exist.
 fi
-

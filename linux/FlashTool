@@ -1,3 +1,12 @@
-export BASEDIR=$(dirname $0)
-export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
-$JAVA_HOME/bin/java -Xms50m -Xmx512m -jar x10flasher.jar
+if test -z ${JAVA_HOME}
+then
+	export BASEDIR=$(dirname $0)
+	export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+fi
+
+if test -e ${JAVA_HOME}/bin/java
+then
+	$JAVA_HOME/bin/java -Xms50m -Xmx512m -jar x10flasher.jar
+else
+	echo "No Java in specified path : ${JAVA_HOME}"
+fi
