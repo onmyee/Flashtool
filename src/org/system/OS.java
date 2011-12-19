@@ -30,6 +30,11 @@ public class OS {
 			   return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"adb.exe").getAbsolutePath();	
 	}
 
+	public static String get7z() {
+		String fsep = OS.getFileSeparator();
+		return new File(System.getProperty("user.dir")+fsep+"x10flasher_lib"+fsep+"7z.exe").getAbsolutePath();	
+}
+
 	public static String getFastBootPath() {
 		String fsep = OS.getFileSeparator();
 	   if (OS.getName().equals("linux"))

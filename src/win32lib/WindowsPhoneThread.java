@@ -1,5 +1,6 @@
 package win32lib;
 
+import org.logger.MyLogger;
 import org.system.Device;
 import org.system.DeviceIdent;
 import org.system.Devices;
