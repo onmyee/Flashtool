@@ -18,12 +18,13 @@ public class WindowsPhoneThread extends Thread {
 				DeviceIdent id = Device.getConnectedDeviceWin32();
 				if (!pid.equals(id.getPid())) {
 					pid = id.getPid();
-					if (!Devices.isWaitingForReboot())
+					if (!Devices.isWaitingForReboot()) {
 						Device.identDevice();
+					}
 				}
 			}
 			try {
-				while ((count<200) && (!done)) {
+				while ((count<100) && (!done)) {
 					sleep(10);
 					count++;
 				}

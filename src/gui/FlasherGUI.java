@@ -75,7 +75,6 @@ public class FlasherGUI extends JFrame {
 	public static boolean guimode=true;
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
-	private static boolean isidentrun = false;
 	private static JToolBar toolBar;
 	private JPanel contentPane;
 	static JTextPane textArea = new JTextPane();
@@ -1247,13 +1246,10 @@ private static void setSystemLookAndFeel() {
  
         public static void doIdent() {
         	if (guimode) {
-        	if (!isidentrun) {
-        		isidentrun=true;
         		Enumeration<Object> e = Devices.listDevices(true);
         		if (!e.hasMoreElements()) {
         			MyLogger.getLogger().error("No device is registered in Flashtool.");
         			MyLogger.getLogger().error("You can only flash devices.");
-        			isidentrun=false;
         			return;
         		}
         		boolean found = false;
@@ -1341,8 +1337,6 @@ private static void setSystemLookAndFeel() {
         				Devices.stopWaitForReboot();
         			MyLogger.getLogger().debug("End of identification");
         		}
-        		isidentrun=false;
-        	}
         	}
         }
 

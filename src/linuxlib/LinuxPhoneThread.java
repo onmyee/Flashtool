@@ -22,7 +22,7 @@ public class LinuxPhoneThread extends Thread {
 				}
 			}
 			try {
-				while ((count<200) && (!done)) {
+				while ((count<100) && (!done)) {
 					sleep(10);
 					count++;
 				}
