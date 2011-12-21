@@ -1,23 +1,19 @@
 package org.system;
 
 public class StatusEvent {
-	String oldstatus;
 	String newstatus;
+	boolean driverok;
 	
-	public StatusEvent(String olds, String news) {
-		oldstatus=olds;
+	public StatusEvent(String news, boolean dok) {
 		newstatus = news;
-	}
-	
-	public String getOld() {
-		return oldstatus;
+		driverok = dok;
 	}
 	
 	public String getNew() {
 		return newstatus;
 	}
 	
-	public boolean hasChanged() {
-		return !newstatus.equals(oldstatus);
+	public boolean isDriverOk() {
+		return driverok;
 	}
 }

@@ -69,15 +69,9 @@ public class Devices  {
 	public static void waitForReboot() throws Exception {
 		MyLogger.getLogger().info("Waiting for device");
 		waitforreboot=true;
-		while (!AdbUtility.getDevices().hasMoreElements()) {
+		while (waitforreboot) {
 			Thread.sleep(20);
 		}
-		while (!AdbUtility.isConnected()) {
-			Thread.sleep(20);
-		}
-		MyLogger.getLogger().debug("Phone connected. Identifying it");
-		FlasherGUI.doIdent();
-		MyLogger.getLogger().debug("End of identification");
 	}
 
 	public static void stopWaitForReboot() {

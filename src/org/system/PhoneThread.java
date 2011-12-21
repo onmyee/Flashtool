@@ -2,6 +2,9 @@ package org.system;
 
 import java.io.InputStream;
 import java.util.Scanner;
+
+import javax.swing.event.EventListenerList;
+
 import org.adb.AdbUtility;
 
 public class PhoneThread extends Thread {
@@ -13,6 +16,7 @@ public class PhoneThread extends Thread {
 	private Process adb;
 	private InputStream processInput;
 	private Scanner sc;
+	private final EventListenerList listeners = new EventListenerList();
 
 	public void done() {
 		done=true;
@@ -27,7 +31,9 @@ public class PhoneThread extends Thread {
 				      processInput = adb.getInputStream();
 				      sc = new Scanner(processInput);
 			    	  while (sc.hasNextLine()) {
-			    		  sc.nextLine();
+			    		  String line = sc.nextLine();
+			    		  if (line.contains("device"))
+			    			  fireStatusChanged(new StatusEvent("adb",true));
 			    	  }    		  
 		    	  }
 		    };
@@ -49,5 +55,23 @@ public class PhoneThread extends Thread {
 		catch (Exception e) {
 		}
 	}
+
+	public void addStatusListener(StatusListener listener) {
+        listeners.add(StatusListener.class, listener);
+    }
+
+    public void removeStatusListener(StatusListener listener) {
+        listeners.remove(StatusListener.class, listener);
+    }
+
+    public StatusListener[] getStatusListeners() {
+        return listeners.getListeners(StatusListener.class);
+    }
+
+    protected void fireStatusChanged(StatusEvent e) {
+		for(StatusListener listener : getStatusListeners()) {
+		    listener.statusChanged(e);
+		}
+    }
 
 }

@@ -88,34 +88,14 @@ public class DeviceIdent {
 	}
 
 	public String getStatus() {
-		String device = getDeviceId();
-    	String status = "none";
-	    if (!device.equals("none")) {
-	    	if (getPid().equals("ADDE")) status="flash";
-	    	else {
-	    		int counter = 0;
-	    		while (!AdbUtility.getDevices().hasMoreElements() && counter<201) {
-	    			try {
-	    				Thread.sleep(10);
-	    				counter+=1;
-	    			}
-	    			catch (Exception e) {}
-	    		}
-	    		if (AdbUtility.getDevices().hasMoreElements())
-	    			status="adb";
-	    		else
-	    			if (FastbootUtility.getDevices().hasMoreElements())
-	    				status="fastboot";
-	    		else {
-	    			if (getPid().startsWith("0") || getPid().startsWith("E")) 
-	    				status="normal";
-	    			else if (getPid().startsWith("5"))
-	    				status="mtp";
-	    			else status = "unknown";
-	    		}
-	    	}
-	    }
-    	return status;
+		try {
+			if (getPid().equals("ADDE")) return "flash";
+			if (getPid().equals("0DDE")) return "fastboot";
+			return "none";
+		}
+		catch (Exception e) {
+			return "none";
+		}
 	}
 	
 	public Properties getIds() {

@@ -5,12 +5,14 @@ import javax.swing.event.EventListenerList;
 import org.system.Device;
 import org.system.DeviceIdent;
 import org.system.Devices;
+import org.system.StatusEvent;
 import org.system.StatusListener;
 
 public class LinuxPhoneThread extends Thread {
 
 	boolean done = false;
 	boolean paused = false;
+	boolean forced = false;
 	String status = "";
 	private final EventListenerList listeners = new EventListenerList();
 	
@@ -19,10 +21,13 @@ public class LinuxPhoneThread extends Thread {
 		while (!done) {
 			if (!paused) {
 				DeviceIdent id = Device.getConnectedDeviceLinux();
+				if (forced) {
+					fireStatusChanged(new StatusEvent(id.getStatus(),id.isDriverOk()));
+				}
+				else
 				if (!status.equals(id.getStatus())) {
+					fireStatusChanged(new StatusEvent(id.getStatus(),id.isDriverOk()));
 					status = id.getStatus();
-					if (!Devices.isWaitingForReboot())
-						Device.identDevice(id.getStatus(),id.isDriverOk());
 				}
 			}
 			try {
@@ -55,4 +60,13 @@ public class LinuxPhoneThread extends Thread {
         return listeners.getListeners(StatusListener.class);
     }
     
+    protected void fireStatusChanged(StatusEvent e) {
+	    for(StatusListener listener : getStatusListeners()) {
+	        listener.statusChanged(e);
+	    }
+    }
+    
+    public void forceDetection() {
+    	if (!forced) forced = true;
+    }
 }

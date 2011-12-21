@@ -37,6 +37,10 @@ public class X10flash {
 	    	}
     }
 
+    public void rebootDevice() throws IOException, X10FlashException {
+    	cmd.send(Command.CMD04,Command.VAL1,false);
+    }
+    
     private void sendTA(InputStream in,String name) throws FileNotFoundException, IOException,X10FlashException {
     	try {
     		TaFile ta = new TaFile(in);

@@ -74,51 +74,43 @@ public class FlasherGUI extends JFrame {
 	/**
 	 * 
 	 */
+	public static FlasherGUI _root;
 	public static boolean guimode=true;
 	private static String fsep = OS.getFileSeparator();
 	private static final long serialVersionUID = 1L;
 	private static JToolBar toolBar;
-	private JPanel contentPane;
-	static JTextPane textArea = new JTextPane();
-	private Bundle bundle;
-	private final ButtonGroup buttonGroupLog = new ButtonGroup();
-	private final ButtonGroup buttonGroupLang = new ButtonGroup();
-	private static JButton flashBtn;
-	private static JButton btnRoot;
-	private static JButton btnAskRootPerms;
-	private static JButton btnCleanroot;
-	private static JButton custBtn;
-	private static JButton btnXrecovery;
-	private static JButton btnKernel;
-	private static JMenuItem mntmInstallBusybox;
-	private static JMenuItem mntmDumpProperties;
-	private static JMenuItem mntmClearCache;
-	private static JMenuItem mntmBuildpropEditor;
-	private static JMenuItem mntmBuildpropRebrand;
-
-	private static JMenuItem mntmSetDefaultRecovery;
-	private static JMenuItem mntmRebootDefaultRecovery;
-	private static JMenuItem mntmRebootIntoRecoveryT;
-	
-	private static JMenuItem mntmSetDefaultKernel;
-	private static JMenuItem mntmRebootCustomKernel;
-	private static JMenuItem mntmRebootDefaultKernel;
-	
-	private static JMenuItem mntmRootPsneuter;
-	private static JMenuItem mntmRootzergRush;
-	//private static JMenuItem mntmCleanUninstalled;
-	//private static JMenuItem mntmRecoveryer;
-	private static JMenuItem mntmBackupSystemApps;
-	//private static JMenuItem mntmInstallBootkit;
-	private String lang;
-	public static FlasherGUI _root;
+	private static JTextPane textArea = new JTextPane();
 	private static PhoneThread phoneWatchdog;
-	private static JMenu mnPlugins;
-	/**
-	 * Launch the application.
-	 */
-	
-private static void setSystemLookAndFeel() {
+	private JPanel contentPane;
+	private Bundle bundle;
+	private ButtonGroup buttonGroupLog = new ButtonGroup();
+	private ButtonGroup buttonGroupLang = new ButtonGroup();
+	private JButton flashBtn;
+	private JButton btnRoot;
+	private JButton btnAskRootPerms;
+	private JButton btnCleanroot;
+	private JButton custBtn;
+	private JButton btnXrecovery;
+	private JButton btnKernel;
+	private JMenuItem mntmInstallBusybox;
+	private JMenuItem mntmDumpProperties;
+	private JMenuItem mntmClearCache;
+	private JMenuItem mntmBuildpropEditor;
+	private JMenuItem mntmBuildpropRebrand;
+	private JMenuItem mntmSetDefaultRecovery;
+	private JMenuItem mntmRebootDefaultRecovery;
+	private JMenuItem mntmRebootIntoRecoveryT;
+	private JMenuItem mntmSetDefaultKernel;
+	private JMenuItem mntmRebootCustomKernel;
+	private JMenuItem mntmRebootDefaultKernel;
+	private JMenuItem mntmRootPsneuter;
+	private JMenuItem mntmRootzergRush;
+	private JMenuItem mntmBackupSystemApps;
+	private JMenu mnPlugins;
+	private String lang;
+	//private StatusListener phoneStatus;
+
+	private static void setSystemLookAndFeel() {
 		try {
 			UIManager.setLookAndFeel(new com.jgoodies.looks.plastic.Plastic3DLookAndFeel());
 		}
@@ -147,6 +139,7 @@ private static void setSystemLookAndFeel() {
 
 	public static void main(String[] args) throws Exception {
 		setSystemLookAndFeel();
+		runAdb();
 		if (!System.getProperty("java.version").contains("1.6")) {
 			AskBox.showOKbox("Your java version must be 1.6");
 			System.exit(1);
@@ -161,7 +154,6 @@ private static void setSystemLookAndFeel() {
 			public void run() {
 				try {
 					FlasherGUI frame = new FlasherGUI();
-					runAdb();
 					frame.setVisible(true);					
 				} catch (Exception e) {}
 			}
@@ -691,12 +683,49 @@ private static void setSystemLookAndFeel() {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		DeviceChangedListener.start();
-		StatusListener l = new StatusListener() {
+		StatusListener phoneStatus = new StatusListener() {
 			public void statusChanged(StatusEvent e) {
-				System.out.println(e.getOld()+" : "+e.getNew());
+				if (!e.isDriverOk()) {
+					MyLogger.getLogger().error("Drivers need to be installed for connected device.");
+					MyLogger.getLogger().error("You can find them in the drivers folder of Flashtool.");
+				}
+				else {
+					if (e.getNew().equals("adb")) {
+						MyLogger.getLogger().info("Device connected with USB debugging on");
+						MyLogger.getLogger().debug("Device connected, continuing with identification");
+						doIdent();
+					}
+					if (e.getNew().equals("none")) {
+						MyLogger.getLogger().info("Device disconnected");
+						doDisableIdent();
+					}
+					if (e.getNew().equals("flash")) {
+						MyLogger.getLogger().info("Device connected in flash mode");
+						doDisableIdent();
+					}
+					if (e.getNew().equals("fastboot")) {
+						MyLogger.getLogger().info("Device connected in fastboot mode");
+						doDisableIdent();
+					}
+					if (e.getNew().equals("normal")) {
+						MyLogger.getLogger().info("Device connected with USB debugging off");
+						doDisableIdent();
+					}
+					if (e.getNew().equals("mtp")) {
+						MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
+						doDisableIdent();
+					}
+					if (e.getNew().equals("unknown")) {
+						MyLogger.getLogger().info("Device connected but cannot identify it. Drivers seem to ok OK.");
+						MyLogger.getLogger().info("Nevertheless, I invite you to double check them.");
+						MyLogger.getLogger().info("You can try reinstall Flashtool-drivers package in drivers folder of Flashtool.");
+						doDisableIdent();
+					}
+				}
 			}
 		};
-		DeviceChangedListener.addStatusListener(l);
+		DeviceChangedListener.addStatusListener(phoneStatus);
+		phoneWatchdog.addStatusListener(phoneStatus);
 	}
 
 	public void setLanguage() {
@@ -1216,7 +1245,7 @@ private static void setSystemLookAndFeel() {
     	showInBrowser("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PPWH7M9MNCEPA");
     }
 
-    private static boolean showInBrowser(String url){
+    private boolean showInBrowser(String url){
 		try {
 			  Desktop.getDesktop().browse(new URI(url));
 		} 
@@ -1226,129 +1255,129 @@ private static void setSystemLookAndFeel() {
         // some mod here
 	}
 
-    public static void doDisableIdent() {
+    public void doDisableIdent() {
     	if (guimode) {
-		btnCleanroot.setEnabled(false);
-		mntmInstallBusybox.setEnabled(false);
-		mntmClearCache.setEnabled(false);
-		mntmRootzergRush.setEnabled(false);
-		mntmRootPsneuter.setEnabled(false);
-		mntmBuildpropEditor.setEnabled(false);
-		mntmBuildpropRebrand.setEnabled(false);
-		mntmRebootIntoRecoveryT.setEnabled(false);
-		mntmRebootDefaultRecovery.setEnabled(false);
-		mntmSetDefaultRecovery.setEnabled(false);
-		mntmSetDefaultKernel.setEnabled(false);
-		mntmRebootCustomKernel.setEnabled(false);
-		mntmRebootDefaultKernel.setEnabled(false);
-		//mntmInstallBootkit.setEnabled(false);
-		btnRoot.setEnabled(false);
-		btnXrecovery.setEnabled(false);
-		btnKernel.setEnabled(false);
-		btnAskRootPerms.setEnabled(false);
-		custBtn.setEnabled(false);
-		//mntmCleanUninstalled.setEnabled(false);
-    		mntmBackupSystemApps.setEnabled(false);
+			btnCleanroot.setEnabled(false);
+			mntmInstallBusybox.setEnabled(false);
+			mntmClearCache.setEnabled(false);
+			mntmRootzergRush.setEnabled(false);
+			mntmRootPsneuter.setEnabled(false);
+			mntmBuildpropEditor.setEnabled(false);
+			mntmBuildpropRebrand.setEnabled(false);
+			mntmRebootIntoRecoveryT.setEnabled(false);
+			mntmRebootDefaultRecovery.setEnabled(false);
+			mntmSetDefaultRecovery.setEnabled(false);
+			mntmSetDefaultKernel.setEnabled(false);
+			mntmRebootCustomKernel.setEnabled(false);
+			mntmRebootDefaultKernel.setEnabled(false);
+			//mntmInstallBootkit.setEnabled(false);
+			btnRoot.setEnabled(false);
+			btnXrecovery.setEnabled(false);
+			btnKernel.setEnabled(false);
+			btnAskRootPerms.setEnabled(false);
+			custBtn.setEnabled(false);
+			//mntmCleanUninstalled.setEnabled(false);
+	    	mntmBackupSystemApps.setEnabled(false);
     	}
-        }
+	}
  
-        public static void doIdent() {
-        	if (guimode) {
-        		Enumeration<Object> e = Devices.listDevices(true);
-        		if (!e.hasMoreElements()) {
-        			MyLogger.getLogger().error("No device is registered in Flashtool.");
-        			MyLogger.getLogger().error("You can only flash devices.");
-        			return;
-        		}
-        		boolean found = false;
-        		Properties founditems = new Properties();
-        		founditems.clear();
-        		Properties buildprop = new Properties();
-        		buildprop.clear();
-        		while (e.hasMoreElements()) {
-        			DeviceEntry current = Devices.getDevice((String)e.nextElement());
-        			String prop = current.getBuildProp();
-        			if (!buildprop.containsKey(prop))
-        				buildprop.setProperty(prop,AdbUtility.getProperty(prop));
-        			Iterator<String> i = current.getRecognitionList().iterator();
-        			String localdev = buildprop.getProperty(prop);
-        			while (i.hasNext()) {
-        				String pattern = i.next().toUpperCase();
-        				if (localdev.toUpperCase().contains(pattern)) {
-        					founditems.put(current.getId(), current.getName());
-        				}
-        			}
-        		}
-        		if (founditems.size()==1) {
-        			found = true;
-        			Devices.setCurrent((String)founditems.keys().nextElement());
-        			if (!Devices.isWaitingForReboot())
-        				MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
-        		}
-        		else {
-        			MyLogger.getLogger().error("Cannot identify your device.");
-	        		MyLogger.getLogger().info("Selecting from user input");
-	        		String devid="";
-	        		deviceSelectGui devsel = new deviceSelectGui(null);
-	        		devid = devsel.getDevice(founditems);
-	    			if (devid.length()>0) {
-	        			found = true;
-	        			Devices.setCurrent(devid);
-		        		String reply = AskBox.getReplyOf("Do you want to permanently identify this device as \n"+Devices.getCurrent().getName()+"?");
-		        		if (reply.equals("yes")) {
-		        			String prop = AdbUtility.getProperty(Devices.getCurrent().getBuildProp());
-		        			Devices.getCurrent().addRecognitionToList(prop);
+    public void doIdent() {
+		        	if (guimode) {
+		        		Enumeration<Object> e = Devices.listDevices(true);
+		        		if (!e.hasMoreElements()) {
+		        			MyLogger.getLogger().error("No device is registered in Flashtool.");
+		        			MyLogger.getLogger().error("You can only flash devices.");
+		        			return;
 		        		}
-		        		if (!Devices.isWaitingForReboot())
-		        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
-	        		}
-	        		else {
-	        			MyLogger.getLogger().error("You can only flash devices.");
-	        		}
-        		}
-        		if (found) {
-        			if (!Devices.isWaitingForReboot()) {
-        				MyLogger.getLogger().info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
-        				MyLogger.getLogger().info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
-        			}
-        			if (Devices.getCurrent().isRecovery()) {
-        				MyLogger.getLogger().info("Phone in recovery mode");
-        				btnRoot.setEnabled(false);
-        				btnAskRootPerms.setEnabled(false);
-        				doGiveRoot();
-        			}
-        			else {
-        				boolean hasSU = Devices.getCurrent().hasSU();
-        				btnRoot.setEnabled(!hasSU);
-        				if (hasSU) {
-        					boolean hasRoot = Devices.getCurrent().hasRoot();
-        					if (hasRoot) doGiveRoot();
-        					btnAskRootPerms.setEnabled(!hasRoot);
-        				}
-        			}
-        			MyLogger.getLogger().debug("Now setting buttons availability - btnRoot");
-        			MyLogger.getLogger().debug("mtmRootzergRush menu");
-        			mntmRootzergRush.setEnabled(true);
-        			MyLogger.getLogger().debug("mtmRootPsneuter menu");
-        			mntmRootPsneuter.setEnabled(true);
-        			boolean flash = Devices.getCurrent().canFlash();
-        			MyLogger.getLogger().debug("flashBtn button "+flash);
-        			flashBtn.setEnabled(flash);
-        			MyLogger.getLogger().debug("custBtn button");
-        			custBtn.setEnabled(true);
-        			MyLogger.getLogger().debug("Now adding plugins");
-        			mnPlugins.removeAll();
-        			addDevicesPlugins();
-        			addGenericPlugins();
-        			MyLogger.getLogger().debug("Stop waiting for device");
-        			if (Devices.isWaitingForReboot())
-        				Devices.stopWaitForReboot();
-        			MyLogger.getLogger().debug("End of identification");
-        		}
-        	}
-        }
+		        		boolean found = false;
+		        		Properties founditems = new Properties();
+		        		founditems.clear();
+		        		Properties buildprop = new Properties();
+		        		buildprop.clear();
+		        		while (e.hasMoreElements()) {
+		        			DeviceEntry current = Devices.getDevice((String)e.nextElement());
+		        			String prop = current.getBuildProp();
+		        			if (!buildprop.containsKey(prop))
+		        				buildprop.setProperty(prop,AdbUtility.getProperty(prop));
+		        			Iterator<String> i = current.getRecognitionList().iterator();
+		        			String localdev = buildprop.getProperty(prop);
+		        			while (i.hasNext()) {
+		        				String pattern = i.next().toUpperCase();
+		        				if (localdev.toUpperCase().contains(pattern)) {
+		        					founditems.put(current.getId(), current.getName());
+		        				}
+		        			}
+		        		}
+		        		if (founditems.size()==1) {
+		        			found = true;
+		        			Devices.setCurrent((String)founditems.keys().nextElement());
+		        			if (!Devices.isWaitingForReboot())
+		        				MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
+		        		}
+		        		else {
+		        			MyLogger.getLogger().error("Cannot identify your device.");
+			        		MyLogger.getLogger().info("Selecting from user input");
+			        		String devid="";
+			        		deviceSelectGui devsel = new deviceSelectGui(null);
+			        		devid = devsel.getDevice(founditems);
+			    			if (devid.length()>0) {
+			        			found = true;
+			        			Devices.setCurrent(devid);
+				        		String reply = AskBox.getReplyOf("Do you want to permanently identify this device as \n"+Devices.getCurrent().getName()+"?");
+				        		if (reply.equals("yes")) {
+				        			String prop = AdbUtility.getProperty(Devices.getCurrent().getBuildProp());
+				        			Devices.getCurrent().addRecognitionToList(prop);
+				        		}
+				        		if (!Devices.isWaitingForReboot())
+				        			MyLogger.getLogger().info("Connected device : " + Devices.getCurrent().getId());
+			        		}
+			        		else {
+			        			MyLogger.getLogger().error("You can only flash devices.");
+			        		}
+		        		}
+		        		if (found) {
+		        			if (!Devices.isWaitingForReboot()) {
+		        				MyLogger.getLogger().info("Installed version of busybox : " + Devices.getCurrent().getInstalledBusyboxVersion());
+		        				MyLogger.getLogger().info("Android version : "+Devices.getCurrent().getVersion()+" / kernel version : "+Devices.getCurrent().getKernelVersion());
+		        			}
+		        			if (Devices.getCurrent().isRecovery()) {
+		        				MyLogger.getLogger().info("Phone in recovery mode");
+		        				btnRoot.setEnabled(false);
+		        				btnAskRootPerms.setEnabled(false);
+		        				doGiveRoot();
+		        			}
+		        			else {
+		        				boolean hasSU = Devices.getCurrent().hasSU();
+		        				btnRoot.setEnabled(!hasSU);
+		        				if (hasSU) {
+		        					boolean hasRoot = Devices.getCurrent().hasRoot();
+		        					if (hasRoot) doGiveRoot();
+		        					btnAskRootPerms.setEnabled(!hasRoot);
+		        				}
+		        			}
+		        			MyLogger.getLogger().debug("Now setting buttons availability - btnRoot");
+		        			MyLogger.getLogger().debug("mtmRootzergRush menu");
+		        			mntmRootzergRush.setEnabled(true);
+		        			MyLogger.getLogger().debug("mtmRootPsneuter menu");
+		        			mntmRootPsneuter.setEnabled(true);
+		        			boolean flash = Devices.getCurrent().canFlash();
+		        			MyLogger.getLogger().debug("flashBtn button "+flash);
+		        			flashBtn.setEnabled(flash);
+		        			MyLogger.getLogger().debug("custBtn button");
+		        			custBtn.setEnabled(true);
+		        			MyLogger.getLogger().debug("Now adding plugins");
+		        			mnPlugins.removeAll();
+		        			addDevicesPlugins();
+		        			addGenericPlugins();
+		        			MyLogger.getLogger().debug("Stop waiting for device");
+		        			if (Devices.isWaitingForReboot())
+		        				Devices.stopWaitForReboot();
+		        			MyLogger.getLogger().debug("End of identification");
+		        		}
+		        	}
+    }
 
-    public static void doGiveRoot() {
+    public void doGiveRoot() {
 		btnCleanroot.setEnabled(true);
 		mntmInstallBusybox.setEnabled(true);
 		mntmClearCache.setEnabled(true);
@@ -1370,7 +1399,7 @@ private static void setSystemLookAndFeel() {
 			MyLogger.getLogger().info("Root Access Allowed");    	
     }
     
-    public static void doAskRoot() {
+    public void doAskRoot() {
 		Worker.post(new Job() {
 			public Object run() {
 				MyLogger.getLogger().warn("Please check your Phone and 'ALLOW' Superuseraccess!");
@@ -1477,7 +1506,7 @@ private static void setSystemLookAndFeel() {
 		});
     }
     
-    public static void addDevicesPlugins() {
+    public void addDevicesPlugins() {
     	try {
 	    	File dir = new File(Devices.getCurrent().getDeviceDir()+fsep+"features");
 		    File[] chld = dir.listFiles();
@@ -1499,7 +1528,7 @@ private static void setSystemLookAndFeel() {
     	catch (Exception e) {}
     }
 
-    public static void addGenericPlugins() {
+    public void addGenericPlugins() {
     	try {
 	    	File dir = new File(OS.getWorkDir()+fsep+"custom"+fsep+"features");
 		    File[] chld = dir.listFiles();
@@ -1522,7 +1551,7 @@ private static void setSystemLookAndFeel() {
     	}
     }
 
-    public static void registerPlugin(String type, String classname, String workdir) {
+    public void registerPlugin(String type, String classname, String workdir) {
 	    try {
 
 	    	Class<?> pluginClass = Class.forName(classname);

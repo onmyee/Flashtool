@@ -63,4 +63,15 @@ public class DeviceChangedListener {
 				llinux.usbwatch.addStatusListener(listener);
 		}		
 	}
+	
+	public static void forceDetection() {
+		if (OS.getName().equals("windows")) {
+			if (lwin32!=null)
+				lwin32.usbwatch.forceDetection();
+		}
+		else {
+			if (llinux!=null)
+				llinux.usbwatch.forceDetection();
+		}		
+	}
 }

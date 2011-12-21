@@ -59,11 +59,13 @@ public class Device {
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
-        synchronized (lastid) {
-        	lastid=id;
-        }
-        if (notchanged) return getLastConnected();
-        return id;
+    	if (!notchanged) {
+    		synchronized (lastid) {
+    			lastid=id;
+    		}
+    		return id;
+    	}
+        return getLastConnected();
     }
 
     public static DeviceIdent getConnectedDeviceLinux() {
@@ -122,45 +124,5 @@ public class Device {
 	    }
 	    else MyLogger.getLogger().info("      - none");
     }
-	
-    public static void identDevice(String currentStatus, boolean driverok) {
-			if (!driverok) {
-				MyLogger.getLogger().error("Drivers need to be installed for connected device.");
-				MyLogger.getLogger().error("You can find them in the drivers folder of Flashtool.");
-			}
-			else {
-				if (currentStatus.equals("adb")) {
-					MyLogger.getLogger().info("Device connected with USB debugging on");
-					MyLogger.getLogger().debug("Device connected, continuing with identification");
-					FlasherGUI.doIdent();
-				}
-				if (currentStatus.equals("none")) {
-					MyLogger.getLogger().info("Device disconnected");
-					FlasherGUI.doDisableIdent();
-				}
-				if (currentStatus.equals("flash")) {
-					MyLogger.getLogger().info("Device connected in flash mode");
-					FlasherGUI.doDisableIdent();
-				}
-				if (currentStatus.equals("fastboot")) {
-					MyLogger.getLogger().info("Device connected in fastboot mode");
-					FlasherGUI.doDisableIdent();
-				}
-				if (currentStatus.equals("normal")) {
-					MyLogger.getLogger().info("Device connected with USB debugging off");
-					FlasherGUI.doDisableIdent();
-				}
-				if (currentStatus.equals("mtp")) {
-					MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
-					FlasherGUI.doDisableIdent();
-				}
-				if (currentStatus.equals("unknown")) {
-					MyLogger.getLogger().info("Device connected but cannot identify it. Drivers seem to ok OK.");
-					MyLogger.getLogger().info("Nevertheless, I invite you to double check them.");
-					MyLogger.getLogger().info("You can try reinstall Flashtool-drivers package in drivers folder of Flashtool.");
-					FlasherGUI.doDisableIdent();
-				}
-			}
-	}
 
 }

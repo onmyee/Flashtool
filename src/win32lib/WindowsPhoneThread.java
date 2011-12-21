@@ -2,10 +2,8 @@ package win32lib;
 
 import javax.swing.event.EventListenerList;
 
-import org.logger.MyLogger;
 import org.system.Device;
 import org.system.DeviceIdent;
-import org.system.Devices;
 import org.system.StatusEvent;
 import org.system.StatusListener;
 
@@ -13,7 +11,10 @@ public class WindowsPhoneThread extends Thread {
 
 	boolean done = false;
 	boolean paused = false;
+	boolean forced = false;
+	String pid = "";
 	String status = "";
+	
 	private final EventListenerList listeners = new EventListenerList();
 
 	public void run() {
@@ -21,10 +22,16 @@ public class WindowsPhoneThread extends Thread {
 		while (!done) {
 			if (!paused) {
 				DeviceIdent id = Device.getConnectedDeviceWin32();
-				if (!status.equals(id.getStatus())) {
-					status = id.getStatus();
-					fireStatusChanged(new StatusEvent(status,id.getStatus()));
+				String lpid = id.getPid();
+				if (!pid.equals(lpid)) {
+					if (lpid.equals("ADDE"))
+						fireStatusChanged(new StatusEvent("flash",id.isDriverOk()));
+					else if (lpid.equals("0DDE"))
+						fireStatusChanged(new StatusEvent("fastboot",id.isDriverOk()));
+					else if (lpid.equals(""))
+						fireStatusChanged(new StatusEvent("none",id.isDriverOk()));
 				}
+				pid=lpid;
 			}
 			try {
 				while ((count<50) && (!done)) {
@@ -57,9 +64,12 @@ public class WindowsPhoneThread extends Thread {
     }
     
     protected void fireStatusChanged(StatusEvent e) {
-    	if (e.hasChanged())
-            for(StatusListener listener : getStatusListeners()) {
-                listener.statusChanged(e);
-            }
+		for(StatusListener listener : getStatusListeners()) {
+		    listener.statusChanged(e);
+		}
+    }
+    
+    public void forceDetection() {
+    	if (!forced) forced = true;
     }
 }

@@ -2,6 +2,7 @@ package org.logger;
 
 import gui.FlasherGUI;
 
+import java.awt.EventQueue;
 import java.io.InputStream;
 import java.util.Properties;
 import org.apache.log4j.Logger;
@@ -30,31 +31,31 @@ public class MyLogger {
 	}
 	
 	public static void initProgress(long max) {
-		if (FlasherGUI.guimode) {
-			if (max > 0) 
-				_bar.setStringPainted(true);
-			else 
-				_bar.setStringPainted(false);
-			_bar.setValue(0);
-			_bar.setMaximum((int)max);
-		}
+					if (FlasherGUI.guimode) {
+						if (max > 0) 
+							_bar.setStringPainted(true);
+						else 
+							_bar.setStringPainted(false);
+						_bar.setValue(0);
+						_bar.setMaximum((int)max);
+					}
 	}
 
 	public static void initProgress(int max) {
-		if (FlasherGUI.guimode) {
-			if (max > 0) 
-				_bar.setStringPainted(true);
-			else 
-				_bar.setStringPainted(false);
-			_bar.setValue(0);
-			_bar.setMaximum(max);
-		}
+					if (FlasherGUI.guimode) {
+						if (max > 0) 
+							_bar.setStringPainted(true);
+						else 
+							_bar.setStringPainted(false);
+						_bar.setValue(0);
+						_bar.setMaximum((int)max);
+					}
 	}
 
 	public static void updateProgress() {
-		if (FlasherGUI.guimode) {
-			_bar.setValue(_bar.getValue()+1);
-		}
+					if (FlasherGUI.guimode) {
+						_bar.setValue(_bar.getValue()+1);
+					}
 	}
 
 	public static void setLevel(String level) {
@@ -123,6 +124,5 @@ public class MyLogger {
 	public static Logger getLogger() {
 		return logger;
 	}
-	
 
 }
