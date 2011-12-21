@@ -123,12 +123,7 @@ public class Device {
 	    else MyLogger.getLogger().info("      - none");
     }
 	
-    public static void identDevice() {
-		DeviceIdent id = getLastConnected();
-		String currentStatus=id.getStatus();
-		if (!laststatus.equals(currentStatus)) {
-			laststatus = currentStatus;
-			boolean driverok = id.isDriverOk();
+    public static void identDevice(String currentStatus, boolean driverok) {
 			if (!driverok) {
 				MyLogger.getLogger().error("Drivers need to be installed for connected device.");
 				MyLogger.getLogger().error("You can find them in the drivers folder of Flashtool.");
@@ -166,7 +161,6 @@ public class Device {
 					FlasherGUI.doDisableIdent();
 				}
 			}
-		}
 	}
 
 }

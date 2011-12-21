@@ -71,12 +71,13 @@ public class Devices  {
 		waitforreboot=true;
 		while (!AdbUtility.getDevices().hasMoreElements()) {
 			Thread.sleep(20);
-			if (AdbUtility.isConnected()) {
-				MyLogger.getLogger().debug("Phone connected. Identifying it");
-				FlasherGUI.doIdent();
-				MyLogger.getLogger().debug("End of identification");
-			}
 		}
+		while (!AdbUtility.isConnected()) {
+			Thread.sleep(20);
+		}
+		MyLogger.getLogger().debug("Phone connected. Identifying it");
+		FlasherGUI.doIdent();
+		MyLogger.getLogger().debug("End of identification");
 	}
 
 	public static void stopWaitForReboot() {

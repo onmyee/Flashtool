@@ -40,6 +40,8 @@ import org.system.PhoneThread;
 import org.system.PropertiesFile;
 import org.system.RunStack;
 import org.system.Shell;
+import org.system.StatusEvent;
+import org.system.StatusListener;
 import org.system.TextFile;
 import java.util.Iterator;
 import java.awt.event.ActionListener;
@@ -689,6 +691,12 @@ private static void setSystemLookAndFeel() {
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
 		DeviceChangedListener.start();
+		StatusListener l = new StatusListener() {
+			public void statusChanged(StatusEvent e) {
+				System.out.println(e.getOld()+" : "+e.getNew());
+			}
+		};
+		DeviceChangedListener.addStatusListener(l);
 	}
 
 	public void setLanguage() {

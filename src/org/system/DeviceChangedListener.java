@@ -53,4 +53,14 @@ public class DeviceChangedListener {
 		}
 	}
 
+	public static void addStatusListener(StatusListener listener) {
+		if (OS.getName().equals("windows")) {
+			if (lwin32!=null)
+				lwin32.usbwatch.addStatusListener(listener);
+		}
+		else {
+			if (llinux!=null)
+				llinux.usbwatch.addStatusListener(listener);
+		}		
+	}
 }

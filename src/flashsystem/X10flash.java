@@ -249,7 +249,7 @@ public class X10flash {
             
 			cmd.send(Command.CMD10,Command.VALNULL,false);
             
-			cmd.send(Command.CMD04,Command.VAL1,false);
+			cmd.send(Command.CMD04,Command.VALNULL,false);
 	
 			MyLogger.getLogger().info("Flashing finished.");
 		    MyLogger.initProgress(0);
