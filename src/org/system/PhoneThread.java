@@ -1,77 +1,84 @@
 package org.system;
 
-import java.io.InputStream;
-import java.util.Scanner;
-
 import javax.swing.event.EventListenerList;
 
-import org.adb.AdbUtility;
+import org.system.Device;
+import org.system.DeviceIdent;
+import org.system.StatusEvent;
+import org.system.StatusListener;
 
 public class PhoneThread extends Thread {
-	
-	String currentPid="none";
-	boolean done=false;
 
-	private ProcessBuilder builder;
-	private Process adb;
-	private InputStream processInput;
-	private Scanner sc;
+	boolean done = false;
+	boolean paused = false;
+	boolean forced = false;
+	String pid = "";
+	String status = "";
+	
 	private final EventListenerList listeners = new EventListenerList();
 
-	public void done() {
-		done=true;
-	}
-	
 	public void run() {
-		try {
-			builder = new ProcessBuilder(OS.getAdbPath(), "status-window");
-			adb = builder.start();
-		    Thread t = new Thread() {
-		    	  public void run() {
-				      processInput = adb.getInputStream();
-				      sc = new Scanner(processInput);
-			    	  while (sc.hasNextLine()) {
-			    		  String line = sc.nextLine();
-			    		  if (line.contains("device"))
-			    			  fireStatusChanged(new StatusEvent("adb",true));
-			    	  }    		  
-		    	  }
-		    };
-		    t.start();
-			while (!done) {
-				int count=1;
-				while (count<2001 && !done) {
-					sleep(1);
-					count++;
+		int count = 0;
+		while (!done) {
+			if (!paused) {
+				DeviceIdent id = Device.getConnectedDevice();
+				String lpid = id.getPid();
+				String lfire="";
+				if (!pid.equals(lpid)) {
+					if (lpid.equals("ADDE"))
+						lfire="flash";
+					else if (lpid.equals("0DDE"))
+						lfire="fastboot";
+					else if (lpid.equals(""))
+						lfire="none";
+					if (lfire.equals("none") && (pid.equals("ADDE") || pid.equals("0DDE"))) {
+						fireStatusChanged(new StatusEvent(lfire,id.isDriverOk()));
+					}
+					if (lfire.length()>0 && (pid.length()==0)) {
+						fireStatusChanged(new StatusEvent(lfire,id.isDriverOk()));
+					}
+					pid=lpid;
 				}
 			}
-			adb.destroy();
 			try {
-				AdbUtility.killServer();
-			}
-			catch (Exception e) {
-			}
+				while ((count<50) && (!done)) {
+					sleep(10);
+					count++;
+				}
+				count = 0;
+			} catch (Exception e) {}
 		}
-		catch (Exception e) {
-		}
+	}
+
+	public void pause(boolean ppaused) {
+		
+		paused = ppaused;
+		pid="paused";
+	}
+
+	public void end() {
+		done = true;
 	}
 
 	public void addStatusListener(StatusListener listener) {
         listeners.add(StatusListener.class, listener);
     }
-
+    
     public void removeStatusListener(StatusListener listener) {
         listeners.remove(StatusListener.class, listener);
     }
-
+    
     public StatusListener[] getStatusListeners() {
         return listeners.getListeners(StatusListener.class);
     }
-
+    
     protected void fireStatusChanged(StatusEvent e) {
 		for(StatusListener listener : getStatusListeners()) {
 		    listener.statusChanged(e);
 		}
     }
-
+    
+    public void forceDetection() {
+    	if (!forced) forced = true;
+    }
 }

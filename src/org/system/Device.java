@@ -29,6 +29,11 @@ public class Device {
 		return id;
 	}
 
+	public static DeviceIdent getConnectedDevice() {
+		if (OS.getName().equals("windows")) return getConnectedDeviceWin32();
+		else return getConnectedDeviceLinux();
+	}
+	
     public static DeviceIdent getConnectedDeviceWin32() {
     	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();

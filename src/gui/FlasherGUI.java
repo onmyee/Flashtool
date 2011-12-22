@@ -27,6 +27,7 @@ import org.logger.MyLogger;
 import org.plugins.PluginActionListener;
 import org.plugins.PluginActionListenerAbout;
 import org.plugins.PluginInterface;
+import org.system.AdbPhoneThread;
 import org.system.ClassPath;
 import org.system.CommentedPropertiesFile;
 import org.system.Device;
@@ -81,7 +82,7 @@ public class FlasherGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static JToolBar toolBar;
 	private static JTextPane textArea = new JTextPane();
-	private static PhoneThread phoneWatchdog;
+	private static AdbPhoneThread phoneWatchdog;
 	private JPanel contentPane;
 	private Bundle bundle;
 	private ButtonGroup buttonGroupLog = new ButtonGroup();
@@ -136,13 +137,13 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public static void main(String[] args) throws Exception {
+		initLogger();
 		setSystemLookAndFeel();
 		runAdb();
 		if (!System.getProperty("java.version").contains("1.6")) {
 			AskBox.showOKbox("Your java version must be 1.6");
 			System.exit(1);
 		}
-		initLogger();
 		MyLogger.getLogger().info("Flashtool "+About.getVersion());
 		String userdir = System.getProperty("user.dir");
 		String pathsep = System.getProperty("path.separator");
@@ -680,7 +681,6 @@ public class FlasherGUI extends JFrame {
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		DeviceChangedListener.start();
 		StatusListener phoneStatus = new StatusListener() {
 			public void statusChanged(StatusEvent e) {
 				if (!e.isDriverOk()) {
@@ -722,8 +722,9 @@ public class FlasherGUI extends JFrame {
 				}
 			}
 		};
+		DeviceChangedListener.start();
 		DeviceChangedListener.addStatusListener(phoneStatus);
-		phoneWatchdog = new PhoneThread();
+		phoneWatchdog = new AdbPhoneThread();
 		phoneWatchdog.start();
 		phoneWatchdog.addStatusListener(phoneStatus);		 
 	}
