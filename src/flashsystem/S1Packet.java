@@ -1,5 +1,7 @@
 package flashsystem;
 
+import java.io.FileOutputStream;
+
 
 public class S1Packet {
 
@@ -33,7 +35,7 @@ public class S1Packet {
 			System.arraycopy(pdata, 4, flags, 0, 4);
 			System.arraycopy(pdata, 8, datalen, 0, 4);
 			hdr = pdata[12];
-			if (getDataLength()>65519)
+			if (getDataLength()>65553)
 				throw new X10FlashException("Incorect read packet. Bad Data length");
 			data = new byte[getDataLength()];
 			int totransfer=pdata.length-13;
@@ -210,5 +212,14 @@ public class S1Packet {
         byte0 += 7;
         return byte0;
     }
+	
+	public void saveDataAs(String file) {
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(data);
+			fos.close();
+		}
+		catch (Exception e) {e.printStackTrace();}
+	}
 
 }

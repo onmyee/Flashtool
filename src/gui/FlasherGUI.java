@@ -128,9 +128,6 @@ public class FlasherGUI extends JFrame {
 			giveRights.run();
 		}
 		killAdbandFastboot();
-
-		phoneWatchdog = new PhoneThread();
-		phoneWatchdog.start();
 	}
 
 	public static void addToolbar(JButton button) {
@@ -725,7 +722,9 @@ public class FlasherGUI extends JFrame {
 			}
 		};
 		DeviceChangedListener.addStatusListener(phoneStatus);
-		phoneWatchdog.addStatusListener(phoneStatus);
+		phoneWatchdog = new PhoneThread();
+		phoneWatchdog.start();
+		phoneWatchdog.addStatusListener(phoneStatus);		 
 	}
 
 	public void setLanguage() {
