@@ -10,6 +10,8 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.W32APIOptions;
 
+import flashsystem.BytesUtil;
+
 public class JKernel32 {
 
 	public static Kernel32RW kernel32 = (Kernel32RW) Native.loadLibrary("kernel32", Kernel32RW.class, W32APIOptions.UNICODE_OPTIONS);
@@ -36,16 +38,7 @@ public class JKernel32 {
 		byte[] b = new byte[bufsize];
 		boolean result = kernel32.ReadFile(HandleToDevice, b, bufsize, nbread, null);
 		if (!result) throw new IOException("Read error :"+getLastError());
-		return getReply(b,nbread.getValue());
-	}
-
-	private static byte[] getReply(byte[] reply, int nbread) {
-		byte[] newreply=null;
-		if (nbread > 0) {
-			newreply = new byte[nbread];
-			System.arraycopy(reply, 0, newreply, 0, nbread);
-		}
-		return newreply;
+		return BytesUtil.getReply(b,nbread.getValue());
 	}
 	
 	public static boolean writeBytes(byte bytes[]) throws IOException {

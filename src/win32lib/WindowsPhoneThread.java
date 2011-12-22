@@ -14,6 +14,7 @@ public class WindowsPhoneThread extends Thread {
 	boolean forced = false;
 	String pid = "";
 	String status = "";
+	String lastfire="";
 	
 	private final EventListenerList listeners = new EventListenerList();
 
@@ -23,15 +24,22 @@ public class WindowsPhoneThread extends Thread {
 			if (!paused) {
 				DeviceIdent id = Device.getConnectedDeviceWin32();
 				String lpid = id.getPid();
+				String lfire="";
 				if (!pid.equals(lpid)) {
 					if (lpid.equals("ADDE"))
-						fireStatusChanged(new StatusEvent("flash",id.isDriverOk()));
+						lfire="flash";
 					else if (lpid.equals("0DDE"))
-						fireStatusChanged(new StatusEvent("fastboot",id.isDriverOk()));
+						lfire="fastboot";
 					else if (lpid.equals(""))
-						fireStatusChanged(new StatusEvent("none",id.isDriverOk()));
+						lfire="none";
+					if (lfire.length()>0) {
+						if (!lfire.equals(lastfire)) {
+							fireStatusChanged(new StatusEvent(lfire,id.isDriverOk()));
+							lastfire=lfire;
+						}
+					}
+					pid=lpid;
 				}
-				pid=lpid;
 			}
 			try {
 				while ((count<50) && (!done)) {

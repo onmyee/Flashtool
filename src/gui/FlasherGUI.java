@@ -58,6 +58,7 @@ import java.awt.event.WindowEvent;
 import org.lang.Language;
 import flashsystem.Bundle;
 import flashsystem.BundleException;
+import flashsystem.HexDump;
 import flashsystem.SeusSinTool;
 import flashsystem.X10flash;
 import gui.EncDecGUI.MyFile;

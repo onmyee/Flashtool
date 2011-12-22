@@ -133,6 +133,20 @@ public class BytesUtil {
 	    return data;
 	}
 
+	public static byte[] concatAll(byte[] first, byte[]... rest) {
+		  int totalLength = first.length;
+		  for (byte[] array : rest) {
+		    totalLength += array.length;
+		  }
+		  byte[] result = Arrays.copyOf(first, totalLength);
+		  int offset = first.length;
+		  for (byte[] array : rest) {
+		    System.arraycopy(array, 0, result, offset, array.length);
+		    offset += array.length;
+		  }
+		  return result;
+	}
+
 	public static <T> T[] concatAll(T[] first, T[]... rest) {
 		  int totalLength = first.length;
 		  for (T[] array : rest) {
@@ -146,8 +160,17 @@ public class BytesUtil {
 		  }
 		  return result;
 	}
-
 	
+	public static byte[] getReply(byte[] reply, int nbread) {
+		if (reply.length==nbread) return reply;
+		byte[] newreply=null;
+		if (nbread > 0) {
+			newreply = new byte[nbread];
+			System.arraycopy(reply, 0, newreply, 0, nbread);
+		}
+		return newreply;
+	}
+
 	
 	static 
     {

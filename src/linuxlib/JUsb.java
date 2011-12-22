@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import org.logger.MyLogger;
 
+import flashsystem.BytesUtil;
 import flashsystem.HexDump;
 import flashsystem.S1Packet;
 import flashsystem.X10FlashException;
@@ -152,7 +153,7 @@ public class JUsb {
 				  throw new IOException("readReply : First data read request failed");
 			  }
 			  if (read1>0) {
-				  p = new S1Packet(getReply(data1,read1));
+				  p = new S1Packet(BytesUtil.getReply(data1,read1));
 				  finished=!p.hasMoreToRead();
 				  try {
 					  while (true) {
@@ -161,7 +162,7 @@ public class JUsb {
 						  else {
 							  read1 = device.bulk_read(0x81, data1, 0);
 							  if (read1 > 0) {
-								  p.addData(getReply(data1,read1));
+								  p.addData(BytesUtil.getReply(data1,read1));
 								  finished=!p.hasMoreToRead();
 							  }
 						  }
@@ -173,15 +174,6 @@ public class JUsb {
 		  closeDevice(device);
 		  p.validate();
 		  return p;
-	  }
-
-	  private static byte[] getReply(byte[] reply, int nbread) {
-			byte[] newreply=null;
-			if (nbread > 0) {
-				newreply = new byte[nbread];
-				System.arraycopy(reply, 0, newreply, 0, nbread);
-			}
-			return newreply;
 	  }
 
 	  public static void writeDevice(UsbDevice device, S1Packet p) throws IOException {

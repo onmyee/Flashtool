@@ -1,6 +1,7 @@
 package flashsystem;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.logger.MyLogger;
 
@@ -37,12 +38,6 @@ public class Command {
 		_simulate = simulate;
 	}
 	
-	public void readReply() throws X10FlashException,IOException {
-		if (getLastReplyString().contains("ERR_SEVERITY"))
-			if (!getLastReplyString().contains("ERR_SEVERITY=\"NONE\""))
-				throw new X10FlashException(getLastReplyString());
-	}
-
     public String getLastReplyString() {
     	try {
     		return new String(USBFlash.getLastReply());
@@ -91,33 +86,31 @@ public class Command {
 
     public void send(int cmd, byte abyte0[], boolean ongoing) throws X10FlashException, IOException
     {
-    	if (cmd==Command.CMD06) {
-	        if(abyte0 != null && abyte0.length < 65519) {
-	            writeCommand(Command.CMD06, abyte0, ongoing);
-	    		readReply();
-	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
-	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
-	        } 
-	        else {
-	            byte abyte1[] = new byte[65519];
-	            System.arraycopy(abyte0, 0, abyte1, 0, abyte1.length);
-	            writeCommand(Command.CMD06, abyte1, true);
-	    		readReply();
-	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
-	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
-	    		abyte1 = new byte[abyte0.length - 65519];
-	            System.arraycopy(abyte0, 65519, abyte1, 0, abyte1.length);
-	            writeCommand(Command.CMD06, abyte1, ongoing);
-	    		readReply();
-	    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
-	    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
-	        }
+    	int maxdatalen=65536-17;
+		int totallen = abyte0.length;
+    	int nbwrite = totallen/maxdatalen;
+    	int remain = totallen%maxdatalen;
+    	for (int i=0;i<nbwrite;i++) {
+    		int begin = i*maxdatalen;
+    		int end = (i+1)*maxdatalen;
+    		writeCommand(cmd, Arrays.copyOfRange(abyte0, begin, end), true);
+    		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
+    		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
+    		if (USBFlash.getLastFlags()==0) {
+    			writeCommand(Command.CMD07, Command.VALNULL, false);
+    			throw new X10FlashException(getLastReplyString());
+    		}
     	}
-    	else {
-    		writeCommand(cmd, abyte0, ongoing);
-    		readReply();
+    	if (remain>0 || abyte0.length==0) {
+    		int begin = totallen-remain;
+    		int end = totallen;
+    		writeCommand(cmd, Arrays.copyOfRange(abyte0, begin, end), ongoing);
     		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
     		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());	
+    		if (USBFlash.getLastFlags()==0) {
+    			writeCommand(Command.CMD07, Command.VALNULL, false);
+    			throw new X10FlashException(getLastReplyString());
+    		}
     	}
     }
 

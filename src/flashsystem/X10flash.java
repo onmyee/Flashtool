@@ -37,10 +37,6 @@ public class X10flash {
 	    	}
     }
 
-    public void rebootDevice() throws IOException, X10FlashException {
-    	cmd.send(Command.CMD04,Command.VAL1,false);
-    }
-    
     private void sendTA(InputStream in,String name) throws FileNotFoundException, IOException,X10FlashException {
     	try {
     		TaFile ta = new TaFile(in);
@@ -122,7 +118,6 @@ public class X10flash {
     }
 
     private void processHeader(InputStream fileinputstream) throws X10FlashException {
-    	byte abyte2[];
     	try {
 			byte abyte0[] = new byte[6];
 			int j = fileinputstream.read(abyte0);
@@ -140,18 +135,19 @@ public class X10flash {
 				fileinputstream.close();
 				throw new X10FlashException("Error in processHeader");
 			}
-			abyte2 = new byte[k + 6];
-			System.arraycopy(abyte0, 0, abyte2, 0, 6);
-			System.arraycopy(abyte1, 0, abyte2, 6, abyte2.length - 6);
-            cmd.send(Command.CMD05,abyte2,false);
+            cmd.send(Command.CMD05,BytesUtil.concatAll(abyte0, abyte1),false);
             if (USBFlash.getLastFlags() == 0)
-                cmd.send(Command.CMD07,Command.VALNULL,false);
+            	getLastError();
     	}
     	catch (IOException ioe) {
     		throw new X10FlashException("Error in processHeader : "+ioe.getMessage());
     	}
     }
  
+    public void getLastError() throws IOException, X10FlashException {
+            cmd.send(Command.CMD07,Command.VALNULL,false);    	
+    }
+    
     private void uploadImage(InputStream fileinputstream, int buffer) throws X10FlashException {
     	try {
 	    	processHeader(fileinputstream);
@@ -159,16 +155,13 @@ public class X10flash {
 			int readCount;
 			do {
 				readCount = fileinputstream.read(readarray);
-				if(readCount != buffer)
-					break;
-				cmd.send(Command.CMD06, readarray, true);
+				if (readCount > 0)
+					cmd.send(Command.CMD06, BytesUtil.getReply(readarray, readCount), (readCount==buffer));
+				if (readCount!=buffer) break;
 			} while(true);
 			fileinputstream.close();
-	        if (readCount != 0) {
-	            byte abyte4[] = new byte[readCount];
-	            System.arraycopy(readarray, 0, abyte4, 0, readCount);
-	            cmd.send(Command.CMD06, abyte4, false);
-	        }
+			if (USBFlash.getLastFlags() == 0)
+				getLastError();
     	}
     	catch (Exception e) {
     		try {fileinputstream.close();}catch(Exception cl) {}
@@ -244,12 +237,8 @@ public class X10flash {
         	if (_bundle.hasPreset()) sendTA(_bundle.getPreset().getInputStream(),"preset");
         	//if (_bundle.hasSimlock()) sendTA(_bundle.getSimlock().getInputStream(),"simlock");
         	sendSystemAndUserData();
-
-			cmd.send(Command.CMD07,Command.VALNULL,false);
 			
 			setFlashState(false);
-            
-			cmd.send(Command.CMD07,Command.VALNULL,false);
             
 			cmd.send(Command.CMD10,Command.VALNULL,false);
             
