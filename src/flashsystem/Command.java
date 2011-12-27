@@ -65,9 +65,9 @@ public class Command {
     	}
     }
 
-    private void writeCommand(int command, byte abyte0[], boolean ongoing) throws X10FlashException, IOException {
+    private void writeCommand(int command, byte data[], boolean ongoing) throws X10FlashException, IOException {
 	    	if (!_simulate) {
-	    		S1Packet p = new S1Packet(command,abyte0,ongoing);
+	    		S1Packet p = new S1Packet(command,data,ongoing);
 	    		try {
 	    			USBFlash.write(p);
 	    			p.release();
@@ -84,16 +84,16 @@ public class Command {
 	    	MyLogger.updateProgress();
     }
 
-    public void send(int cmd, byte abyte0[], boolean ongoing) throws X10FlashException, IOException
+    public void send(int cmd, byte data[], boolean ongoing) throws X10FlashException, IOException
     {
     	int maxdatalen=65536-17;
-		int totallen = abyte0.length;
+		int totallen = data.length;
     	int nbwrite = totallen/maxdatalen;
     	int remain = totallen%maxdatalen;
     	for (int i=0;i<nbwrite;i++) {
     		int begin = i*maxdatalen;
     		int end = (i+1)*maxdatalen;
-    		writeCommand(cmd, Arrays.copyOfRange(abyte0, begin, end), true);
+    		writeCommand(cmd, Arrays.copyOfRange(data, begin, end), true);
     		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
     		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());
     		if (USBFlash.getLastFlags()==0) {
@@ -101,10 +101,10 @@ public class Command {
     			throw new X10FlashException(getLastReplyString());
     		}
     	}
-    	if (remain>0 || abyte0.length==0) {
+    	if (remain>0 || data.length==0) {
     		int begin = totallen-remain;
     		int end = totallen;
-    		writeCommand(cmd, Arrays.copyOfRange(abyte0, begin, end), ongoing);
+    		writeCommand(cmd, Arrays.copyOfRange(data, begin, end), ongoing);
     		MyLogger.getLogger().debug("Reply      : "+getLastReplyString());
     		MyLogger.getLogger().debug("Reply(Hex) : "+getLastReplyHex());	
     		if (USBFlash.getLastFlags()==0) {

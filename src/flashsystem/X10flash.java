@@ -20,6 +20,8 @@ public class X10flash {
     private Command cmd;
     private String phoneident = "";
     private String loaderident = "";
+    byte readarray65[] = new byte[0x10000];
+    byte readarray4[] = new byte[0x1000];
 
     public X10flash(Bundle bundle) {
     	_bundle=bundle;
@@ -151,12 +153,17 @@ public class X10flash {
     private void uploadImage(InputStream fileinputstream, int buffer) throws X10FlashException {
     	try {
 	    	processHeader(fileinputstream);
-	    	byte readarray[] = new byte[buffer];
 			int readCount;
 			do {
-				readCount = fileinputstream.read(readarray);
+				if (buffer==0x1000)
+					readCount = fileinputstream.read(readarray4);
+				else
+					readCount = fileinputstream.read(readarray65);
 				if (readCount > 0)
-					cmd.send(Command.CMD06, BytesUtil.getReply(readarray, readCount), (readCount==buffer));
+					if (buffer==0x1000)
+						cmd.send(Command.CMD06, BytesUtil.getReply(readarray4, readCount), (readCount==buffer));
+					else
+						cmd.send(Command.CMD06, BytesUtil.getReply(readarray65, readCount), (readCount==buffer));
 				if (readCount!=buffer) break;
 			} while(true);
 			fileinputstream.close();
