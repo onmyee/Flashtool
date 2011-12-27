@@ -47,4 +47,9 @@ public class USBFlash {
 		}
     }
 
+    public static void close() {
+    	if (OS.getName().equals("windows")) {
+    		USBFlashWin32.close();
+    	}
+    }
 }

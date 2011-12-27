@@ -58,26 +58,16 @@ public class X10flash {
 
     public String dumpProperty(int prnumber) throws IOException, X10FlashException
     {
-    	try {
-    		MyLogger.initProgress(1);
     		MyLogger.getLogger().info("Start Reading property");
 	        MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(prnumber).toString());
 	        cmd.send(Command.CMD12, BytesUtil.getBytesWord(prnumber, 4),false);
+	        MyLogger.updateProgress();
 	        String reply = cmd.getLastReplyHex();
 	        reply = reply.replace("[", "");
 	        reply = reply.replace("]", "");
 	        reply = reply.replace(",", "");
 			MyLogger.getLogger().info("Reading property finished.");
-			MyLogger.initProgress(0);
-			DeviceChangedListener.pause(false);
 			return reply;
-	    }
-    	catch (Exception ioe) {
-    		MyLogger.getLogger().error("Error dumping properties. Aborted");
-    		MyLogger.initProgress(0);
-    		DeviceChangedListener.pause(false);
-    		return "";
-    	}    	
     }
 
     public void dumpProperties() throws IOException, X10FlashException
@@ -89,7 +79,7 @@ public class X10flash {
     	try {
 		    MyLogger.getLogger().info("Start Dumping properties");
 		    MyLogger.initProgress(3000);
-	        for(int i = 0; i < 3000; i++)
+	        for(int i = 0; i < 4920; i++)
 	        {
 	        	MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(i).toString());
 	        	cmd.send(Command.CMD12, BytesUtil.getBytesWord(i, 4),false);
@@ -108,6 +98,7 @@ public class X10flash {
 	        tazoneS.close();
 			MyLogger.getLogger().info("Dumping properties finished.");
 			DeviceChangedListener.pause(false);
+			closeDevice();
 	    }
     	catch (Exception ioe) {
 	        tazone.close();
@@ -116,6 +107,7 @@ public class X10flash {
     		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error dumping properties. Aborted");
     		DeviceChangedListener.pause(false);
+    		closeDevice();
     	}
     }
 
@@ -251,11 +243,16 @@ public class X10flash {
             
 			cmd.send(Command.CMD04,Command.VALNULL,false);
 	
+			closeDevice();
+			
 			MyLogger.getLogger().info("Flashing finished.");
-		    MyLogger.initProgress(0);
+			MyLogger.getLogger().info("Please wait. Phone will reboot");
+			MyLogger.getLogger().info("For flashtool, Unknown Sources and Debugging must be checked in phone settings");
+			MyLogger.initProgress(0);
 		    DeviceChangedListener.pause(false);
     	}
     	catch (Exception ioe) {
+    		closeDevice();
     		MyLogger.getLogger().error(ioe.getMessage());
     		MyLogger.getLogger().error("Error flashing. Aborted");
     		MyLogger.initProgress(0);
@@ -279,6 +276,10 @@ public class X10flash {
     	return found;
     }
 
+    public void closeDevice() {
+    	USBFlash.close();
+    }
+    
     public boolean openDevice(boolean simulate) {
     	if (simulate) return true;
     	boolean found=false;

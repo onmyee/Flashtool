@@ -811,9 +811,10 @@ public class FlasherGUI extends JFrame {
 		if (bundle!=null) {
 				Worker.post(new Job() {
 					public Object run() {
+						X10flash flash=null;
 						try {
 					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
-							X10flash flash = new X10flash(bundle);
+							flash = new X10flash(bundle);
 							MyLogger.getLogger().info("Please connect your device into flashmode.");
 							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
 								flash.dumpProperties();
@@ -851,18 +852,15 @@ public class FlasherGUI extends JFrame {
 				bundle.setLoader(new File(Devices.getCurrent().getLoader()));
 				Worker.post(new Job() {
 					public Object run() {
+						X10flash flash=null;
 						try {
 				    		MyLogger.getLogger().info("Preparing files for flashing");
 				    		bundle.open();
 					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
-							X10flash flash = new X10flash(bundle);
+							flash = new X10flash(bundle);
 							MyLogger.getLogger().info("Please connect your device into flashmode.");
 							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
 								flash.flashDevice();
-								MyLogger.getLogger().info("Now unplug the device and power it on");
-								MyLogger.getLogger().info("Then go to application settings");
-								MyLogger.getLogger().info("turn on Unknown Sources and Debugging");
-								doDisableIdent();
 							}
 						}
 						catch (BundleException ioe) {
