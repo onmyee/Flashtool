@@ -21,7 +21,9 @@ public class USBFlashLinux {
 	}
 
 	public static void write(S1Packet p) throws IOException,X10FlashException {
+		sleep(5);
 		JUsb.write(p);
+		sleep(5);
 		int count = 0;
 		while (true) {
 			try {
@@ -64,5 +66,12 @@ public class USBFlashLinux {
     public static byte[] getLastReply() {
     	return lastreply;
     }
+
+    private static void sleep(int len) {
+		try {
+			Thread.sleep(len);
+		}
+		catch (Exception e) {}
+	}
 
 }
