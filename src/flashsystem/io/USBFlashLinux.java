@@ -3,6 +3,8 @@ package flashsystem.io;
 import flashsystem.S1Packet;
 import flashsystem.X10FlashException;
 import java.io.IOException;
+
+import win32lib.JKernel32;
 import linuxlib.JUsb;
 
 public class USBFlashLinux {
@@ -12,6 +14,7 @@ public class USBFlashLinux {
 	
 	public static void open() throws IOException {
 		try {
+			JUsb.openDevice();
 			readReply();
 			if (lastreply == null) throw new IOException("Unable to read from device");
 			
@@ -22,7 +25,7 @@ public class USBFlashLinux {
 
 	public static void write(S1Packet p) throws IOException,X10FlashException {
 		sleep(5);
-		JUsb.write(p);
+		JUsb.writeDevice(p);
 		sleep(5);
 		int count = 0;
 		while (true) {
@@ -48,7 +51,7 @@ public class USBFlashLinux {
 
     private static  void readReply() throws X10FlashException, IOException
     {
-    	S1Packet p = JUsb.read();
+    	S1Packet p = JUsb.readDevice();
     	if (p!=null) {
     		lastreply = p.getDataArray();
     		lastflags = p.getFlags();
@@ -72,6 +75,10 @@ public class USBFlashLinux {
 			Thread.sleep(len);
 		}
 		catch (Exception e) {}
+	}
+
+    public static void close() {
+		JUsb.closeDevice();
 	}
 
 }

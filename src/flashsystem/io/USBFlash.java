@@ -51,5 +51,7 @@ public class USBFlash {
     	if (OS.getName().equals("windows")) {
     		USBFlashWin32.close();
     	}
+    	else
+    		USBFlashLinux.close();
     }
 }

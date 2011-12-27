@@ -31,11 +31,6 @@ public class JUsb {
 		}
 	}
 
-	public static S1Packet read() throws X10FlashException, IOException {
-		S1Packet p = readDevice();
-		return p;
-	}
-
 	public static HashSet<LinuxUsbDevice> getConnectedDevices() {
 		HashSet<LinuxUsbDevice> result = new HashSet<LinuxUsbDevice>();
 		try {
@@ -45,6 +40,7 @@ public class JUsb {
 	    		String vendor = HexDump.toHex(d.getIdVendor());
 	    		String product = HexDump.toHex(d.getIdProduct());
 	    		if (vendor.equals("0FCE")) {
+	    			device=d;
 	    			result.add(new LinuxUsbDevice(vendor,product));
 	    	    }
 	    	}
@@ -54,45 +50,18 @@ public class JUsb {
 		return result;
 	}
 
-	public static void write(S1Packet p) throws IOException {
-		writeDevice(p);
-	}
-
-	public static boolean open() throws Exception {
-		try {
-			boolean found = false;
-	    	Iterator<UsbDevice> i = system.visitUsbDevices(new ListDevices()).iterator();
-	    	while (i.hasNext()) {
-	    		device = i.next();
-	    		String vendor = HexDump.toHex(device.getIdVendor());
-	    		String product = HexDump.toHex(device.getIdProduct());
-	    		if (vendor.equals("0FCE") && product.equals("ADDE")) {
-	    			openDevice();
-	    	    	found = true;
-	    	  	  	break;
-	    	    }
-	    	}
-	    	return found;
-		}
-    	catch (Exception e) {
-    		throw new IOException(e.getMessage());
-    	}		
-	}
-
-	public static boolean openDevice() {
+	public static void openDevice() {
 		try {
 			device.open();
 			if (device.kernel_driver_active(0)) device.detach_kernel_driver(0);
 			device.claim_interface(0);
-		  	return true;
 		}
 		catch (LibUsbPermissionException pe) {
 			MyLogger.getLogger().error("Missing permissions on USB device");
 			MyLogger.getLogger().error("Set this udev rule : SUBSYSTEM==\"usb\", ACTION==\"add\", SYSFS{idVendor}==\"0fce\", SYSFS{idProduct}==\"adde\", MODE=\"0777\"");
-			return false;
 		}
 		catch (Exception e) {
-			return false;
+			MyLogger.getLogger().error(e.getMessage());
 		}
 	}
 
