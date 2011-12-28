@@ -14,7 +14,7 @@ public class USBFlashLinux {
 	
 	public static void open() throws IOException {
 		try {
-			JUsb.openDevice();
+			JUsb.openDevice(); 
 			readReply();
 			if (lastreply == null) throw new IOException("Unable to read from device");
 			
@@ -24,9 +24,7 @@ public class USBFlashLinux {
 	}
 
 	public static void write(S1Packet p) throws IOException,X10FlashException {
-		sleep(5);
 		JUsb.writeDevice(p);
-		sleep(5);
 		int count = 0;
 		while (true) {
 			try {
