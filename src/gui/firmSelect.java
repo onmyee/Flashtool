@@ -65,6 +65,7 @@ public class firmSelect extends JDialog {
 	JCheckBox chckbxExcludeKernel;
 	private JTable table_1;
 	private JTextField folderSource;
+	private String filename="";
 
 	private void dirlist() throws Exception{
 		boolean hasElements = false;
@@ -81,11 +82,21 @@ public class firmSelect extends JDialog {
 	    	File dir = new File(folderSource.getText());
 		    File[] chld = dir.listFiles();
 		    for(int i = 0; i < chld.length; i++){
-		    	if (chld[i].isFile() && chld[i].getName().toUpperCase().endsWith("FTF")) {
+		    	if (filename.length()==0) {
+		    		if (chld[i].isFile() && chld[i].getName().toUpperCase().endsWith("FTF")) {
 		    			hasElements = true;
 		    			JarFile jf = new JarFile(chld[i]);
 		    			modelFirm.addRow(new String[]{chld[i].getName(),jf.getManifest().getMainAttributes().getValue("device"),jf.getManifest().getMainAttributes().getValue("version"),jf.getManifest().getMainAttributes().getValue("branding")});
 		    			MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of firmwares");
+		    		}
+		    	}
+		    	else {
+		    		if (chld[i].getName().equals(filename)) {
+		    			hasElements = true;
+		    			JarFile jf = new JarFile(chld[i]);
+		    			modelFirm.addRow(new String[]{chld[i].getName(),jf.getManifest().getMainAttributes().getValue("device"),jf.getManifest().getMainAttributes().getValue("version"),jf.getManifest().getMainAttributes().getValue("branding")});
+		    			MyLogger.getLogger().debug("Adding "+chld[i].getName()+" to list of firmwares");
+		    		}
 		    	}
 		    }
 	    }
@@ -194,7 +205,8 @@ public class firmSelect extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public firmSelect(String source) {
+	public firmSelect(String path, String file) {
+		filename=file;
 		setResizable(false);
 		setName("firmSelect");
 		setTitle("Firmware Selection");
@@ -257,10 +269,10 @@ public class firmSelect extends JDialog {
 			{
 				folderSource = new JTextField();
 				folderSource.setEditable(false);
-				if (source.length()==0)
+				if (path.length()==0)
 					folderSource.setText(OS.getWorkDir()+fsep+"firmwares");
 				else
-					folderSource.setText(source);
+					folderSource.setText(path);
 				panel.add(folderSource, "1, 3, 2, 1, fill, default");
 				folderSource.setColumns(10);
 			}
