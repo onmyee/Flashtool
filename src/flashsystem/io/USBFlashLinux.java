@@ -14,7 +14,7 @@ public class USBFlashLinux {
 	
 	public static void open() throws IOException {
 		try {
-			JUsb.openDevice(); 
+			JUsb.openDevice();
 			readReply();
 			if (lastreply == null) throw new IOException("Unable to read from device");
 			
@@ -33,7 +33,7 @@ public class USBFlashLinux {
 			}
 			catch (IOException e) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				}
 				catch (Exception s) {}
 				count++;
@@ -67,13 +67,6 @@ public class USBFlashLinux {
     public static byte[] getLastReply() {
     	return lastreply;
     }
-
-    private static void sleep(int len) {
-		try {
-			Thread.sleep(len);
-		}
-		catch (Exception e) {}
-	}
 
     public static void close() {
 		JUsb.closeDevice();
