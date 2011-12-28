@@ -34,6 +34,7 @@ import org.system.Device;
 import org.system.DeviceChangedListener;
 import org.system.DeviceEntry;
 import org.system.Devices;
+import org.system.FileDrop;
 import org.system.GlobalConfig;
 import org.system.OS;
 import org.system.OsRun;
@@ -109,6 +110,7 @@ public class FlasherGUI extends JFrame {
 	private JMenuItem mntmBackupSystemApps;
 	private JMenu mnPlugins;
 	private String lang;
+	private String ftfpath="";
 	//private StatusListener phoneStatus;
 
 	private static void setSystemLookAndFeel() {
@@ -676,6 +678,24 @@ public class FlasherGUI extends JFrame {
 		mntmInstallBusybox.setEnabled(false);
 		mntmBuildpropEditor.setEnabled(false);
 		mntmBuildpropRebrand.setEnabled(false);
+        new FileDrop( null, textArea, 
+        		new FileDrop.Listener() {
+        			public void filesDropped( java.io.File[] files ) {
+        				if (files.length==1) {
+        					if (files[0].getAbsolutePath().toUpperCase().endsWith("FTF")) {
+        						try {
+        							doFlashmode(files[0].getParentFile().getAbsolutePath());
+        						}
+        						catch (Exception e) {}
+        					}
+        					else
+        						MyLogger.getLogger().error("You can only drop ftf files");
+        				}
+        				else
+        					MyLogger.getLogger().error("You dropped more than one file");
+            }   // end filesDropped
+        }); // end FileDrop.Listener
+
 	}
 
 	public void setVisible(boolean visible) {
@@ -834,7 +854,7 @@ public class FlasherGUI extends JFrame {
 		BootModeSelectGUI bootmode = new BootModeSelectGUI();
 		String select = bootmode.selectMode();
 		if (select.equals("flashmode"))
-			doFlashmode();
+			doFlashmode("");
 		if (select.equals("fastboot"))
 			doFastBoot();
 	}
@@ -844,36 +864,44 @@ public class FlasherGUI extends JFrame {
 		box.setVisible(true);
 	}
 	
-	public void doFlashmode() throws Exception {
-		firmSelect sel = new firmSelect();
-		bundle = sel.getBundle();
-		if (bundle!=null) {
-			if (!bundle.hasLoader())
-				bundle.setLoader(new File(Devices.getCurrent().getLoader()));
-				Worker.post(new Job() {
-					public Object run() {
-						X10flash flash=null;
-						try {
-				    		MyLogger.getLogger().info("Preparing files for flashing");
-				    		bundle.open();
-					    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
-							flash = new X10flash(bundle);
-							MyLogger.getLogger().info("Please connect your device into flashmode.");
-							if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
-								flash.flashDevice();
-							}
+	public void doFlashmode(String pftfpath) throws Exception {
+		ftfpath=pftfpath;
+		Worker.post(new Job() {
+			public Object run() {
+				firmSelect sel = new firmSelect(ftfpath);
+				try {
+					bundle = sel.getBundle();
+				}
+				catch (IOException ioe) {
+					bundle=null;
+				}
+				if (bundle!=null) {
+					if (!bundle.hasLoader())
+						bundle.setLoader(new File(Devices.getCurrent().getLoader()));
+					X10flash flash=null;
+					try {
+			    		MyLogger.getLogger().info("Preparing files for flashing");
+			    		bundle.open();
+				    	bundle.setSimulate(GlobalConfig.getProperty("simulate").toLowerCase().equals("yes"));
+						flash = new X10flash(bundle);
+						MyLogger.getLogger().info("Please connect your device into flashmode.");
+						if ((new WaitDeviceFlashmodeGUI(flash)).deviceFound(_root)) {
+							flash.flashDevice();
 						}
-						catch (BundleException ioe) {
-							MyLogger.getLogger().error("Error preparing files");
-						}
-						catch (Exception e) {
-							MyLogger.getLogger().error(e.getMessage());
-						}
-						bundle.close();
-						return null;
+						else MyLogger.getLogger().info("Flash canceled");
 					}
-				});
+					catch (BundleException ioe) {
+						MyLogger.getLogger().error("Error preparing files");
+					}
+					catch (Exception e) {
+						MyLogger.getLogger().error(e.getMessage());
+					}
+					bundle.close();
+				}
+				else MyLogger.getLogger().info("Flash canceled");
+				return null;
 			}
+		});
 	}
 
 	public void doRoot() {

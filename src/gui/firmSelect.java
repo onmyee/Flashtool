@@ -194,7 +194,7 @@ public class firmSelect extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public firmSelect() {
+	public firmSelect(String source) {
 		setResizable(false);
 		setName("firmSelect");
 		setTitle("Firmware Selection");
@@ -257,7 +257,10 @@ public class firmSelect extends JDialog {
 			{
 				folderSource = new JTextField();
 				folderSource.setEditable(false);
-				folderSource.setText(OS.getWorkDir()+fsep+"firmwares");
+				if (source.length()==0)
+					folderSource.setText(OS.getWorkDir()+fsep+"firmwares");
+				else
+					folderSource.setText(source);
 				panel.add(folderSource, "1, 3, 2, 1, fill, default");
 				folderSource.setColumns(10);
 			}
