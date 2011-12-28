@@ -78,7 +78,7 @@ public class X10flash {
         tazoneS.open(false);
     	try {
 		    MyLogger.getLogger().info("Start Dumping properties");
-		    MyLogger.initProgress(3000);
+		    MyLogger.initProgress(4920);
 	        for(int i = 0; i < 4920; i++)
 	        {
 	        	MyLogger.getLogger().debug((new StringBuilder("%%% read property id=")).append(i).toString());
