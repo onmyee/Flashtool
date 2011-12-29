@@ -1,3 +1,4 @@
+export BASEDIR=$(dirname $0)
 
 show_help() {
 	echo Usage : FlashToolConsole [OPTIONS]
@@ -86,8 +87,8 @@ then
 
 	if test -z ${JAVA_HOME}
 	then
-		export BASEDIR=$(dirname $0)
 		export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+		echo "JAVA_HOME not set. Using default value : ${JAVA_HOME}"
 	fi
 
 	if test -e ${JAVA_HOME}/bin/java
@@ -96,10 +97,11 @@ then
 	   do
 		CLASSPATH=$CLASSPATH$(echo $BASEDIR/$i:)
 	   done
-	   $JAVA_HOME/bin/java -Xms50m -Xmx512m -cp ${CLASSPATH}${BASEDIR}/x10flasher.jar flashsystem.FlasherConsole $p_file $p_data $p_cache $p_baseband $p_system $p_kernel
+	   $JAVA_HOME/bin/java -Xms128m -Xmx512m -cp ${CLASSPATH}${BASEDIR}/x10flasher.jar flashsystem.FlasherConsole $p_file $p_data $p_cache $p_baseband $p_system $p_kernel
 	else
-		echo "No Java in specified path : ${JAVA_HOME}"
-	fi
+        echo "No Java in specified path in JAVA_HOME=${JAVA_HOME}"
+        echo "Set the variable to a valid Java installation"
+    fi
 else
    echo $p_file does not exist.
 fi

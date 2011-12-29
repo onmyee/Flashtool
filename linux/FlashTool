@@ -1,12 +1,18 @@
+export BASEDIR=$(dirname $0)
+
 if test -z ${JAVA_HOME}
-then
-	export BASEDIR=$(dirname $0)
+then	
 	export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+	echo "JAVA_HOME not set. Using default value : ${JAVA_HOME}"
 fi
+
+chmod 755 ${BASEDIR}/x10flasher_lib/adb
+chmod 755 ${BASEDIR}/x10flasher_lib/fastboot
 
 if test -e ${JAVA_HOME}/bin/java
 then
-	$JAVA_HOME/bin/java -Xms50m -Xmx512m -jar x10flasher.jar
+	$JAVA_HOME/bin/java -Xms128m -Xmx512m -jar x10flasher.jar
 else
-	echo "No Java in specified path : ${JAVA_HOME}"
+	echo "No Java in specified path in JAVA_HOME=${JAVA_HOME}"
+	echo "Set the variable to a valid Java installation"
 fi

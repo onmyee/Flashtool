@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.EventListenerList;
-
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
@@ -36,12 +35,10 @@ import org.system.Device;
 import org.system.DeviceChangedListener;
 import org.system.DeviceEntry;
 import org.system.Devices;
-import org.system.DragNDropListener;
 import org.system.FileDrop;
 import org.system.GlobalConfig;
 import org.system.OS;
 import org.system.OsRun;
-import org.system.PhoneThread;
 import org.system.PropertiesFile;
 import org.system.RunStack;
 import org.system.Shell;
@@ -116,8 +113,6 @@ public class FlasherGUI extends JFrame {
 	private String ftfpath="";
 	private String ftfname="";
 	//private StatusListener phoneStatus;
-	
-	private final EventListenerList listeners = new EventListenerList();
 
 	private static void setSystemLookAndFeel() {
 		try {
@@ -182,11 +177,18 @@ public class FlasherGUI extends JFrame {
 
 		new FileDrop( null, textArea, 
         		new FileDrop.Listener() {
-        			public void filesDropped( java.io.File[] files ) {
+        			public void filesDropped(final java.io.File[] files ) {
         				if (files.length==1) {
         					if (files[0].getAbsolutePath().toUpperCase().endsWith("FTF")) {
         						try {
-        							fireDragNDropChanged(files[0]);
+        							EventQueue.invokeLater(new Runnable() {
+        								public void run() {
+        									try {
+        										doFlashmode(files[0].getParentFile().getAbsolutePath(),files[0].getName());
+        									}
+        									catch (Exception e) {}
+        								}
+        							});
         						}
         						catch (Exception e) {}
         					}
@@ -747,18 +749,6 @@ public class FlasherGUI extends JFrame {
 				}
 			}
 		};
-		DragNDropListener DragnDrop = new DragNDropListener() {
-			public void fileDragged(final File e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							doFlashmode(e.getParentFile().getAbsolutePath(),e.getName());
-						} catch (Exception e1) {}
-					}
-				});
-			}
-		};
-		addDragNDropListener(DragnDrop);
 		DeviceChangedListener.start();
 		DeviceChangedListener.addStatusListener(phoneStatus);
 		phoneWatchdog = new AdbPhoneThread();
@@ -1662,24 +1652,6 @@ public class FlasherGUI extends JFrame {
 	    catch (Exception e) {
 	    	MyLogger.getLogger().error(e.getMessage());
 	    }    	
-    }
-	
-    public void addDragNDropListener(DragNDropListener listener) {
-        listeners.add(DragNDropListener.class, listener);
-    }
-    
-    public void removeDragNDropListener(DragNDropListener listener) {
-        listeners.remove(DragNDropListener.class, listener);
-    }
-    
-    public DragNDropListener[] getDragNDropListeners() {
-        return listeners.getListeners(DragNDropListener.class);
-    }
-    
-    protected void fireDragNDropChanged(File f) {
-		for(DragNDropListener listener : getDragNDropListeners()) {
-		    listener.fileDragged(f);
-		}
     }
 
 }
