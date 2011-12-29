@@ -37,7 +37,7 @@ public class Device {
     public static DeviceIdent getConnectedDeviceWin32() {
     	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
-    	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedClasses();
+    	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedInterfaces();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {
         	MyLogger.getLogger().error("Cannot have device list");
         }

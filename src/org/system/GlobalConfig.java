@@ -11,4 +11,9 @@ public class GlobalConfig {
 		return config.getProperty(property);
 	}
 
+	public static void setProperty(String property, String value) {
+		config.setProperty(property, value);
+		config.write("UTF-8");
+	}
+	
 }

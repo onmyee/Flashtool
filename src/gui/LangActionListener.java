@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import org.lang.Language;
+import org.system.GlobalConfig;
 
 public class LangActionListener implements ActionListener {
 	
@@ -22,6 +23,7 @@ public class LangActionListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		try {
 			Language.Init(_lang);
+			GlobalConfig.setProperty("language",_lang);
 			Enumeration<AbstractButton> en = _bgroup.getElements();
 			while (en.hasMoreElements()) {
 				AbstractButton b = en.nextElement();

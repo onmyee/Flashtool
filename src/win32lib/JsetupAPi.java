@@ -72,16 +72,8 @@ public class JsetupAPi {
 		return DeviceInfoData;
 	}
 	
-	public static HDEVINFO getHandleForAllClasses() {
-		return setupapi.SetupDiGetClassDevs(null, null, null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_ALLCLASSES);
-	}
-
-	public static HDEVINFO getHandleForInterfaces(GUID Guid) {
-		return setupapi.SetupDiGetClassDevs(Guid, null, null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_DEVICEINTERFACE);
-	}
-
-	public static HDEVINFO getHandleForConnectedClasses() {
-		return setupapi.SetupDiGetClassDevs(USBGuid, null, null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_DEVICEINTERFACE);
+	public static HDEVINFO getHandleForConnectedInterfaces() {
+		return setupapi.SetupDiGetClassDevs(USBGuid, null, null, SetupApi.DIGCF_PRESENT|SetupApi.DIGCF_DEVICEINTERFACE|SetupApi.DIGCF_PROFILE|SetupApi.DIGCF_ALLCLASSES);
 	}
 	
 	public static boolean isInstalled(HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData) {

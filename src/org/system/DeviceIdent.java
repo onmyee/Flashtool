@@ -32,7 +32,8 @@ public class DeviceIdent {
 	}
 
 	public void addDevPath(String path) {
-		devicepath=path;
+		if (path.length()>0)
+			devicepath=path;
 	}
 	
 	public String getDevPath() {
