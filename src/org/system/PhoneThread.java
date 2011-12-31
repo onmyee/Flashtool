@@ -52,6 +52,7 @@ public class PhoneThread extends Thread {
 				count = 0;					
 			} catch (Exception e) {}
 		}
+		Device.clean();
 	}
 
 	public void pause(boolean ppaused) {

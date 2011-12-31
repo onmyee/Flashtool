@@ -122,4 +122,7 @@ public class Device {
 	    else MyLogger.getLogger().info("      - none");
     }
 
+    public static void clean() {
+    	if (OS.getName().equals("linux")) JUsb.clean(); 
+    }
 }

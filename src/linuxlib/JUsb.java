@@ -117,4 +117,10 @@ public class JUsb {
 		  }
 	  }
 
+	  public static void clean() {
+		  try {
+			  system.cleanup();
+		  }
+		  catch (Exception e) {}
+	  }
 }
