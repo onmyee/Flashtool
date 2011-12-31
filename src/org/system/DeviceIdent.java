@@ -7,11 +7,12 @@ import org.adb.FastbootUtility;
 
 public class DeviceIdent {
 
-	private String pid;
-	private String vid;
-	private String devicepath;
+	private String pid="";
+	private String vid="";
+	private String devicepath="";
 	private Properties devid;
 	private int maxsize=0;
+	private String serial = "";
 	
 	public DeviceIdent() {
 		pid="";
@@ -42,12 +43,12 @@ public class DeviceIdent {
 	
 	public void addDevId(String device) {
 		if (device.length()>maxsize) maxsize=device.length();
-		String tmpvid=device.substring(device.indexOf("VID_"),device.indexOf("VID_")+12);
-		vid=tmpvid.substring(4,tmpvid.indexOf("&"));
-		String tmppid=device.substring(device.indexOf("PID_"),device.indexOf("PID_")+9);
-		int endindex = tmppid.indexOf("\\");
-		if (endindex == -1) endindex = tmppid.indexOf("&");
-		pid=tmppid.substring(4,endindex);
+		vid=device.substring(device.indexOf("VID_")+4, device.indexOf("PID_")-1);
+		int begin = device.indexOf("PID_")+4;
+		pid=device.substring(begin,begin+4);
+		if (!device.contains("MI")) {
+			serial = device.substring(begin+5,device.length());
+		}
 		devid.setProperty(device, Boolean.toString(true));
 	}
 
@@ -69,6 +70,10 @@ public class DeviceIdent {
 		return vid;
 	}
 	
+	public String getSerial() {
+		return serial;
+	}
+
 	public boolean isDriverOk() {
 		Enumeration e = devid.elements();
 		while (e.hasMoreElements()) {
@@ -89,14 +94,9 @@ public class DeviceIdent {
 	}
 
 	public String getStatus() {
-		try {
-			if (getPid().equals("ADDE")) return "flash";
-			if (getPid().equals("0DDE")) return "fastboot";
-			return "none";
-		}
-		catch (Exception e) {
-			return "none";
-		}
+		if (getPid().length()==0) return "none";
+		if (!isDriverOk()) return "notinstalled";
+		return GlobalState.getState(getSerial(), getPid());
 	}
 	
 	public Properties getIds() {

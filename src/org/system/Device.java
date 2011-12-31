@@ -47,11 +47,6 @@ public class Device {
 	        do {
 	        	DeviceInfoData = JsetupAPi.enumDevInfo(hDevInfo, index);
 	            String devid = JsetupAPi.getDevId(hDevInfo, DeviceInfoData);
-	            if (lastid!=null)
-	            if (lastid.getIds().contains(devid)) {
-	            	notchanged=true;
-	            	break;
-	            }
 	            if (devid.contains("VID_0FCE")) {
 	            	id.addDevPath(JsetupAPi.getDevicePath(hDevInfo, DeviceInfoData));
 	            	id.addDevId(devid);
@@ -64,13 +59,10 @@ public class Device {
 	        } while (DeviceInfoData!=null);
 	        JsetupAPi.destroyHandle(hDevInfo);
         }
-    	if (!notchanged) {
-    		synchronized (lastid) {
-    			lastid=id;
-    		}
-    		return id;
+    	synchronized (lastid) {
+    		lastid=id;
     	}
-        return getLastConnected();
+    	return id;
     }
 
     public static DeviceIdent getConnectedDeviceLinux() {

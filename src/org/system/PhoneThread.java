@@ -12,32 +12,36 @@ public class PhoneThread extends Thread {
 	boolean done = false;
 	boolean paused = false;
 	boolean forced = false;
-	String pid = "";
 	String status = "";
 	
 	private final EventListenerList listeners = new EventListenerList();
 
 	public void run() {
 		int count = 0;
+		int nbnull = 0;
+		DeviceIdent id=null;
 		while (!done) {
 			if (!paused) {
-				DeviceIdent id = Device.getConnectedDevice();
-				String lpid = id.getPid();
-				String lfire="";
-				if (!pid.equals(lpid)) {
-					if (lpid.equals("ADDE"))
-						lfire="flash";
-					else if (lpid.equals("0DDE"))
-						lfire="fastboot";
-					else if (lpid.equals(""))
-						lfire="none";
-					if (lfire.equals("none") && (pid.equals("ADDE") || pid.equals("0DDE"))) {
-						fireStatusChanged(new StatusEvent(lfire,id.isDriverOk()));
+				id = Device.getConnectedDevice();
+				if (id.getPid().equals("ADDE"))
+					GlobalState.setState(id.getSerial(), id.getPid(), "flash");
+				else if (id.getPid().equals("0DDE"))
+					GlobalState.setState(id.getSerial(), id.getPid(), "fastboot");
+				while (id.getStatus().length()==0) {
+					doSleep(300);
+					id = Device.getConnectedDevice();
+					nbnull++;
+					if (nbnull==5) {
+						nbnull=0;
+	    				GlobalState.setState(id.getSerial(), id.getPid(), "normal");
+						break;
 					}
-					if (lfire.length()>0 && (pid.length()==0)) {
-						fireStatusChanged(new StatusEvent(lfire,id.isDriverOk()));
-					}
-					pid=lpid;
+				}
+				String lstatus= id.getStatus();
+				if (!lstatus.equals(status)) {
+					if (!lstatus.equals("adb"))
+						fireStatusChanged(new StatusEvent(lstatus,id.isDriverOk()));
+					status = lstatus;
 				}
 			}
 			try {
@@ -45,15 +49,14 @@ public class PhoneThread extends Thread {
 					sleep(10);
 					count++;
 				}
-				count = 0;
+				count = 0;					
 			} catch (Exception e) {}
 		}
 	}
 
 	public void pause(boolean ppaused) {
-		
 		paused = ppaused;
-		pid="paused";
+		status="paused";
 	}
 
 	public void end() {
@@ -80,5 +83,12 @@ public class PhoneThread extends Thread {
     
     public void forceDetection() {
     	if (!forced) forced = true;
+    }
+    
+    public void doSleep(int time) {
+    	try {
+    		sleep(time);
+    	}
+    	catch (Exception e) {}
     }
 }

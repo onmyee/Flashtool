@@ -69,8 +69,14 @@ public class Devices  {
 	public static void waitForReboot() throws Exception {
 		MyLogger.getLogger().info("Waiting for device");
 		waitforreboot=true;
+		int count=0;
 		while (waitforreboot) {
 			Thread.sleep(20);
+			count++;
+			if (Device.getLastConnected().getPid().length()>0 && count==500) {
+				MyLogger.getLogger().info("Forced stop waiting.");
+				waitforreboot=false;
+			}
 		}
 	}
 

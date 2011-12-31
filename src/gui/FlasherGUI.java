@@ -748,11 +748,9 @@ public class FlasherGUI extends JFrame {
 				}
 			}
 		};
-		DeviceChangedListener.start();
-		DeviceChangedListener.addStatusListener(phoneStatus);
 		phoneWatchdog = new AdbPhoneThread();
 		phoneWatchdog.start();
-		phoneWatchdog.addStatusListener(phoneStatus);		 
+		phoneWatchdog.addStatusListener(phoneStatus);
 	}
 
 	public void setLanguage() {

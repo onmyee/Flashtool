@@ -17,6 +17,8 @@ public class AdbPhoneThread extends Thread {
 	private InputStream processInput;
 	private Scanner sc;
 	private final EventListenerList listeners = new EventListenerList();
+	private StatusListener listener;
+	boolean first = true;
 
 	public void done() {
 		done=true;
@@ -30,13 +32,22 @@ public class AdbPhoneThread extends Thread {
 		    	  public void run() {
 				      processInput = adb.getInputStream();
 				      sc = new Scanner(processInput);
+				      DeviceIdent id = null;
 			    	  while (sc.hasNextLine()) {
 			    		  String line = sc.nextLine();
-			    		  if (line.contains("device"))
-			    			  fireStatusChanged(new StatusEvent("adb",true));
-			    		  if (line.contains("unknown"))
-			    			  fireStatusChanged(new StatusEvent("none",true));
-			    	  }    		  
+			    		  if (line.contains("State")) {
+				    		  if (line.contains("device")) {
+				    			  id = Device.getConnectedDevice();
+				    			  GlobalState.setState(id.getSerial(), id.getPid(), "adb");
+				    			  fireStatusChanged(new StatusEvent(GlobalState.getState(id.getSerial(), id.getPid()),true));
+				    		  }
+				    		  if (first) {
+				    			  DeviceChangedListener.start();
+				    			  DeviceChangedListener.addStatusListener(listener);
+				    			  first = false;
+				    		  }
+			    		  }
+			    	  }
 		    	  }
 		    };
 		    t.start();
@@ -58,8 +69,9 @@ public class AdbPhoneThread extends Thread {
 		}
 	}
 
-	public void addStatusListener(StatusListener listener) {
-        listeners.add(StatusListener.class, listener);
+	public void addStatusListener(StatusListener plistener) {
+        listeners.add(StatusListener.class, plistener);
+        listener = plistener;
     }
 
     public void removeStatusListener(StatusListener listener) {
@@ -74,6 +86,13 @@ public class AdbPhoneThread extends Thread {
 		for(StatusListener listener : getStatusListeners()) {
 		    listener.statusChanged(e);
 		}
+    }
+
+    public void doSleep(int time) {
+    	try {
+    		sleep(time);
+    	}
+    	catch (Exception e) {}
     }
 
 }
