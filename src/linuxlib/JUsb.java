@@ -27,7 +27,8 @@ public class JUsb {
 			return i;
 		}
 		catch (Exception e) {
-			throw new IOException("Cannot get list of USB devices");
+			throw new IOException("Cannot g" +
+					"et list of USB devices");
 		}
 	}
 
@@ -41,7 +42,14 @@ public class JUsb {
 	    		String product = HexDump.toHex(d.getIdProduct());
 	    		if (vendor.equals("0FCE")) {
 	    			device=d;
-	    			result.add(new LinuxUsbDevice(vendor,product));
+	    			if (product.equals("ADDE") || product.equals("0DDE")) {
+	    				result.add(new LinuxUsbDevice(vendor,product,product));
+	    			}
+	    			else {
+	    				d.open();
+	    				result.add(new LinuxUsbDevice(vendor,product,d.getSerialNumber()));
+	    				d.close();
+	    			}
 	    	    }
 	    	}
 		}

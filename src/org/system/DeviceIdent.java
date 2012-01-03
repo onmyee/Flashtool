@@ -52,9 +52,10 @@ public class DeviceIdent {
 		devid.setProperty(device, Boolean.toString(true));
 	}
 
-	public void addDevId(String vendor, String product) {
+	public void addDevId(String vendor, String product, String ser) {
 		vid = vendor;
 		pid = product;
+		serial = ser;
 		devid.setProperty("VID_"+vendor+"&"+"PID_"+product+"\\", "true");
 	}
 	

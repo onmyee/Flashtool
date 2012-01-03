@@ -733,16 +733,7 @@ public class FlasherGUI extends JFrame {
 					}
 					if (e.getNew().equals("normal")) {
 						MyLogger.getLogger().info("Device connected with USB debugging off");
-						doDisableIdent();
-					}
-					if (e.getNew().equals("mtp")) {
-						MyLogger.getLogger().info("Device connected with USB debugging on and MTP mode on. Switch your device to MSC mode");
-						doDisableIdent();
-					}
-					if (e.getNew().equals("unknown")) {
-						MyLogger.getLogger().info("Device connected but cannot identify it. Drivers seem to ok OK.");
-						MyLogger.getLogger().info("Nevertheless, I invite you to double check them.");
-						MyLogger.getLogger().info("You can try reinstall Flashtool-drivers package in drivers folder of Flashtool.");
+						MyLogger.getLogger().info("For 2011 devices line, be sure you are not in MTP mode");
 						doDisableIdent();
 					}
 				}

@@ -72,7 +72,7 @@ public class Device {
     	Iterator<LinuxUsbDevice> i = JUsb.getConnectedDevices().iterator();
     	while (i.hasNext()) {
     		LinuxUsbDevice d = i.next();
-    		id.addDevId(d.getIdVendor(),d.getIdProduct());
+    		id.addDevId(d.getIdVendor(),d.getIdProduct(),d.getSerial());
             if (lastid!=null)
             if (lastid.getIds().contains(d.getIdProduct())) {
             	notchanged=true;
