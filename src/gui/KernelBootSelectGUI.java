@@ -51,7 +51,7 @@ public class KernelBootSelectGUI extends JDialog {
 		setResizable(false);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setTitle("Kernel Selector");
-		setBounds(100, 100, 200, 300);
+		setBounds(100, 100, 234, 300);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
