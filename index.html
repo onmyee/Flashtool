@@ -76,8 +76,7 @@ To install the Flashtool, follow the steps below:
     <li>Unpack the tar.7z package<br>
     <li>Check that libusb-1.0 is installed. On 64bits system, both 64bit and 32bit should be installed.<br>
     <li>Add these rules to /etc/udev : <br>
-        SUBSYSTEM=="usb", ACTION=="add", SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="adde", MODE="0777"<br>
-        SUBSYSTEM=="usb", ACTION=="add", SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="0dde", MODE="0777"<br>
+        SUBSYSTEM=="usb", ACTION=="add", SYSFS{idVendor}=="0fce", SYSFS{idProduct}=="*", MODE="0777"<br>
 </ol>
 		</td></tr>
 		</table>
