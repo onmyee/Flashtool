@@ -1,8 +1,15 @@
 export BASEDIR=$(dirname $0)
 
-if test -z ${JAVA_HOME}
-then	
-	export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
+export system64=$(uname -a|grep x86_64)
+
+if test -z "${JAVA_HOME}"
+then
+	if test -z "${system64}"
+	then
+		export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre32
+	else
+		export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre64
+	fi
 	echo "JAVA_HOME not set. Using default value : ${JAVA_HOME}"
 fi
 

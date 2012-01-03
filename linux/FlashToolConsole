@@ -1,4 +1,6 @@
-export BASEDIR=$(dirname $0)
+
+fi
+rt BASEDIR=$(dirname $0)
 
 show_help() {
 	echo Usage : FlashToolConsole [OPTIONS]
@@ -85,10 +87,17 @@ then
         p_baseband=$(echo yes)
      fi
 
-	if test -z ${JAVA_HOME}
+	export system64=$(uname -a|grep x86_64)
+
+	if test -z "${JAVA_HOME}"
 	then
-		export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre
-		echo "JAVA_HOME not set. Using default value : ${JAVA_HOME}"
+       		if test -z "${system64}"
+        	then
+                	export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre32
+        	else
+                	export JAVA_HOME=${BASEDIR}/x10flasher_lib/jre64
+        	fi
+        	echo "JAVA_HOME not set. Using default value : ${JAVA_HOME}"
 	fi
 
 	if test -e ${JAVA_HOME}/bin/java
