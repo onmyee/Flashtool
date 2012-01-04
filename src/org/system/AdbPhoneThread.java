@@ -69,6 +69,13 @@ public class AdbPhoneThread extends Thread {
 		}
 	}
 
+	private void Sleep(int ms) {
+		try {
+			sleep(ms);
+		}
+		catch (Exception e) {
+		}
+	}
 	public void addStatusListener(StatusListener plistener) {
         listeners.add(StatusListener.class, plistener);
         listener = plistener;

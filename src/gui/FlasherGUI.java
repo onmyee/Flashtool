@@ -920,7 +920,7 @@ public class FlasherGUI extends JFrame {
 					shell = new Shell("rootit");
 					MyLogger.getLogger().info("Running part1 of Root Exploit, please wait");
 					shell.run(true);
-					Devices.waitForReboot();
+					Devices.waitForReboot(true);
 					MyLogger.getLogger().info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);
@@ -945,7 +945,7 @@ public class FlasherGUI extends JFrame {
 					shell = new Shell("rootit");
 					MyLogger.getLogger().info("Running part1 of Root Exploit, please wait");
 					shell.run(false);
-					Devices.waitForReboot();
+					Devices.waitForReboot(true);
 					MyLogger.getLogger().info("Running part2 of Root Exploit");
 					shell = new Shell("rootit2");
 					shell.run(false);

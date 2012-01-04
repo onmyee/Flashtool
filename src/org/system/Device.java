@@ -30,12 +30,25 @@ public class Device {
 	}
 
 	public static DeviceIdent getConnectedDevice() {
-		if (OS.getName().equals("windows")) return getConnectedDeviceWin32();
-		else return getConnectedDeviceLinux();
+		DeviceIdent id;
+		if (OS.getName().equals("windows")) id=getConnectedDeviceWin32();
+		else id=getConnectedDeviceLinux();
+		int count=0;
+		while (!id.isDriverOk()) {
+			try {
+				Thread.sleep(200);
+			}
+			catch (Exception e) {
+			}
+			if (OS.getName().equals("windows")) id=getConnectedDeviceWin32();
+			else id=getConnectedDeviceLinux();
+			count++;
+			if (count==5) break;
+		}
+		return id;
 	}
 	
     public static DeviceIdent getConnectedDeviceWin32() {
-    	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
     	HDEVINFO hDevInfo = JsetupAPi.getHandleForConnectedInterfaces();
         if (hDevInfo.equals(WinBase.INVALID_HANDLE_VALUE)) {

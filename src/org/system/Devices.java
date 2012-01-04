@@ -66,18 +66,20 @@ public class Devices  {
 		}
 	}
 
-	public static void waitForReboot() {
+	public static void waitForReboot(boolean tobeforced) {
 		MyLogger.getLogger().info("Waiting for device");
 		waitforreboot=true;
 		int count=0;
 		while (waitforreboot) {
 			sleep(20);
-			count++;
-			if (Device.getLastConnected().getStatus().equals("adb") && count==3000) {
-				MyLogger.getLogger().info("Forced stop waiting.");
-				waitforreboot=false;
+			if (tobeforced) {
+				count++;
+				if (Device.getLastConnected().getStatus().equals("adb") && count==3000) {
+					MyLogger.getLogger().info("Forced stop waiting.");
+					waitforreboot=false;
+				}
+				else if (count==3000) count=0;
 			}
-			else if (count==3000) count=0;
 		}
 	}
 
