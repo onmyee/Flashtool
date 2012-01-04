@@ -19,7 +19,7 @@ if the 4 bit is set to true, it means there is more data,
 otherwise we are done with command.
 
 COMMANDS:
-0x01 - loader info?a
+0x01 - loader info?
 0x04 - 
 0x05 - write SIN header
 0x06 - write SIN
