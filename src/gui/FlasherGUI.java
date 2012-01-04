@@ -902,7 +902,9 @@ public class FlasherGUI extends JFrame {
 	}
 
 	public void doRoot() {
-		if (Devices.getCurrent().getVersion().contains("2.3")) doRootzergRush();
+		if (Devices.getCurrent().getVersion().contains("2.3")) {
+			doRootzergRush();
+		}
 		else 
 			doRootpsneuter();
 	}
