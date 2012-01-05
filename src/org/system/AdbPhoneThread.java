@@ -33,13 +33,25 @@ public class AdbPhoneThread extends Thread {
 				      processInput = adb.getInputStream();
 				      sc = new Scanner(processInput);
 				      DeviceIdent id = null;
+				      DeviceIdent newid = null;
 			    	  while (sc.hasNextLine()) {
 			    		  String line = sc.nextLine();
 			    		  if (line.contains("State")) {
 				    		  if (line.contains("device")) {
-				    			  id = Device.getConnectedDevice();
-				    			  GlobalState.setState(id.getSerial(), id.getPid(), "adb");
-				    			  fireStatusChanged(new StatusEvent(GlobalState.getState(id.getSerial(), id.getPid()),true));
+				    			  id = Device.getLastConnected(first);
+				    			  newid = Device.getLastConnected(first);
+				    			  if (!GlobalState.getState(newid.getSerial(), newid.getPid()).equals("adb")) {
+				    				  int count=0;
+				    				  if (first) count=19;
+				    				  while (newid.getPid().equals(id.getPid())) {
+				    					  Sleep(100);
+				    					  count++;
+				    					  newid = Device.getLastConnected(first);
+				    					  if (count==20) break;
+				    				  }
+				    				  GlobalState.setState(newid.getSerial(), newid.getPid(), "adb");
+				    			  }
+				    			  fireStatusChanged(new StatusEvent(GlobalState.getState(newid.getSerial(), newid.getPid()),true));
 				    		  }
 				    		  if (first) {
 				    			  DeviceChangedListener.start();

@@ -10,7 +10,7 @@ import org.system.OS;
 public class USBFlash {
 
 	public static void open() throws IOException {
-		if (Device.getLastConnected().getPid().equals("ADDE"))
+		if (Device.getLastConnected(false).getPid().equals("ADDE"))
 			DeviceChangedListener.pause(true);
 		if (OS.getName().equals("windows")) {
 			USBFlashWin32.open();

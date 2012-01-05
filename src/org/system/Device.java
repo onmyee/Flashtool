@@ -21,7 +21,8 @@ public class Device {
 	static DeviceIdent lastid = new DeviceIdent();
 	static String laststatus = "";
 
-	public static DeviceIdent getLastConnected() {
+	public static DeviceIdent getLastConnected(boolean force) {
+		if (force) return getConnectedDevice();
 		DeviceIdent id = null;
 		synchronized (lastid) {
 			id = new DeviceIdent(lastid);
@@ -29,7 +30,7 @@ public class Device {
 		return id;
 	}
 
-	public static DeviceIdent getConnectedDevice() {
+	public static synchronized DeviceIdent getConnectedDevice() {
 		DeviceIdent id;
 		if (OS.getName().equals("windows")) id=getConnectedDeviceWin32();
 		else id=getConnectedDeviceLinux();
@@ -79,23 +80,16 @@ public class Device {
     }
 
     public static DeviceIdent getConnectedDeviceLinux() {
-    	boolean notchanged=false;
     	DeviceIdent id = new DeviceIdent();
     	try {
-    	Iterator<LinuxUsbDevice> i = JUsb.getConnectedDevices().iterator();
-    	while (i.hasNext()) {
-    		LinuxUsbDevice d = i.next();
-    		id.addDevId(d.getIdVendor(),d.getIdProduct(),d.getSerial());
-            if (lastid!=null)
-            if (lastid.getIds().contains(d.getIdProduct())) {
-            	notchanged=true;
-            	break;
-            }
-        }
-        synchronized (lastid) {
-        	lastid=id;
-        }
-        if (notchanged) return getLastConnected();
+	    	Iterator<LinuxUsbDevice> i = JUsb.getConnectedDevices().iterator();
+	    	while (i.hasNext()) {
+	    		LinuxUsbDevice d = i.next();
+	    		id.addDevId(d.getIdVendor(),d.getIdProduct(),d.getSerial());
+	        }
+	        synchronized (lastid) {
+	        	lastid=id;
+	        }
     	}
     	catch (UnsatisfiedLinkError e) {
     		MyLogger.getLogger().error("libusb-1.0 is not installed");
@@ -108,7 +102,7 @@ public class Device {
 
     public static void CheckAdbDrivers() {
     	MyLogger.getLogger().info("List of connected devices (Device Id) :");
-    	DeviceIdent id=getLastConnected();
+    	DeviceIdent id=getLastConnected(false);
     	String driverstatus;
     	int maxsize = id.getMaxSize();
     	Enumeration e = id.getIds().keys();

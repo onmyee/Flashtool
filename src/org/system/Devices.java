@@ -74,7 +74,7 @@ public class Devices  {
 			sleep(20);
 			if (tobeforced) {
 				count++;
-				if (Device.getLastConnected().getStatus().equals("adb") && count==3000) {
+				if (Device.getLastConnected(false).getStatus().equals("adb") && count==3000) {
 					MyLogger.getLogger().info("Forced stop waiting.");
 					waitforreboot=false;
 				}

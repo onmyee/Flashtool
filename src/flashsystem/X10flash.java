@@ -268,7 +268,7 @@ public class X10flash {
     	boolean found = false;
     	try {
 			Thread.sleep(500);
-			found = Device.getLastConnected().getPid().equals("ADDE");
+			found = Device.getLastConnected(false).getPid().equals("ADDE");
 		}
 		catch (Exception e) {
 	    	found = false;

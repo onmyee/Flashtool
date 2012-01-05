@@ -27,21 +27,18 @@ public class PhoneThread extends Thread {
 					GlobalState.setState(id.getSerial(), id.getPid(), "flash");
 				else if (id.getPid().equals("0DDE"))
 					GlobalState.setState(id.getSerial(), id.getPid(), "fastboot");
-				while (id.getStatus().length()==0) {
-					doSleep(300);
-					id = Device.getConnectedDevice();
+				if (id.getStatus().length()==0) {
 					nbnull++;
-					if (nbnull==5) {
-						nbnull=0;
-	    				GlobalState.setState(id.getSerial(), id.getPid(), "normal");
-						break;
-					}
+					if (nbnull==5) GlobalState.setState(id.getSerial(), id.getPid(), "normal");
 				}
-				String lstatus= id.getStatus();
-				if (!lstatus.equals(status)) {
-					if (!lstatus.equals("adb"))
-						fireStatusChanged(new StatusEvent(lstatus,id.isDriverOk()));
-					status = lstatus;
+				else {
+					nbnull=0;
+					String lstatus= id.getStatus();
+					if (!lstatus.equals(status)) {
+						if (!lstatus.equals("adb"))
+							fireStatusChanged(new StatusEvent(lstatus,id.isDriverOk()));
+						status = lstatus;
+					}
 				}
 			}
 			try {
