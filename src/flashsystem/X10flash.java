@@ -227,20 +227,20 @@ public class X10flash {
     	try {
 		    MyLogger.getLogger().info("Start Flashing");
 		    MyLogger.initProgress(getNumberPasses());
-		    
+
 		    init();
-		    
-			setFlashState(true);
-			
+
 			sendImages();
-        	if (_bundle.hasPreset()) sendTA(_bundle.getPreset().getInputStream(),"preset");
-        	//if (_bundle.hasSimlock()) sendTA(_bundle.getSimlock().getInputStream(),"simlock");
         	sendSystemAndUserData();
-			
-			setFlashState(false);
+    
+        	if (_bundle.hasTA()) {
+        		setFlashState(true);
+        		if (_bundle.hasPreset()) sendTA(_bundle.getPreset().getInputStream(),"preset");
+        		//if (_bundle.hasSimlock()) sendTA(_bundle.getSimlock().getInputStream(),"simlock");
+        		setFlashState(false);
+        	}
             
-			cmd.send(Command.CMD10,Command.VALNULL,false);
-            
+			cmd.send(Command.CMD10,Command.VALNULL,false);            
 			cmd.send(Command.CMD04,Command.VALNULL,false);
 	
 			closeDevice();

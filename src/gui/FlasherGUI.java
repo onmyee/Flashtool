@@ -1028,10 +1028,14 @@ public class FlasherGUI extends JFrame {
 					boolean somethingdone = false;
 						if (TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd")) {
 							AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd", GlobalConfig.getProperty("deviceworkdir"));
+							MyLogger.getLogger().debug("opening "+OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd");
 							TextFile t = new TextFile(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd","ASCII");
+							MyLogger.getLogger().debug("opened "+OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd successfully");
 							Iterator<String> i = t.getLines().iterator();
+							MyLogger.getLogger().debug("Processing lines");
 							while (i.hasNext()) {
-								AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+""+i.next(), GlobalConfig.getProperty("deviceworkdir"));
+								MyLogger.getLogger().debug("pushing "+OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+""+i.next()+" to device");
+								AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+i.next(), GlobalConfig.getProperty("deviceworkdir"));
 							}
 							t.delete();
 							Shell shell1 = new Shell("sysadd");
@@ -1058,7 +1062,9 @@ public class FlasherGUI extends JFrame {
 						else MyLogger.getLogger().info("Clean canceled");
 					}
 					else MyLogger.getLogger().info("Error mounting /system rw");
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					MyLogger.getLogger().error(e.getMessage());
+				}
 				return null;
 			}
 		});

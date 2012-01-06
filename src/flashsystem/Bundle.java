@@ -159,6 +159,16 @@ public final class Bundle {
 		return false;
 	}
 	
+	public boolean hasTA() {
+		Enumeration<Object> e =bundleList.keys();
+		while (e.hasMoreElements()) {
+			String key = (String)e.nextElement();
+			if (key.toUpperCase().endsWith(".TA"))
+				return true;
+		}
+		return false;		
+	}
+	
 	public BundleEntry getPreset() {
 		Enumeration<Object> e =bundleList.keys();
 		while (e.hasMoreElements()) {
