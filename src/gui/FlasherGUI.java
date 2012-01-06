@@ -1023,18 +1023,25 @@ public class FlasherGUI extends JFrame {
 				try {
 					Devices.getCurrent().doBusyboxHelper();
 					if (AdbUtility.Sysremountrw()) {
-					apkClean sel = new apkClean();
-					sel.setVisible(true);
-					boolean somethingdone = false;
+						apkClean sel = new apkClean();
+						sel.setVisible(true);
+						boolean somethingdone = false;
+						if (TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd")) {
+							TextFile t = new TextFile(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd","ASCII");
+							Iterator<String> i = t.getLines().iterator();
+							while (i.hasNext()) {
+								if (!TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+i.next())) {
+									t.close();
+									throw new Exception("File "+OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+i.next()+" does not exist");
+								}
+							}
+							t.close();
+						}
 						if (TextFile.exists(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd")) {
 							AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd", GlobalConfig.getProperty("deviceworkdir"));
-							MyLogger.getLogger().debug("opening "+OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd");
 							TextFile t = new TextFile(OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd","ASCII");
-							MyLogger.getLogger().debug("opened "+OS.getWorkDir()+fsep+"custom"+fsep+"clean"+fsep+"listappsadd successfully");
 							Iterator<String> i = t.getLines().iterator();
-							MyLogger.getLogger().debug("Processing lines");
 							while (i.hasNext()) {
-								MyLogger.getLogger().debug("pushing "+OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+""+i.next()+" to device");
 								AdbUtility.push(OS.getWorkDir()+fsep+"custom"+fsep+"apps_saved"+fsep+i.next(), GlobalConfig.getProperty("deviceworkdir"));
 							}
 							t.delete();
@@ -1053,7 +1060,6 @@ public class FlasherGUI extends JFrame {
 							shell2.runRoot();
 							t.delete();
 							somethingdone = true;
-							
 						}
 						if (somethingdone) {
 							AdbUtility.clearcache();
@@ -1061,7 +1067,8 @@ public class FlasherGUI extends JFrame {
 						}
 						else MyLogger.getLogger().info("Clean canceled");
 					}
-					else MyLogger.getLogger().info("Error mounting /system rw");
+					else 
+						MyLogger.getLogger().info("Error mounting /system rw");
 				} catch (Exception e) {
 					MyLogger.getLogger().error(e.getMessage());
 				}

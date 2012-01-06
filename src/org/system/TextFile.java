@@ -29,8 +29,11 @@ public final class TextFile {
 	}
 
 	public void close() throws IOException {
-		pwriter.flush();
-		pwriter.close();
+		try {
+			pwriter.flush();
+			pwriter.close();
+		}
+		catch (NullPointerException npe) {}
 	}
 
 	public void delete() {

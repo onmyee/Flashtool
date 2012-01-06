@@ -245,8 +245,11 @@ public final class Bundle {
 		Enumeration<BundleEntry> e = allEntries();
 		while (e.hasMoreElements()) {
 			BundleEntry entry = e.nextElement();
-			MyLogger.getLogger().info("Adding "+entry.getName()+" to the bundle");
-		    JarEntry jarAdd = new JarEntry(BundleTrans.getInternal(entry.getName()));
+			String name = entry.getName();
+			int S1pos = name.toUpperCase().indexOf("_S1");
+			if (S1pos > 0) name = name.substring(0,S1pos)+".sin";
+			MyLogger.getLogger().info("Adding "+entry.getName()+" renamed as "+name+" to the bundle");
+		    JarEntry jarAdd = new JarEntry(name);
 	        out.putNextEntry(jarAdd);
 	        InputStream in = entry.getInputStream();
 	        while (true) {
