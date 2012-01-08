@@ -3,13 +3,13 @@
 
 Name Flashtool
 
-SetCompressor /SOLID lzma
+# SetCompressor /SOLID lzma
 
 RequestExecutionLevel highest
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 0.6.4.0
+!define VERSION 0.6.6.0
 !define COMPANY Androxyde
 !define URL http://androxyde.github.com/Flashtool/
 
@@ -48,7 +48,7 @@ InstallDir C:\Flashtool
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 0.6.4.0
+VIProductVersion 0.6.6.0
 VIAddVersionKey ProductName Flashtool
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
