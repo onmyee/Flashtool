@@ -4,7 +4,7 @@
 Name Flashtool
 
 # SetCompressor /SOLID lzma
-
+SetCompressor /SOLID lzma
 RequestExecutionLevel highest
 
 # General Symbol Definitions
@@ -43,7 +43,7 @@ Var StartMenuGroup
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile setup.exe
+OutFile ..\deploy\flashtool-${VERSION}-windows.exe
 InstallDir C:\Flashtool
 CRCCheck on
 XPStyle on

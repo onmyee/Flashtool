@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exe4j version="4.4.2" transformSequenceNumber="1">
-  <directoryPresets config="C:/Program Files (x86)/Java" />
+  <directoryPresets config="C:/Users/Manu/git/Deploy/FlashTool/x10flasher_lib" />
   <application name="FlashTool" distributionSourceDir="C:/Users/Manu/Documents/FlashTool">
     <languages>
       <principalLanguage id="en" customLocalizationFile="" />
@@ -18,8 +18,8 @@
   </splashScreen>
   <java mainClass="gui.FlasherGUI" vmParameters="-Xms128m -Xmx256m" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true" minVersion="1.6" maxVersion="1.6" allowBetaVM="false" jdkOnly="false">
     <searchSequence>
+      <directory location="./x10flasher_lib/winjre64" />
       <registry />
-      <directory location="./x10flasher_lib/jre" />
     </searchSequence>
     <classPath>
       <archive location="./x10flasher.jar" failOnError="false" />
