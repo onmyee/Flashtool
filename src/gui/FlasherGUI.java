@@ -1591,12 +1591,11 @@ public class FlasherGUI extends JFrame {
 
     public void registerPlugin(String type, String classname, String workdir) {
 	    try {
-
+	    	
 	    	Class<?> pluginClass = Class.forName(classname);
             Constructor<?> constr = pluginClass.getConstructor();
             PluginInterface pluginObject = (PluginInterface)constr.newInstance();
             pluginObject.setWorkdir(workdir);
-
             boolean aenabled = false;
             String aversion = Devices.getCurrent().getVersion();
             Enumeration <String> e1 = pluginObject.getCompatibleAndroidVersions();
