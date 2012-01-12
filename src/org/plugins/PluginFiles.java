@@ -1,5 +1,7 @@
 package org.plugins;
 
+import java.io.File;
+
 import org.adb.AdbUtility;
 import org.logger.MyLogger;
 import org.system.GlobalConfig;
@@ -67,5 +69,10 @@ public class PluginFiles {
 	
 	public String getFile(String folder, String file) {
 		return _filedir+OS.getFileSeparator()+folder+OS.getFileSeparator()+file;
+	}
+	
+	public void delete(String file) {
+		File f = new File(_filedir+OS.getFileSeparator()+file);
+		f.delete();
 	}
 }

@@ -29,8 +29,11 @@ public class CommentedPropertiesFile extends java.util.Properties {
 	     */
 	    public void load(File f) throws IOException
 	    {
-	    	load(new FileInputStream(f));
-	    	Scanner sc = new Scanner(new FileReader(f));
+	    	FileInputStream fin = new FileInputStream(f);
+	    	load(fin);
+	    	fin.close();
+	    	FileReader fread = new FileReader(f);
+	    	Scanner sc = new Scanner(fread);
 	    	while (sc.hasNextLine()) {
 	    		String line = sc.nextLine();
 	    		if (line.trim().startsWith("#") || line.trim().length()==0) {
@@ -45,6 +48,7 @@ public class CommentedPropertiesFile extends java.util.Properties {
 	    			lines.add(line.trim().split("=")[0].trim());
 	    		}
 	    	}
+	    	fread.close();
 	    }
 	 
 	    /**
@@ -78,6 +82,8 @@ public class CommentedPropertiesFile extends java.util.Properties {
 	        }
 	        writer.flush ();
 	        writer.close();
+	        out.flush();
+	        out.close();
 	    }
 	    
 	    public void updateWith(File f) throws IOException {
