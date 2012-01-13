@@ -5,12 +5,11 @@
 
 	<target name="devices" depends="E10 Device,E15 Device,U20 Device,LT15 Device,LT18 Device,MK16 Device,MT11 Device,MT15 Device,R800 Device,SK17 Device,ST15 Device,ST17 Device,ST18 Device,WT19 Device,X10 Device"/>
 	
-    <target name="JRE">
+	<target name="JRE">
         <delete dir="../Deploy/FlashTool/x10flasher_lib/winjre32"/>
-    	<delete dir="../Deploy/FlashTool/x10flasher_lib/winjre64"/>
-		<copy todir="../Deploy/FlashTool/x10flasher_lib">
-			<fileset dir="../Deploy/jre"/>
-		</copy>
+        <delete dir="../Deploy/FlashTool/x10flasher_lib/winjre64"/>
+        <unzip src="jre/winjre.zip" dest="../Deploy/FlashTool/x10flasher_lib"/>
+		<untar src="jre/linjre.tar" dest="../Deploy/FlashTool/x10flasher_lib"/>
     </target>
 
 	<target name="clean">
